@@ -1,0 +1,30 @@
+<html>
+<head>
+    <title>Sample Payment Form</title>
+</head>
+<body>
+<h1>Sample Adyen CC Payment Form</h1>
+<div>
+    <form method="POST" id="adyen-encrypted-form" action="/perform_payment">
+        <input type="text" autocomplete="off" data-encrypted-name="number" size="20"/>
+        <input type="text" autocomplete="off" data-encrypted-name="holderName" size="20"/>
+        <input type="text" autocomplete="off" data-encrypted-name="expiryMonth" size="2" maxlength="2"/>
+        <input type="text" autocomplete="off" data-encrypted-name="expiryYear" size="4" maxlength="4"/>
+        <input type="text" autocomplete="off" data-encrypted-name="cvc" size="4" maxlength="4"/>
+        <input type="hidden" value="2017-03-28T20:00:40.428Z" data-encrypted-name="generationtime"/>
+        <input type="submit" value="Pay" />
+    </form>
+</div>
+<script type="text/javascript" src="{{ .EncURL }}"></script>
+<script type="text/javascript">
+    // The form element to encrypt.
+    var form    = document.getElementById('adyen-encrypted-form');
+    // See adyen.encrypt.simple.html for details on the options to use
+    var options = {};
+
+    // Create the form.
+    // Note that the method is on the Adyen object, not the adyen.encrypt object.
+    adyen.createEncryptedForm( form, options);
+</script>
+</body>
+</html>
