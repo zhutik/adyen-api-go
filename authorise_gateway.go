@@ -1,17 +1,15 @@
 package adyen
 
-import (
-	"bytes"
-	"encoding/json"
-	"net/http"
-)
+import "encoding/json"
 
 type AuthoriseGateway struct {
 	*Adyen
 }
 
+// @todo: move to enums
 const RequestType = "authorise"
 
+// Perform authorise payment in Adyen
 func (a *AuthoriseGateway) Payment(encryptedData string, reference string, amount float32) (*AuthoriseResponse, error) {
 	auth := AuthoriseRequest{
 		Amount:          Amount{Value: amount, Currency: "EUR"},
@@ -20,15 +18,7 @@ func (a *AuthoriseGateway) Payment(encryptedData string, reference string, amoun
 		Reference:       reference,
 	}
 
-	// move request logic to Adyen
-	body, _ := json.Marshal(auth)
-
-	req, err := http.NewRequest("POST", a.AdyenUrl(RequestType), bytes.NewBuffer(body))
-	req.Header.Set("Content-Type", "application/json")
-	req.SetBasicAuth(a.Username, a.Password)
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
+	resp, err := a.execute(RequestType, auth)
 
 	if err != nil {
 		return nil, err

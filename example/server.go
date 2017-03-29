@@ -18,11 +18,8 @@ import (
 	adyen "github.com/zhutik/adyen-api-go"
 )
 
-type AdyenConfig struct {
-	ClientToken     string
-	Username        string
-	Password        string
-	MerchantAccount string
+type TempateConfig struct {
+	EncURL string
 }
 
 func randInt(min int, max int) int {
@@ -41,27 +38,29 @@ func randomString(l int) string {
  * Show Adyen Payment form
  */
 func showForm(w http.ResponseWriter, r *http.Request) {
-	config := AdyenConfig{
-		ClientToken: os.Getenv("ADYEN_CLIENT_TOKEN"),
+	adyen := adyen.New(
+		os.Getenv("ADYEN_USERNAME"),
+		os.Getenv("ADYEN_PASSWORD"),
+		os.Getenv("ADYEN_CLIENT_TOKEN"),
+		os.Getenv("ADYEN_ACCOUNT"),
+	)
+	config := TempateConfig{
+		EncURL: adyen.ClientURL(),
 	}
 
 	t := template.Must(template.ParseFiles("index.html"))
 	t.Execute(w, config)
 }
 
+/**
+ * Handle post request and perform payment authosization
+ */
 func performPayment(w http.ResponseWriter, r *http.Request) {
-	config := AdyenConfig{
-		ClientToken:     os.Getenv("ADYEN_CLIENT_TOKEN"),
-		Username:        os.Getenv("ADYEN_USERNAME"),
-		Password:        os.Getenv("ADYEN_PASSWORD"),
-		MerchantAccount: os.Getenv("ADYEN_ACCOUNT"),
-	}
-
 	adyen := adyen.New(
-		config.Username,
-		config.Password,
-		"8214907238780839",
-		config.MerchantAccount,
+		os.Getenv("ADYEN_USERNAME"),
+		os.Getenv("ADYEN_PASSWORD"),
+		os.Getenv("ADYEN_CLIENT_TOKEN"),
+		os.Getenv("ADYEN_ACCOUNT"),
 	)
 
 	r.ParseForm()
