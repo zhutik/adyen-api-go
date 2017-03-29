@@ -18,6 +18,7 @@ import (
 	adyen "github.com/zhutik/adyen-api-go"
 )
 
+// TempateConfig for HTML template
 type TempateConfig struct {
 	EncURL string
 }

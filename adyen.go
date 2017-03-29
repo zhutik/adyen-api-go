@@ -6,15 +6,17 @@ import (
 	"net/http"
 )
 
-func New(username, password, clientId, merchantAccount string) *Adyen {
+// New - creates Adyen instance
+func New(username, password, clientID, merchantAccount string) *Adyen {
 	return &Adyen{
 		Username:        username,
 		Password:        password,
-		ClientID:        clientId,
+		ClientID:        clientID,
 		MerchantAccount: merchantAccount,
 	}
 }
 
+// Adyen - base structure with configuration options
 type Adyen struct {
 	Username        string
 	Password        string
@@ -22,18 +24,21 @@ type Adyen struct {
 	MerchantAccount string
 }
 
+// Version of a current Adyen API
 const (
 	APIVersion         = "25"
-	AdyenTestUrl       = "https://pal-test.adyen.com/pal/servlet/Payment"
-	AdyenClientTestUrl = "https://test.adyen.com/hpp/cse/js/"
+	AdyenTestURL       = "https://pal-test.adyen.com/pal/servlet/Payment"
+	AdyenClientTestURL = "https://test.adyen.com/hpp/cse/js/"
 )
 
+// ClientURL - returns URl, that need to loaded in UI, to encrypt Credit Card information
 func (a *Adyen) ClientURL() string {
-	return AdyenClientTestUrl + a.ClientID + ".shtml"
+	return AdyenClientTestURL + a.ClientID + ".shtml"
 }
 
-func (a *Adyen) AdyenUrl(requestType string) string {
-	return AdyenTestUrl + "/" + APIVersion + "/" + requestType
+// AdyenURL returns Adyen backend URL
+func (a *Adyen) AdyenURL(requestType string) string {
+	return AdyenTestURL + "/" + APIVersion + "/" + requestType
 }
 
 // execute request on Adyen side, transforms "requestEntity" into JSON representation
@@ -43,20 +48,25 @@ func (a *Adyen) execute(method string, requestEntity interface{}) (*http.Respons
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", a.AdyenUrl(method), bytes.NewBuffer(body))
+	req, err2 := http.NewRequest("POST", a.AdyenURL(method), bytes.NewBuffer(body))
+	if err2 != nil {
+		return nil, err2
+	}
+
 	req.Header.Set("Content-Type", "application/json")
 	req.SetBasicAuth(a.Username, a.Password)
 
 	client := &http.Client{}
-	resp, err := client.Do(req)
+	resp, err3 := client.Do(req)
 
-	if err != nil {
-		return nil, err
+	if err3 != nil {
+		return nil, err3
 	}
 
 	return resp, nil
 }
 
+// Authorise - returns AuthoriseGateway
 func (a *Adyen) Authorise() *AuthoriseGateway {
 	return &AuthoriseGateway{a}
 }

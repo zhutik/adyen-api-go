@@ -2,14 +2,15 @@ package adyen
 
 import "encoding/json"
 
+// AuthoriseGateway - Adyen payment authorisation logic
 type AuthoriseGateway struct {
 	*Adyen
 }
 
-// @todo: move to enums
+// RequestType - authorise type request, @TODO: move to enums
 const RequestType = "authorise"
 
-// Perform authorise payment in Adyen
+// Payment - Perform authorise payment in Adyen
 func (a *AuthoriseGateway) Payment(encryptedData string, reference string, amount float32) (*AuthoriseResponse, error) {
 	auth := AuthoriseRequest{
 		Amount:          Amount{Value: amount, Currency: "EUR"},
