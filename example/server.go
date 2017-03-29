@@ -1,5 +1,5 @@
 /*
-	export ADYEN_ENC_URL="YOUR_ADYEN_ENCRYPTED_URL"
+	export ADYEN_CLIENT_TOKEN="YOUR_ADYEN_ENCRYPTED_URL"
 	export ADYEN_USERNAME="YOUR_ADYEN_API_USERNAME"
 	export ADYEN_PASSWORD="YOUR_API_PASSWORD"
 	export ADYEN_ACCOUNT="YOUR_MERCHANT_ACCOUNT"
@@ -8,42 +8,18 @@
 package main
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
 	"html/template"
 	"math/rand"
 	"net/http"
 	"os"
 	"time"
+
+	adyen "github.com/zhutik/adyen-api-go"
 )
 
-type Amount struct {
-	Value    float32 `json:"value"`
-	Currency string  `json:"currency"`
-}
-
-type AdditionalData struct {
-	Content string `json:"card.encrypted.json"`
-}
-
-type AdyenRequest struct {
-	AdditionalData  AdditionalData `json:"additionalData"`
-	Amount          Amount         `json:"amount"`
-	Reference       string         `json:"reference"`
-	MerchantAccount string         `json:"merchantAccount"`
-}
-
-type AdyenResponse struct {
-	PspReference  string `json:"pspReference"`
-	ResultCode    string `json:"resultCode"`
-	AuthCode      string `json:"authCode"`
-	RefusalReason string `json:"refusalReason"`
-}
-
 type AdyenConfig struct {
-	ApiURL          string
-	EncURL          string
+	ClientToken     string
 	Username        string
 	Password        string
 	MerchantAccount string
@@ -65,53 +41,41 @@ func randomString(l int) string {
  * Show Adyen Payment form
  */
 func showForm(w http.ResponseWriter, r *http.Request) {
-	var config AdyenConfig
-	config.EncURL = os.Getenv("ADYEN_ENC_URL")
+	config := AdyenConfig{
+		ClientToken: os.Getenv("ADYEN_CLIENT_TOKEN"),
+	}
 
 	t := template.Must(template.ParseFiles("index.html"))
 	t.Execute(w, config)
 }
 
 func performPayment(w http.ResponseWriter, r *http.Request) {
-	var config AdyenConfig
+	config := AdyenConfig{
+		ClientToken:     os.Getenv("ADYEN_CLIENT_TOKEN"),
+		Username:        os.Getenv("ADYEN_USERNAME"),
+		Password:        os.Getenv("ADYEN_PASSWORD"),
+		MerchantAccount: os.Getenv("ADYEN_ACCOUNT"),
+	}
 
-	config.ApiURL = "https://pal-test.adyen.com/pal/servlet/Payment/v25/authorise"
-	config.EncURL = os.Getenv("ADYEN_ENC_URL")
-	config.Username = os.Getenv("ADYEN_USERNAME")
-	config.Password = os.Getenv("ADYEN_PASSWORD")
-	config.MerchantAccount = os.Getenv("ADYEN_ACCOUNT")
+	adyen := adyen.New(
+		config.Username,
+		config.Password,
+		"8214907238780839",
+		config.MerchantAccount,
+	)
 
 	r.ParseForm()
 
-	var adyenReq AdyenRequest
-	var amount Amount
-	amount.Currency = "EUR"
-	amount.Value = 1000 // should be amount * 100, f.e. 20.00 = 2000
-	var addInfo AdditionalData
-	addInfo.Content = r.Form.Get("adyen-encrypted-data")
-
 	rand.Seed(time.Now().UTC().UnixNano())
 
-	adyenReq.Amount = amount
-	adyenReq.Reference = "DE-100" + randomString(6)
-	adyenReq.MerchantAccount = config.MerchantAccount
-	adyenReq.AdditionalData = addInfo
-
-	body, _ := json.Marshal(adyenReq)
-
-	req, err := http.NewRequest("POST", config.ApiURL, bytes.NewBuffer(body))
-	req.Header.Set("Content-Type", "application/json")
-	req.SetBasicAuth(config.Username, config.Password)
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-
-	var responseValues AdyenResponse
-
-	json.NewDecoder(resp.Body).Decode(&responseValues)
+	g, err := adyen.Authorise().Payment(
+		r.Form.Get("adyen-encrypted-data"),
+		"DE-100"+randomString(6),
+		1000,
+	)
 
 	if err == nil {
-		fmt.Fprintf(w, "<h1>Success!</h1><code><pre>"+responseValues.AuthCode+" "+responseValues.PspReference+"</pre></code>")
+		fmt.Fprintf(w, "<h1>Success!</h1><code><pre>"+g.AuthCode+" "+g.PspReference+"</pre></code>")
 	} else {
 		fmt.Fprintf(w, "<h1>Something went wrong: "+err.Error()+"</h1>")
 	}
