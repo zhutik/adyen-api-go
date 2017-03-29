@@ -16,8 +16,18 @@ type Adyen struct {
 	MerchantAccount string
 }
 
+const (
+	APIVersion         = "25"
+	AdyenTestUrl       = "https://pal-test.adyen.com/pal/servlet/Payment"
+	AdyenClientTestUrl = "https://test.adyen.com/hpp/cse/js/"
+)
+
 func (a *Adyen) ClientURL() string {
-	return "https://test.adyen.com/hpp/cse/js/" + a.ClientID + ".shtml"
+	return AdyenClientTestUrl + a.ClientID + ".shtml"
+}
+
+func (a *Adyen) AdyenUrl(requestType string) string {
+	return AdyenTestUrl + "/" + APIVersion + "/" + requestType
 }
 
 func (a *Adyen) Authorise() *AuthoriseGateway {
