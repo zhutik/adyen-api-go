@@ -1,20 +1,98 @@
 <html>
 <head>
     <title>Sample Payment Form</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 </head>
 <body>
-<h1>Sample Adyen CC Payment Form</h1>
-<div>
-    <form method="POST" id="adyen-encrypted-form" action="/perform_payment">
-        <input type="text" autocomplete="off" data-encrypted-name="number" size="20"/>
-        <input type="text" autocomplete="off" data-encrypted-name="holderName" size="20"/>
-        <input type="text" autocomplete="off" data-encrypted-name="expiryMonth" size="2" maxlength="2"/>
-        <input type="text" autocomplete="off" data-encrypted-name="expiryYear" size="4" maxlength="4"/>
-        <input type="text" autocomplete="off" data-encrypted-name="cvc" size="4" maxlength="4"/>
-        <input type="hidden" value="2017-03-28T20:00:40.428Z" data-encrypted-name="generationtime"/>
-        <input type="submit" value="Pay" />
-    </form>
+  <div class="container">
+    <h1>Adyen CC Test</h1>
+    <br /><br />
+
+    <div class="row">
+      <div class="col-md-6">
+        <h3>Adyen Perform Authorise</h3>
+        <br />
+        <form class="form-horizontal" method="POST" id="adyen-encrypted-form" action="/perform_payment">
+          <div class="form-group">
+            <label for="number" class="col-sm-4 control-label">Card Number</label>
+            <div class="col-sm-8">
+                <input type="text" id="number" class="form-control" autocomplete="off" data-encrypted-name="number" size="20">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="holderName" class="col-sm-4 control-label">Account Holder</label>
+            <div class="col-sm-8">
+                <input type="text" id="holderName" class="form-control" autocomplete="off" data-encrypted-name="holderName" size="20">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="expiryMonth" class="col-sm-4 control-label">Month</label>
+            <div class="col-sm-8">
+                <input type="number" id="expiryMonth" class="form-control" autocomplete="off" data-encrypted-name="expiryMonth" size="2" maxlength="2">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="expiryYear" class="col-sm-4 control-label">Year</label>
+            <div class="col-sm-8">
+                <input type="number" id="expiryYear" class="form-control" autocomplete="off" data-encrypted-name="expiryYear" size="4" maxlength="4">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="cvc" class="col-sm-4 control-label">CSV</label>
+            <div class="col-sm-8">
+                <input type="number" id="cvc" class="form-control" autocomplete="off" data-encrypted-name="cvc" size="4" maxlength="4">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-10 col-sm-2">
+              <input type="hidden" value="{{ .Time }}" data-encrypted-name="generationtime"/>
+              <button type="submit" class="btn btn-default">Pay Me</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-6">
+        <h3>Adyen Perform Capture</h3>
+        <br />
+        <form class="form-horizontal" method="POST" id="adyen-capture-form" action="/perform_capture">
+          <div class="form-group">
+            <label for="number" class="col-sm-4 control-label">Original Reference</label>
+            <div class="col-sm-8">
+                <input type="text" name="original-reference" id="original-reference" class="form-control" size="20">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="holderName" class="col-sm-4 control-label">Order Number</label>
+            <div class="col-sm-8">
+                <input type="text" name="reference" id="reference" class="form-control" size="20">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="expiryMonth" class="col-sm-4 control-label">Amount</label>
+            <div class="col-sm-8">
+                <input type="number" name="amount" id="amount" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-9 col-sm-3">
+              <button type="submit" class="btn btn-default">Capture Me</button>
+            </div>
+          </div>
+        </form>
+      </div>
+  </div>
 </div>
+
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous">
+</script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+  integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+  crossorigin="anonymous">
+</script>
 <script type="text/javascript" src="{{ .EncURL }}"></script>
 <script type="text/javascript">
     // The form element to encrypt.

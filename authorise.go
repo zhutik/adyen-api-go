@@ -16,12 +16,6 @@ type AuthoriseResponse struct {
 	RefusalReason string `json:"refusalReason"`
 }
 
-// Amount value/currency representation
-type Amount struct {
-	Value    float32 `json:"value"`
-	Currency string  `json:"currency"`
-}
-
 // AdditionalData stores encrypted information about customer's credit card
 type AdditionalData struct {
 	Content string `json:"card.encrypted.json"`
