@@ -1,0 +1,13 @@
+language: go
+
+go:
+  - 1.8
+
+sudo: false
+
+before_install:
+  - go get github.com/golang/lint/golint
+
+script:
+  - go vet ./...
+  - golint -set_exit_status ./...
