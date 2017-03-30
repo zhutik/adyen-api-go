@@ -7,8 +7,8 @@ type AuthoriseGateway struct {
 	*Adyen
 }
 
-// RequestType - authorise type request, @TODO: move to enums
-const RequestType = "authorise"
+// AuthoriseType - authorise type request, @TODO: move to enums
+const AuthoriseType = "authorise"
 
 // Payment - Perform authorise payment in Adyen
 func (a *AuthoriseGateway) Payment(encryptedData string, reference string, amount float32) (*AuthoriseResponse, error) {
@@ -19,7 +19,7 @@ func (a *AuthoriseGateway) Payment(encryptedData string, reference string, amoun
 		Reference:       reference,
 	}
 
-	resp, err := a.execute(RequestType, auth)
+	resp, err := a.execute(AuthoriseType, auth)
 
 	if err != nil {
 		return nil, err

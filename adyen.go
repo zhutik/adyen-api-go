@@ -26,7 +26,7 @@ type Adyen struct {
 
 // Version of a current Adyen API
 const (
-	APIVersion         = "25"
+	APIVersion         = "v25"
 	AdyenTestURL       = "https://pal-test.adyen.com/pal/servlet/Payment"
 	AdyenClientTestURL = "https://test.adyen.com/hpp/cse/js/"
 )
@@ -69,4 +69,9 @@ func (a *Adyen) execute(method string, requestEntity interface{}) (*http.Respons
 // Authorise - returns AuthoriseGateway
 func (a *Adyen) Authorise() *AuthoriseGateway {
 	return &AuthoriseGateway{a}
+}
+
+// Capture - returns CaptureGateway
+func (a *Adyen) Capture() *CaptureGateway {
+	return &CaptureGateway{a}
 }
