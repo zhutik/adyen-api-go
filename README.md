@@ -1,8 +1,34 @@
 # [WIP] Adyen API for Go
 
+## Usage
+
+```
+// Configure Adyen API
+adyen := adyen.New(
+  os.Getenv("ADYEN_USERNAME"),
+  os.Getenv("ADYEN_PASSWORD"),
+  os.Getenv("ADYEN_CLIENT_TOKEN"),
+  os.Getenv("ADYEN_ACCOUNT"),
+)
+
+// Perform authorise transaction
+resp, err := adyen.Authorise().Payment(
+  "encryptedData",
+  "your-order-number",
+  1000, // amount * 100, f.e. 10,30 EUR = 1030
+)
+```
+
+Supported API Calls
+* Authorise (only encrypted)
+* Capture
+* [NEXT] Cancel
+* [NEXT] Refund
+* [NEXT] CancelOrRefund
+
 ## To run example
 
-Expose your settings for Adyen API configuration.
+### Expose your settings for Adyen API configuration.
 
 ```server.go``` script will use those variables to communicate with API
 
@@ -19,11 +45,13 @@ Settings explanation:
 * ADYEN_PASSWORD - Adyen API password for username
 * ADYEN_ACCOUNT - Selected Merchant Account
 
-Run example application
+### Run example application
 ```
 $ cd example
 $ go run server.go
 ```
+
+### Perform payments
 
 Open http://localhost:8080 in your browser
 Put credit card information.
