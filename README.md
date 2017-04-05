@@ -27,7 +27,7 @@ g, err := instance.Payment().Authorise(req)
 Supported API Calls
 * Authorise (only encrypted)
 * Capture
-* [NEXT] Cancel
+* Cancel
 * [NEXT] Refund
 * [NEXT] CancelOrRefund
 
