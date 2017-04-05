@@ -31,7 +31,7 @@ Supported API Calls
 * Capture
 * Cancel
 * [NEXT] Refund
-* [NEXT] CancelOrRefund
+* CancelOrRefund
 
 ## To run example
 

@@ -2,11 +2,14 @@ package adyen
 
 import "encoding/json"
 
-// CaptureType - capture type request, @TODO: move to enums
-const CaptureType = "capture"
-
-// CancelType - cancel type request, @TODO: move to enums
-const CancelType = "cancel"
+/*
+  Adyen Modification actions
+*/
+const (
+	CaptureType    = "capture"
+	CancelType     = "cancel"
+	CancelOrRefund = "cancelOrRefund"
+)
 
 // ModificationGateway - Adyen modification transaction logic, capture, cancel, refunds and e.t.c
 type ModificationGateway struct {
@@ -36,6 +39,21 @@ func (a *ModificationGateway) Cancel(req *Cancel) (*CancelResponse, error) {
 	}
 
 	var val CancelResponse
+	json.NewDecoder(resp.Body).Decode(&val)
+
+	return &val, nil
+}
+
+// CancelOrRefund - Perform cancellation for not captured transaction
+// otherwise perform refund action
+func (a *ModificationGateway) CancelOrRefund(req *Cancel) (*CancelOrRefundResponse, error) {
+	resp, err := a.execute(CancelOrRefund, req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var val CancelOrRefundResponse
 	json.NewDecoder(resp.Body).Decode(&val)
 
 	return &val, nil
