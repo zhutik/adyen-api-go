@@ -12,3 +12,9 @@ type CancelResponse struct {
 	PspReference string `json:"pspReference"`
 	Response     string `json:"response"`
 }
+
+// CancelOrRefundResponse is a response structure for Adyen cancelOrRefund
+type CancelOrRefundResponse struct {
+	PspReference string `json:"pspReference"`
+	Response     string `json:"response"`
+}
