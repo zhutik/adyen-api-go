@@ -62,7 +62,7 @@ func showForm(w http.ResponseWriter, r *http.Request) {
  * Handle post request and perform payment authosization
  */
 func performPayment(w http.ResponseWriter, r *http.Request) {
-	adyen := adyen.New(
+	instance := adyen.New(
 		os.Getenv("ADYEN_USERNAME"),
 		os.Getenv("ADYEN_PASSWORD"),
 		os.Getenv("ADYEN_CLIENT_TOKEN"),
@@ -73,11 +73,14 @@ func performPayment(w http.ResponseWriter, r *http.Request) {
 
 	rand.Seed(time.Now().UTC().UnixNano())
 
-	g, err := adyen.Authorise().Payment(
-		r.Form.Get("adyen-encrypted-data"),
-		"DE-100"+randomString(6),
-		1000,
-	)
+	req := &adyen.Authorise{
+		Amount:          &adyen.Amount{Value: 1000, Currency: "EUR"},
+		MerchantAccount: os.Getenv("ADYEN_ACCOUNT"),
+		AdditionalData:  &adyen.AdditionalData{Content: r.Form.Get("adyen-encrypted-data")},
+		Reference:       "DE-100" + randomString(6),
+	}
+
+	g, err := instance.Transaction().Authorise(req)
 
 	if err == nil {
 		fmt.Fprintf(w, "<h1>Success!</h1><code><pre>"+g.AuthCode+" "+g.PspReference+"</pre></code>")
@@ -87,7 +90,7 @@ func performPayment(w http.ResponseWriter, r *http.Request) {
 }
 
 func performCapture(w http.ResponseWriter, r *http.Request) {
-	adyen := adyen.New(
+	instance := adyen.New(
 		os.Getenv("ADYEN_USERNAME"),
 		os.Getenv("ADYEN_PASSWORD"),
 		os.Getenv("ADYEN_CLIENT_TOKEN"),
@@ -103,11 +106,14 @@ func performCapture(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	g, err := adyen.Capture().Payment(
-		r.Form.Get("original-reference"),
-		r.Form.Get("reference"),
-		float32(amount),
-	)
+	req := &adyen.Capture{
+		ModificationAmount: &adyen.Amount{Value: float32(amount), Currency: "EUR"},
+		MerchantAccount:    os.Getenv("ADYEN_ACCOUNT"),
+		Reference:          r.Form.Get("reference"),
+		OriginalReference:  r.Form.Get("original-reference"),
+	}
+
+	g, err := instance.Transaction().Capture(req)
 
 	if err == nil {
 		fmt.Fprintf(w, "<h1>Success!</h1><code><pre>"+g.PspReference+" "+g.Response+"</pre></code>")
