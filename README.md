@@ -4,25 +4,32 @@
 
 ```
 // Configure Adyen API
-adyen := adyen.New(
+instance := adyen.New(
   os.Getenv("ADYEN_USERNAME"),
   os.Getenv("ADYEN_PASSWORD"),
   os.Getenv("ADYEN_CLIENT_TOKEN"),
   os.Getenv("ADYEN_ACCOUNT"),
 )
 
+req := &adyen.Authorise{
+  Amount:          &adyen.Amount{
+    Value: 1000, / amount * 100, f.e. 10,30 EUR = 1030
+    Currency: "EUR"
+  },
+  MerchantAccount: os.Getenv("ADYEN_ACCOUNT"),
+  AdditionalData:  &adyen.AdditionalData{Content: "encryptedData"},
+  Reference:       "your-order-number",
+}
+
 // Perform authorise transaction
-resp, err := adyen.Authorise().Payment(
-  "encryptedData",
-  "your-order-number",
-  1000, // amount * 100, f.e. 10,30 EUR = 1030
-)
+g, err := instance.Payment().Authorise(req)
+
 ```
 
 Supported API Calls
 * Authorise (only encrypted)
 * Capture
-* [NEXT] Cancel
+* Cancel
 * [NEXT] Refund
 * [NEXT] CancelOrRefund
 

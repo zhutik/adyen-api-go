@@ -66,12 +66,12 @@ func (a *Adyen) execute(method string, requestEntity interface{}) (*http.Respons
 	return resp, nil
 }
 
-// Authorise - returns AuthoriseGateway
-func (a *Adyen) Authorise() *AuthoriseGateway {
-	return &AuthoriseGateway{a}
+// Payment - returns PaymentGateway
+func (a *Adyen) Payment() *PaymentGateway {
+	return &PaymentGateway{a}
 }
 
-// Capture - returns CaptureGateway
-func (a *Adyen) Capture() *CaptureGateway {
-	return &CaptureGateway{a}
+// Modification - returns ModificationGateway
+func (a *Adyen) Modification() *ModificationGateway {
+	return &ModificationGateway{a}
 }
