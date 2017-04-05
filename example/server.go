@@ -80,7 +80,7 @@ func performPayment(w http.ResponseWriter, r *http.Request) {
 		Reference:       "DE-100" + randomString(6),
 	}
 
-	g, err := instance.Transaction().Authorise(req)
+	g, err := instance.Payment().Authorise(req)
 
 	if err == nil {
 		fmt.Fprintf(w, "<h1>Success!</h1><code><pre>"+g.AuthCode+" "+g.PspReference+"</pre></code>")
@@ -113,7 +113,7 @@ func performCapture(w http.ResponseWriter, r *http.Request) {
 		OriginalReference:  r.Form.Get("original-reference"),
 	}
 
-	g, err := instance.Transaction().Capture(req)
+	g, err := instance.Modification().Capture(req)
 
 	if err == nil {
 		fmt.Fprintf(w, "<h1>Success!</h1><code><pre>"+g.PspReference+" "+g.Response+"</pre></code>")
