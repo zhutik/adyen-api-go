@@ -22,7 +22,7 @@ req := &adyen.Authorise{
 }
 
 // Perform authorise transaction
-g, err := instance.Transaction().Authorise(req)
+g, err := instance.Payment().Authorise(req)
 
 Supported API Calls
 * Authorise (only encrypted)
