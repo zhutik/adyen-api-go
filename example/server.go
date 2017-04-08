@@ -41,7 +41,7 @@ func randomString(l int) string {
  * Show Adyen Payment form
  */
 func showForm(w http.ResponseWriter, r *http.Request) {
-	adyen := adyen.New(
+	instance := adyen.New(
 		os.Getenv("ADYEN_USERNAME"),
 		os.Getenv("ADYEN_PASSWORD"),
 		os.Getenv("ADYEN_CLIENT_TOKEN"),
@@ -50,7 +50,7 @@ func showForm(w http.ResponseWriter, r *http.Request) {
 	now := time.Now()
 
 	config := TempateConfig{
-		EncURL: adyen.ClientURL(),
+		EncURL: instance.ClientURL(),
 		Time:   now.Format(time.RFC3339),
 	}
 
@@ -69,12 +69,14 @@ func performPayment(w http.ResponseWriter, r *http.Request) {
 		os.Getenv("ADYEN_ACCOUNT"),
 	)
 
+	instance.SetCurrency("EUR")
+
 	r.ParseForm()
 
 	rand.Seed(time.Now().UTC().UnixNano())
 
 	req := &adyen.Authorise{
-		Amount:          &adyen.Amount{Value: 1000, Currency: "EUR"},
+		Amount:          &adyen.Amount{Value: 1000, Currency: instance.Currency},
 		MerchantAccount: os.Getenv("ADYEN_ACCOUNT"),
 		AdditionalData:  &adyen.AdditionalData{Content: r.Form.Get("adyen-encrypted-data")},
 		Reference:       "DE-100" + randomString(6),
@@ -97,6 +99,8 @@ func performCapture(w http.ResponseWriter, r *http.Request) {
 		os.Getenv("ADYEN_ACCOUNT"),
 	)
 
+	instance.SetCurrency("EUR")
+
 	r.ParseForm()
 
 	amount, err := strconv.ParseFloat(r.Form.Get("amount"), 32)
@@ -107,7 +111,7 @@ func performCapture(w http.ResponseWriter, r *http.Request) {
 	}
 
 	req := &adyen.Capture{
-		ModificationAmount: &adyen.Amount{Value: float32(amount), Currency: "EUR"},
+		ModificationAmount: &adyen.Amount{Value: float32(amount), Currency: instance.Currency},
 		MerchantAccount:    os.Getenv("ADYEN_ACCOUNT"),
 		Reference:          r.Form.Get("reference"),
 		OriginalReference:  r.Form.Get("original-reference"),

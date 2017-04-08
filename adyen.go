@@ -6,6 +6,9 @@ import (
 	"net/http"
 )
 
+// DefaultCurrency default currency for transactions
+const DefaultCurrency = "EUR"
+
 // New - creates Adyen instance
 func New(username, password, clientID, merchantAccount string) *Adyen {
 	return &Adyen{
@@ -13,6 +16,7 @@ func New(username, password, clientID, merchantAccount string) *Adyen {
 		Password:        password,
 		ClientID:        clientID,
 		MerchantAccount: merchantAccount,
+		Currency:        DefaultCurrency,
 	}
 }
 
@@ -22,6 +26,7 @@ type Adyen struct {
 	Password        string
 	ClientID        string
 	MerchantAccount string
+	Currency        string
 }
 
 // Version of a current Adyen API
@@ -39,6 +44,11 @@ func (a *Adyen) ClientURL() string {
 // AdyenURL returns Adyen backend URL
 func (a *Adyen) AdyenURL(requestType string) string {
 	return AdyenTestURL + "/" + APIVersion + "/" + requestType
+}
+
+// SetCurrency set default currency for transactions
+func (a *Adyen) SetCurrency(currency string) {
+	a.Currency = currency
 }
 
 // execute request on Adyen side, transforms "requestEntity" into JSON representation
