@@ -1,8 +1,19 @@
 # [WIP] Adyen API for Go
 
+[![Build Status](https://travis-ci.org/zhutik/adyen-api-go.png)](https://travis-ci.org/zhutik/adyen-api-go)
+[![GoDoc](http://godoc.org/github.com/zhutik/adyen-api-go?status.png)](http://godoc.org/github.com/zhutik/adyen-api-go)
+
+## Install
+
+```
+go get github.com/zhutik/adyen-api-go
+```
+
 ## Usage
 
 ```
+import "github.com/zhutik/adyen-api-go"
+
 // Configure Adyen API
 instance := adyen.New(
   os.Getenv("ADYEN_USERNAME"),
