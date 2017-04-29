@@ -9,6 +9,13 @@
 go get github.com/zhutik/adyen-api-go
 ```
 
+## Playgroup and examples
+
+Please check separate repository with Adyen API playgroup, where you can test API
+and get some usage example for Adyen API library
+
+https://github.com/zhutik/adyen-api-go-example
+
 ## Usage
 
 ```
@@ -48,8 +55,6 @@ Supported API Calls
 
 ### Expose your settings for Adyen API configuration.
 
-```server.go``` script will use those variables to communicate with API
-
 ```
 $ export ADYEN_CLIENT_TOKEN="YOUR_ADYEN_CLIENT_TOKEN"
 $ export ADYEN_USERNAME="YOUR_ADYEN_API_USERNAME"
@@ -63,15 +68,15 @@ Settings explanation:
 * ADYEN_PASSWORD - Adyen API password for username
 * ADYEN_ACCOUNT - Selected Merchant Account
 
-### Run example application
-```
-$ cd example
-$ go run server.go
-```
+### Setup playgroup
+
+Please check separate repository with Adyen API playgroup, where you can test API
+and get some usage example for Adyen API library
+
+https://github.com/zhutik/adyen-api-go-example
 
 ### Perform payments
 
-Open http://localhost:8080 in your browser
-Put credit card information.
+Open http://localhost:8080 in your browser and check implemented actions.
 
 Test credit cards could be found https://docs.adyen.com/support/integration#testcardnumbers
