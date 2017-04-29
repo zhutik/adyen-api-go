@@ -79,7 +79,7 @@ func performPayment(w http.ResponseWriter, r *http.Request) {
 		Amount:          &adyen.Amount{Value: 1000, Currency: instance.Currency},
 		MerchantAccount: os.Getenv("ADYEN_ACCOUNT"),
 		AdditionalData:  &adyen.AdditionalData{Content: r.Form.Get("adyen-encrypted-data")},
-		Reference:       "DE-100" + randomString(6),
+		Reference:       "DE-100" + randomString(6), // order number or some bussiness reference
 	}
 
 	g, err := instance.Payment().Authorise(req)
@@ -112,12 +112,39 @@ func performCapture(w http.ResponseWriter, r *http.Request) {
 
 	req := &adyen.Capture{
 		ModificationAmount: &adyen.Amount{Value: float32(amount), Currency: instance.Currency},
-		MerchantAccount:    os.Getenv("ADYEN_ACCOUNT"),
-		Reference:          r.Form.Get("reference"),
-		OriginalReference:  r.Form.Get("original-reference"),
+		MerchantAccount:    os.Getenv("ADYEN_ACCOUNT"),       // Merchant Account setting
+		Reference:          r.Form.Get("reference"),          // order number or some bussiness reference
+		OriginalReference:  r.Form.Get("original-reference"), // PSP reference that came as authosization results
 	}
 
 	g, err := instance.Modification().Capture(req)
+
+	if err == nil {
+		fmt.Fprintf(w, "<h1>Success!</h1><code><pre>"+g.PspReference+" "+g.Response+"</pre></code>")
+	} else {
+		fmt.Fprintf(w, "<h1>Something went wrong: "+err.Error()+"</h1>")
+	}
+}
+
+func performCancel(w http.ResponseWriter, r *http.Request) {
+	instance := adyen.New(
+		os.Getenv("ADYEN_USERNAME"),
+		os.Getenv("ADYEN_PASSWORD"),
+		os.Getenv("ADYEN_CLIENT_TOKEN"),
+		os.Getenv("ADYEN_ACCOUNT"),
+	)
+
+	instance.SetCurrency("EUR")
+
+	r.ParseForm()
+
+	req := &adyen.Cancel{
+		Reference:         r.Form.Get("reference"),          // order number or some bussiness reference
+		MerchantAccount:   os.Getenv("ADYEN_ACCOUNT"),       // Merchant Account setting
+		OriginalReference: r.Form.Get("original-reference"), // PSP reference that came as authosization result
+	}
+
+	g, err := instance.Modification().Cancel(req)
 
 	if err == nil {
 		fmt.Fprintf(w, "<h1>Success!</h1><code><pre>"+g.PspReference+" "+g.Response+"</pre></code>")
@@ -130,5 +157,6 @@ func main() {
 	http.HandleFunc("/", showForm)
 	http.HandleFunc("/perform_payment", performPayment)
 	http.HandleFunc("/perform_capture", performCapture)
+	http.HandleFunc("/perform_cancel", performCancel)
 	http.ListenAndServe(":8080", nil)
 }
