@@ -6,9 +6,10 @@ import "encoding/json"
   Adyen Modification actions
 */
 const (
-	CaptureType    = "capture"
-	CancelType     = "cancel"
-	CancelOrRefund = "cancelOrRefund"
+	CaptureType        = "capture"
+	CancelType         = "cancel"
+	CancelOrRefundType = "cancelOrRefund"
+	RefundType         = "refund"
 )
 
 // ModificationGateway - Adyen modification transaction logic, capture, cancel, refunds and e.t.c
@@ -47,13 +48,27 @@ func (a *ModificationGateway) Cancel(req *Cancel) (*CancelResponse, error) {
 // CancelOrRefund - Perform cancellation for not captured transaction
 // otherwise perform refund action
 func (a *ModificationGateway) CancelOrRefund(req *Cancel) (*CancelOrRefundResponse, error) {
-	resp, err := a.execute(CancelOrRefund, req)
+	resp, err := a.execute(CancelOrRefundType, req)
 
 	if err != nil {
 		return nil, err
 	}
 
 	var val CancelOrRefundResponse
+	json.NewDecoder(resp.Body).Decode(&val)
+
+	return &val, nil
+}
+
+// Refund - perform refund for already captured request
+func (a *ModificationGateway) Refund(req *Refund) (*RefundResponse, error) {
+	resp, err := a.execute(RefundType, req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var val RefundResponse
 	json.NewDecoder(resp.Body).Decode(&val)
 
 	return &val, nil
