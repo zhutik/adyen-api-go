@@ -1,11 +1,19 @@
 package adyen
 
-// Authorise structure for Authorisation request
-type Authorise struct {
+// AuthoriseEncrypted structure for Authorisation request (with encrypted card information)
+type AuthoriseEncrypted struct {
 	AdditionalData  *AdditionalData `json:"additionalData"`
 	Amount          *Amount         `json:"amount"`
 	Reference       string          `json:"reference"`
 	MerchantAccount string          `json:"merchantAccount"`
+}
+
+// Authorise structure for Authorisation request (card is not encrypted)
+type Authorise struct {
+	Card            *Card   `json:"card"`
+	Amount          *Amount `json:"amount"`
+	Reference       string  `json:"reference"`
+	MerchantAccount string  `json:"merchantAccount"`
 }
 
 // AuthoriseResponse is a response structure for Adyen
