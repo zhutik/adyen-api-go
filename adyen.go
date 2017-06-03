@@ -3,6 +3,7 @@ package adyen
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -52,28 +53,48 @@ func (a *Adyen) SetCurrency(currency string) {
 }
 
 // execute request on Adyen side, transforms "requestEntity" into JSON representation
-func (a *Adyen) execute(method string, requestEntity interface{}) (*http.Response, error) {
+func (a *Adyen) execute(method string, requestEntity interface{}) (*Response, error) {
 	body, err := json.Marshal(requestEntity)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err2 := http.NewRequest("POST", a.AdyenURL(method), bytes.NewBuffer(body))
-	if err2 != nil {
-		return nil, err2
+	req, err := http.NewRequest("POST", a.AdyenURL(method), bytes.NewBuffer(body))
+	if err != nil {
+		return nil, err
 	}
 
 	req.Header.Set("Content-Type", "application/json")
 	req.SetBasicAuth(a.Username, a.Password)
 
 	client := &http.Client{}
-	resp, err3 := client.Do(req)
+	resp, err := client.Do(req)
 
-	if err3 != nil {
-		return nil, err3
+	if err != nil {
+		return nil, err
 	}
 
-	return resp, nil
+	defer resp.Body.Close()
+
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(resp.Body)
+	newStr := buf.String()
+
+	fmt.Println(newStr)
+
+	providerResponse := &Response{
+		Response: resp,
+	}
+
+	providerResponse.Body = buf.Bytes()
+
+	err = providerResponse.checkError()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return providerResponse, nil
 }
 
 // Payment - returns PaymentGateway

@@ -1,7 +1,5 @@
 package adyen
 
-import "encoding/json"
-
 /*
   Adyen Modification actions
 */
@@ -25,10 +23,7 @@ func (a *ModificationGateway) Capture(req *Capture) (*CaptureResponse, error) {
 		return nil, err
 	}
 
-	var val CaptureResponse
-	json.NewDecoder(resp.Body).Decode(&val)
-
-	return &val, nil
+	return resp.capture()
 }
 
 // Cancel - Perform cancellation of the authorised transaction
@@ -39,10 +34,7 @@ func (a *ModificationGateway) Cancel(req *Cancel) (*CancelResponse, error) {
 		return nil, err
 	}
 
-	var val CancelResponse
-	json.NewDecoder(resp.Body).Decode(&val)
-
-	return &val, nil
+	return resp.cancel()
 }
 
 // CancelOrRefund - Perform cancellation for not captured transaction
@@ -54,10 +46,7 @@ func (a *ModificationGateway) CancelOrRefund(req *Cancel) (*CancelOrRefundRespon
 		return nil, err
 	}
 
-	var val CancelOrRefundResponse
-	json.NewDecoder(resp.Body).Decode(&val)
-
-	return &val, nil
+	return resp.cancelOrRefund()
 }
 
 // Refund - perform refund for already captured request
@@ -68,8 +57,5 @@ func (a *ModificationGateway) Refund(req *Refund) (*RefundResponse, error) {
 		return nil, err
 	}
 
-	var val RefundResponse
-	json.NewDecoder(resp.Body).Decode(&val)
-
-	return &val, nil
+	return resp.refund()
 }

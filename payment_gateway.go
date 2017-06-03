@@ -1,7 +1,5 @@
 package adyen
 
-import "encoding/json"
-
 // PaymentGateway - Adyen payment transaction logic
 type PaymentGateway struct {
 	*Adyen
@@ -18,10 +16,7 @@ func (a *PaymentGateway) AuthoriseEncrypted(req *AuthoriseEncrypted) (*Authorise
 		return nil, err
 	}
 
-	var val AuthoriseResponse
-	json.NewDecoder(resp.Body).Decode(&val)
-
-	return &val, nil
+	return resp.authorize()
 }
 
 // Authorise - Perform authorise payment in Adyen
@@ -32,8 +27,5 @@ func (a *PaymentGateway) Authorise(req *Authorise) (*AuthoriseResponse, error) {
 		return nil, err
 	}
 
-	var val AuthoriseResponse
-	json.NewDecoder(resp.Body).Decode(&val)
-
-	return &val, nil
+	return resp.authorize()
 }
