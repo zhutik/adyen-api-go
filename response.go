@@ -8,7 +8,7 @@ import (
 
 type ApiError struct {
 	ErrorType string `json:"errorType"`
-	ErrorCode int32  `json:"errorCode"`
+	ErrorCode string `json:"errorCode"`
 	Message   string `json:"message"`
 	Status    int32  `json:"status"`
 }
@@ -18,25 +18,21 @@ type Response struct {
 	Body []byte
 }
 
-func (r *Response) checkError() error {
+// handleHttpError - handle non 200 response from Adyen and create Error response instance
+func (r *Response) handleHttpError() error {
 	var a ApiError
 
 	json.Unmarshal(r.Body, &a)
 	if a.Status > 299 {
-		return httpError(a.Status)
+		return a
 	}
 
 	return nil
 }
 
-type httpError int
-
-func (e httpError) StatusCode() int {
-	return int(e)
-}
-
-func (e httpError) Error() string {
-	return fmt.Sprintf("%s (%d)", http.StatusText(e.StatusCode()), e.StatusCode())
+// Error - error interface for ApiError
+func (e ApiError) Error() string {
+	return fmt.Sprintf("[%s][%d]: (%s) %s", e.ErrorType, e.Status, e.ErrorCode, e.Message)
 }
 
 // authorize - generate Adyen Authorize API Response

@@ -3,7 +3,6 @@ package adyen
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
@@ -78,17 +77,15 @@ func (a *Adyen) execute(method string, requestEntity interface{}) (*Response, er
 
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(resp.Body)
-	newStr := buf.String()
 
-	fmt.Println(newStr)
+	//fmt.Println(buf.String())
 
 	providerResponse := &Response{
 		Response: resp,
+		Body:     buf.Bytes(),
 	}
 
-	providerResponse.Body = buf.Bytes()
-
-	err = providerResponse.checkError()
+	err = providerResponse.handleHttpError()
 
 	if err != nil {
 		return nil, err
