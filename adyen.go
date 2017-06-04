@@ -85,7 +85,7 @@ func (a *Adyen) execute(method string, requestEntity interface{}) (*Response, er
 		Body:     buf.Bytes(),
 	}
 
-	err = providerResponse.handleHttpError()
+	err = providerResponse.handleHTTPError()
 
 	if err != nil {
 		return nil, err
