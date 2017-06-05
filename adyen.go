@@ -3,6 +3,7 @@ package adyen
 import (
 	"bytes"
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -27,6 +28,7 @@ type Adyen struct {
 	ClientID        string
 	MerchantAccount string
 	Currency        string
+	Logger          *log.Logger
 }
 
 // Version of a current Adyen API
@@ -46,6 +48,11 @@ func (a *Adyen) AdyenURL(requestType string) string {
 	return AdyenTestURL + "/" + APIVersion + "/" + requestType
 }
 
+// AttachLogger attach logger to API instance
+func (a *Adyen) AttachLogger(Logger *log.Logger) {
+	a.Logger = Logger
+}
+
 // SetCurrency set default currency for transactions
 func (a *Adyen) SetCurrency(currency string) {
 	a.Currency = currency
@@ -58,9 +65,14 @@ func (a *Adyen) execute(method string, requestEntity interface{}) (*Response, er
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", a.AdyenURL(method), bytes.NewBuffer(body))
+	url := a.AdyenURL(method)
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(body))
 	if err != nil {
 		return nil, err
+	}
+
+	if a.Logger != nil {
+		a.Logger.Printf("[Request]: %s %s\n%s", method, url, body)
 	}
 
 	req.Header.Set("Content-Type", "application/json")
@@ -78,7 +90,9 @@ func (a *Adyen) execute(method string, requestEntity interface{}) (*Response, er
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(resp.Body)
 
-	//fmt.Println(buf.String())
+	if a.Logger != nil {
+		a.Logger.Printf("[Response]: %s %s\n%s", method, url, buf.String())
+	}
 
 	providerResponse := &Response{
 		Response: resp,
