@@ -23,6 +23,7 @@ import "github.com/zhutik/adyen-api-go"
 
 // Configure Adyen API
 instance := adyen.New(
+  adyen.Testing,
   os.Getenv("ADYEN_USERNAME"),
   os.Getenv("ADYEN_PASSWORD"),
   os.Getenv("ADYEN_CLIENT_TOKEN"),
@@ -48,8 +49,12 @@ Supported API Calls
 * Authorise (only encrypted)
 * Capture
 * Cancel
-* [NEXT] Refund
+* Refund
 * CancelOrRefund
+
+Next:
+* Notifications
+* Add tests
 
 ## To run example
 
