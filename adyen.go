@@ -32,12 +32,12 @@ const (
 
 // ClientURL - returns URl, that need to loaded in UI, to encrypt Credit Card information
 func (a *Adyen) ClientURL() string {
-	return a.Credentials.env.ClientUrl(a.Credentials.clientID)
+	return a.Credentials.env.ClientURL(a.Credentials.clientID)
 }
 
 // AdyenURL returns Adyen backend URL
 func (a *Adyen) AdyenURL(requestType string) string {
-	return a.Credentials.env.BaseUrl(APIVersion) + "/" + requestType
+	return a.Credentials.env.BaseURL(APIVersion) + "/" + requestType
 }
 
 // AttachLogger attach logger to API instance
