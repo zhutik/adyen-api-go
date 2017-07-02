@@ -9,7 +9,6 @@ package adyen
 //     Password - API password for authentication
 //     merchantID - Merchant Account settings for payment and modification requests
 //     clientID - Used to load external JS files from Adyen, to encrypt client requests
-//
 type apiCredentials struct {
 	env         Environment
 	Username    string
@@ -26,7 +25,6 @@ type apiCredentials struct {
 //     hmac - is generated when new Skin is created in Adyen Customer Area
 //     skinCode - skin code from Adyen CA
 //     shopperLocale - merchant local settings (in ISO format)
-//
 type hppCredentials struct {
 	hmac          string
 	skinCode      string
