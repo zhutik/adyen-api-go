@@ -86,3 +86,13 @@ func (r *Response) refund() (*RefundResponse, error) {
 
 	return &a, nil
 }
+
+// directoryLookup - generate Adyen Directory Lookup response
+func (r *Response) directoryLookup() (*DirectoryLookupResponse, error) {
+	var a DirectoryLookupResponse
+	if err := json.Unmarshal(r.Body, &a); err != nil {
+		return nil, err
+	}
+
+	return &a, nil
+}
