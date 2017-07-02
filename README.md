@@ -73,6 +73,59 @@ Settings explanation:
 * ADYEN_PASSWORD - Adyen API password for username
 * ADYEN_ACCOUNT - Selected Merchant Account
 
+## Hosted Payment Pages
+
+Update your settings to include
+
+```
+$ export ADYEN_HMAC="YOUR_HMAC_KEY"
+$ export ADYEN_SKINCODE="YOUR_SKINCODE_ID"
+$ export ADYEN_SHOPPER_LOCALE="YOUR_SHOPPER_LOCALE"
+```
+
+Use HPP constructor to initialize new Adyen API instance
+
+```
+import "github.com/zhutik/adyen-api-go"
+
+// Configure Adyen API
+instance := adyen.New(
+  adyen.Testing,
+  os.Getenv("ADYEN_USERNAME"),
+  os.Getenv("ADYEN_PASSWORD"),
+  os.Getenv("ADYEN_CLIENT_TOKEN"),
+  os.Getenv("ADYEN_ACCOUNT"),
+  os.Getenv("ADYEN_HMAC"),
+  os.Getenv("ADYEN_SKINCODE"),
+  os.Getenv("ADYEN_SHOPPER_LOCALE"),
+)
+
+```
+
+Perform requests as usual:
+
+```
+timeIn := time.Now().Local().Add(time.Minute * time.Duration(60))
+
+req := &adyen.DirectoryLookupRequest{
+    CurrencyCode:      "EUR",
+    MerchantAccount:   os.Getenv("ADYEN_ACCOUNT"),
+    PaymentAmount:     1000,
+    SkinCode:          os.Getenv("ADYEN_SKINCODE"),
+    MerchantReference: "your-order-number",
+    SessionsValidity:  timeIn.Format(time.RFC3339),
+}
+
+g, err := instance.Payment().DirectoryLookup(req)
+
+```
+
+Supported Calls:
+* Directory Lookup
+
+Next:
+* Locale payment methods redirect
+
 ### Setup playgroup
 
 Please check separate repository with Adyen API playgroup, where you can test API
