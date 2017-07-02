@@ -53,7 +53,7 @@ func (a *Adyen) AdyenURL(requestType string) string {
 
 // CreateHPPUrl returns Adyen HPP url
 func (a *Adyen) CreateHPPUrl(requestType string) string {
-	return a.Credentials.env.HppUrl(requestType)
+	return a.Credentials.env.HppURL(requestType)
 }
 
 // AttachLogger attach logger to API instance
