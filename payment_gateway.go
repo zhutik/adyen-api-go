@@ -37,7 +37,11 @@ func (a *PaymentGateway) Authorise(req *Authorise) (*AuthoriseResponse, error) {
 func (a *PaymentGateway) DirectoryLookup(req *DirectoryLookupRequest) (*DirectoryLookupResponse, error) {
 
 	// Calculate HMAC signature to request
-	req.CalculateSignature(a.Adyen)
+	err := req.CalculateSignature(a.Adyen)
+	if err != nil {
+		return nil, err
+	}
+
 	resp, err := a.executeHpp(DirectoryLookupURL, req)
 
 	if err != nil {

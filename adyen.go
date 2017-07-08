@@ -19,7 +19,7 @@ const (
 // New - creates Adyen instance
 func New(env Environment, username, password, clientID, merchantAccount string) *Adyen {
 	return &Adyen{
-		Credentials: newCredentials(env, username, password, merchantAccount, clientID),
+		Credentials: NewCredentials(env, username, password, merchantAccount, clientID),
 		Currency:    DefaultCurrency,
 	}
 }
@@ -29,14 +29,14 @@ func New(env Environment, username, password, clientID, merchantAccount string) 
 // Use this constructor when you need to use Adyen HPP API
 func NewWithHPP(env Environment, username, password, clientID, merchantAccount, hmac, skinCode, shopperLocale string) *Adyen {
 	return &Adyen{
-		Credentials: newCredentialsWithHPPSettings(env, username, password, merchantAccount, clientID, hmac, skinCode, shopperLocale),
+		Credentials: NewCredentialsWithHPPSettings(env, username, password, merchantAccount, clientID, hmac, skinCode, shopperLocale),
 		Currency:    DefaultCurrency,
 	}
 }
 
 // Adyen - base structure with configuration options
 type Adyen struct {
-	Credentials apiCredentials
+	Credentials APICredentials
 	Currency    string
 	Logger      *log.Logger
 }

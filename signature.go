@@ -33,7 +33,7 @@ func (r *DirectoryLookupRequest) CalculateSignature(adyen *Adyen) error {
 
 	// @todo write sorting for this map
 	keys := "countryCode"
-	values := ""
+	values := ReplaceSpecialChars(r.CountryCode)
 
 	keys += ":" + "currencyCode"
 	values += ":" + ReplaceSpecialChars(r.CurrencyCode)

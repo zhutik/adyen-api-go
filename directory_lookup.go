@@ -3,6 +3,7 @@ package adyen
 // DirectoryLookupRequest - get list of available payment methods based on skin, country and order details
 //
 // Description - https://docs.adyen.com/developers/api-reference/hosted-payment-pages-api#directoryrequest
+// CountryCode could be used to test local payment methods, if client's IP is from different country
 type DirectoryLookupRequest struct {
 	CurrencyCode      string `url:"currencyCode"`
 	MerchantAccount   string `url:"merchantAccount"`
