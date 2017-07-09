@@ -1,4 +1,4 @@
-// Adyen API Library for GO
+// Package adyen is Adyen API Library for GO
 package adyen
 
 import (
