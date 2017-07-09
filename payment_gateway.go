@@ -5,15 +5,15 @@ type PaymentGateway struct {
 	*Adyen
 }
 
-// AuthoriseType - authorise type request, @TODO: move to enums
-const AuthoriseType = "authorise"
+// authoriseType - authorise type request, @TODO: move to enums
+const authoriseType = "authorise"
 
-// DirectoryLookupURL - version 2 url for Directory Lookup request
-const DirectoryLookupURL = "directory/v2"
+// directoryLookupURL - version 2 url for Directory Lookup request
+const directoryLookupURL = "directory/v2"
 
 // AuthoriseEncrypted - Perform authorise payment in Adyen
 func (a *PaymentGateway) AuthoriseEncrypted(req *AuthoriseEncrypted) (*AuthoriseResponse, error) {
-	resp, err := a.execute(AuthoriseType, req)
+	resp, err := a.execute(authoriseType, req)
 
 	if err != nil {
 		return nil, err
@@ -24,7 +24,7 @@ func (a *PaymentGateway) AuthoriseEncrypted(req *AuthoriseEncrypted) (*Authorise
 
 // Authorise - Perform authorise payment in Adyen
 func (a *PaymentGateway) Authorise(req *Authorise) (*AuthoriseResponse, error) {
-	resp, err := a.execute(AuthoriseType, req)
+	resp, err := a.execute(authoriseType, req)
 
 	if err != nil {
 		return nil, err
@@ -42,7 +42,7 @@ func (a *PaymentGateway) DirectoryLookup(req *DirectoryLookupRequest) (*Director
 		return nil, err
 	}
 
-	resp, err := a.executeHpp(DirectoryLookupURL, req)
+	resp, err := a.executeHpp(directoryLookupURL, req)
 
 	if err != nil {
 		return nil, err

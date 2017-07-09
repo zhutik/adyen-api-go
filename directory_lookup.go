@@ -29,23 +29,23 @@ type DirectoryLookupResponse struct {
 type PaymentMethod struct {
 	BrandCode string   `json:"brandCode"`
 	Name      string   `json:"name"`
-	Logos     Logos    `json:"logos"`
-	Issuers   []Issuer `json:"issuers"`
+	Logos     logos    `json:"logos"`
+	Issuers   []issuer `json:"issuers"`
 }
 
-// Logos - payment method logos
+// logos - payment method logos
 //
 // Part of DirectoryLookupResponse
-type Logos struct {
+type logos struct {
 	Normal string `json:"normal"`
 	Small  string `json:"small"`
 	Tiny   string `json:"tiny"`
 }
 
-// Issuer - bank issuer type
+// issuer - bank issuer type
 //
 // Part of DirectoryLookupResponse
-type Issuer struct {
+type issuer struct {
 	IssuerID string `json:"issuerId"`
 	Name     string `json:"name"`
 }

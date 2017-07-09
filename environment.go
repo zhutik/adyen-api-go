@@ -1,29 +1,29 @@
 package adyen
 
-// Environment structure to support testing and production
-type Environment struct {
+// environment structure to support testing and production
+type environment struct {
 	apiURL    string
 	clientURL string
 	hppURL    string
 }
 
 // NewEnvironment create environment based on api url
-func NewEnvironment(apiURL, clientURL, hppURL string) Environment {
-	return Environment{apiURL: apiURL, clientURL: clientURL, hppURL: hppURL}
+func NewEnvironment(apiURL, clientURL, hppURL string) environment {
+	return environment{apiURL: apiURL, clientURL: clientURL, hppURL: hppURL}
 }
 
 // BaseURL returns api base url
-func (e Environment) BaseURL(version string) string {
+func (e environment) BaseURL(version string) string {
 	return e.apiURL + "/" + version
 }
 
 // ClientURL returns Adyen Client URL to load external scripts
-func (e Environment) ClientURL(clientID string) string {
+func (e environment) ClientURL(clientID string) string {
 	return e.clientURL + clientID + ".shtml"
 }
 
 // HppURL returns Adyen HPP url to execute Hosted Payment Paged API requests
-func (e Environment) HppURL(request string) string {
+func (e environment) HppURL(request string) string {
 	return e.hppURL + request + ".shtml"
 }
 

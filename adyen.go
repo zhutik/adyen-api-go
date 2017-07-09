@@ -17,7 +17,7 @@ const (
 )
 
 // New - creates Adyen instance
-func New(env Environment, username, password, clientID, merchantAccount string) *Adyen {
+func New(env environment, username, password, clientID, merchantAccount string) *Adyen {
 	return &Adyen{
 		Credentials: NewCredentials(env, username, password, merchantAccount, clientID),
 		Currency:    DefaultCurrency,
@@ -27,7 +27,7 @@ func New(env Environment, username, password, clientID, merchantAccount string) 
 // NewWithHPP - create new Adyen instance with HPP credentials
 //
 // Use this constructor when you need to use Adyen HPP API
-func NewWithHPP(env Environment, username, password, clientID, merchantAccount, hmac, skinCode, shopperLocale string) *Adyen {
+func NewWithHPP(env environment, username, password, clientID, merchantAccount, hmac, skinCode, shopperLocale string) *Adyen {
 	return &Adyen{
 		Credentials: NewCredentialsWithHPPSettings(env, username, password, merchantAccount, clientID, hmac, skinCode, shopperLocale),
 		Currency:    DefaultCurrency,
@@ -43,17 +43,17 @@ type Adyen struct {
 
 // ClientURL - returns URl, that need to loaded in UI, to encrypt Credit Card information
 func (a *Adyen) ClientURL() string {
-	return a.Credentials.env.ClientURL(a.Credentials.clientID)
+	return a.Credentials.Env.ClientURL(a.Credentials.ClientID)
 }
 
 // AdyenURL returns Adyen backend URL
 func (a *Adyen) AdyenURL(requestType string) string {
-	return a.Credentials.env.BaseURL(APIVersion) + "/" + requestType
+	return a.Credentials.Env.BaseURL(APIVersion) + "/" + requestType
 }
 
 // CreateHPPUrl returns Adyen HPP url
 func (a *Adyen) CreateHPPUrl(requestType string) string {
-	return a.Credentials.env.HppURL(requestType)
+	return a.Credentials.Env.HppURL(requestType)
 }
 
 // AttachLogger attach logger to API instance

@@ -4,10 +4,10 @@ package adyen
   Adyen Modification actions
 */
 const (
-	CaptureType        = "capture"
-	CancelType         = "cancel"
-	CancelOrRefundType = "cancelOrRefund"
-	RefundType         = "refund"
+	captureType        = "capture"
+	cancelType         = "cancel"
+	cancelOrRefundType = "cancelOrRefund"
+	refundType         = "refund"
 )
 
 // ModificationGateway - Adyen modification transaction logic, capture, cancel, refunds and e.t.c
@@ -17,7 +17,7 @@ type ModificationGateway struct {
 
 // Capture - Perform capture payment in Adyen
 func (a *ModificationGateway) Capture(req *Capture) (*CaptureResponse, error) {
-	resp, err := a.execute(CaptureType, req)
+	resp, err := a.execute(captureType, req)
 
 	if err != nil {
 		return nil, err
@@ -28,7 +28,7 @@ func (a *ModificationGateway) Capture(req *Capture) (*CaptureResponse, error) {
 
 // Cancel - Perform cancellation of the authorised transaction
 func (a *ModificationGateway) Cancel(req *Cancel) (*CancelResponse, error) {
-	resp, err := a.execute(CancelType, req)
+	resp, err := a.execute(cancelType, req)
 
 	if err != nil {
 		return nil, err
@@ -40,7 +40,7 @@ func (a *ModificationGateway) Cancel(req *Cancel) (*CancelResponse, error) {
 // CancelOrRefund - Perform cancellation for not captured transaction
 // otherwise perform refund action
 func (a *ModificationGateway) CancelOrRefund(req *Cancel) (*CancelOrRefundResponse, error) {
-	resp, err := a.execute(CancelOrRefundType, req)
+	resp, err := a.execute(cancelOrRefundType, req)
 
 	if err != nil {
 		return nil, err
@@ -51,7 +51,7 @@ func (a *ModificationGateway) CancelOrRefund(req *Cancel) (*CancelOrRefundRespon
 
 // Refund - perform refund for already captured request
 func (a *ModificationGateway) Refund(req *Refund) (*RefundResponse, error) {
-	resp, err := a.execute(RefundType, req)
+	resp, err := a.execute(refundType, req)
 
 	if err != nil {
 		return nil, err

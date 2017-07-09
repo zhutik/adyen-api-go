@@ -4,60 +4,60 @@ package adyen
 //
 // Description:
 //
-//     - env - Environment for next API calls
+//     - Env - Environment for next API calls
 //     - Username - API username for authentication
 //     - Password - API password for authentication
-//     - merchantID - Merchant Account settings for payment and modification requests
-//     - clientID - Used to load external JS files from Adyen, to encrypt client requests
+//     - MerchantID - Merchant Account settings for payment and modification requests
+//     - ClientID - Used to load external JS files from Adyen, to encrypt client requests
 //
 // You can create new API user there: https://ca-test.adyen.com/ca/ca/config/users.shtml
 type APICredentials struct {
-	env         Environment
+	Env         environment
 	Username    string
 	Password    string
-	merchantID  string
-	clientID    string
-	hppSettings HPPCredentials
+	MerchantID  string
+	ClientID    string
+	HppSettings HPPCredentials
 }
 
 // HPPCredentials used to communicate with Adyen HPP API
 //
 // Description:
 //
-//     - hmac - is generated when new Skin is created in Adyen Customer Area
-//     - skinCode - skin code from Adyen CA
-//     - shopperLocale - merchant local settings (in ISO format)
+//     - Hmac - is generated when new Skin is created in Adyen Customer Area
+//     - SkinCode - skin code from Adyen CA
+//     - ShopperLocale - merchant local settings (in ISO format)
 //
 // New skin can be created there https://ca-test.adyen.com/ca/ca/skin/skins.shtml
 type HPPCredentials struct {
-	hmac          string
-	skinCode      string
-	shopperLocale string
+	Hmac          string
+	SkinCode      string
+	ShopperLocale string
 }
 
 // NewCredentials create new APICredentials
-func NewCredentials(env Environment, username, password, merchantID, clientID string) APICredentials {
+func NewCredentials(env environment, username, password, merchantID, clientID string) APICredentials {
 	return APICredentials{
-		env:        env,
+		Env:        env,
 		Username:   username,
 		Password:   password,
-		merchantID: merchantID,
-		clientID:   clientID,
+		MerchantID: merchantID,
+		ClientID:   clientID,
 	}
 }
 
 // NewCredentialsWithHPPSettings create new APICredentials and specify Adyen Hosted Payment Page settings
-func NewCredentialsWithHPPSettings(env Environment, username, password, merchantID, clientID, hmac, skinCode, shopperLocale string) APICredentials {
+func NewCredentialsWithHPPSettings(env environment, username, password, merchantID, clientID, hmac, skinCode, shopperLocale string) APICredentials {
 	return APICredentials{
-		env:        env,
+		Env:        env,
 		Username:   username,
 		Password:   password,
-		merchantID: merchantID,
-		clientID:   clientID,
-		hppSettings: HPPCredentials{
-			hmac:          hmac,
-			skinCode:      skinCode,
-			shopperLocale: shopperLocale,
+		MerchantID: merchantID,
+		ClientID:   clientID,
+		HppSettings: HPPCredentials{
+			Hmac:          hmac,
+			SkinCode:      skinCode,
+			ShopperLocale: shopperLocale,
 		},
 	}
 }
