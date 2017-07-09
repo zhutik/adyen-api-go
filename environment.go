@@ -7,8 +7,8 @@ type environment struct {
 	hppURL    string
 }
 
-// NewEnvironment create environment based on api url
-func NewEnvironment(apiURL, clientURL, hppURL string) environment {
+// newEnvironment create environment based on api url
+func newEnvironment(apiURL, clientURL, hppURL string) environment {
 	return environment{apiURL: apiURL, clientURL: clientURL, hppURL: hppURL}
 }
 
@@ -28,14 +28,14 @@ func (e environment) HppURL(request string) string {
 }
 
 // Testing - instance of testing environment
-var Testing = NewEnvironment(
+var Testing = newEnvironment(
 	"https://pal-test.adyen.com/pal/servlet/Payment",
 	"https://test.adyen.com/hpp/cse/js/",
 	"https://test.adyen.com/hpp/",
 )
 
 // Production - instance of production environment
-var Production = NewEnvironment(
+var Production = newEnvironment(
 	"https://pal-live.adyen.com/pal/servlet/Payment",
 	"https://live.adyen.com/hpp/cse/js/",
 	"https://live.adyen.com/hpp/",

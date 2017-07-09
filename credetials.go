@@ -1,6 +1,6 @@
 package adyen
 
-// APICredentials basic API settings
+// apiCredentials basic API settings
 //
 // Description:
 //
@@ -11,16 +11,16 @@ package adyen
 //     - ClientID - Used to load external JS files from Adyen, to encrypt client requests
 //
 // You can create new API user there: https://ca-test.adyen.com/ca/ca/config/users.shtml
-type APICredentials struct {
+type apiCredentials struct {
 	Env         environment
 	Username    string
 	Password    string
 	MerchantID  string
 	ClientID    string
-	HppSettings HPPCredentials
+	HppSettings hppCredentials
 }
 
-// HPPCredentials used to communicate with Adyen HPP API
+// hppCredentials used to communicate with Adyen HPP API
 //
 // Description:
 //
@@ -29,15 +29,15 @@ type APICredentials struct {
 //     - ShopperLocale - merchant local settings (in ISO format)
 //
 // New skin can be created there https://ca-test.adyen.com/ca/ca/skin/skins.shtml
-type HPPCredentials struct {
+type hppCredentials struct {
 	Hmac          string
 	SkinCode      string
 	ShopperLocale string
 }
 
-// NewCredentials create new APICredentials
-func NewCredentials(env environment, username, password, merchantID, clientID string) APICredentials {
-	return APICredentials{
+// newCredentials create new APICredentials
+func newCredentials(env environment, username, password, merchantID, clientID string) apiCredentials {
+	return apiCredentials{
 		Env:        env,
 		Username:   username,
 		Password:   password,
@@ -46,15 +46,15 @@ func NewCredentials(env environment, username, password, merchantID, clientID st
 	}
 }
 
-// NewCredentialsWithHPPSettings create new APICredentials and specify Adyen Hosted Payment Page settings
-func NewCredentialsWithHPPSettings(env environment, username, password, merchantID, clientID, hmac, skinCode, shopperLocale string) APICredentials {
-	return APICredentials{
+// newCredentialsWithHPPSettings create new APICredentials and specify Adyen Hosted Payment Page settings
+func newCredentialsWithHPPSettings(env environment, username, password, merchantID, clientID, hmac, skinCode, shopperLocale string) apiCredentials {
+	return apiCredentials{
 		Env:        env,
 		Username:   username,
 		Password:   password,
 		MerchantID: merchantID,
 		ClientID:   clientID,
-		HppSettings: HPPCredentials{
+		HppSettings: hppCredentials{
 			Hmac:          hmac,
 			SkinCode:      skinCode,
 			ShopperLocale: shopperLocale,

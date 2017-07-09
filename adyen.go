@@ -1,3 +1,4 @@
+// Adyen API Library for GO
 package adyen
 
 import (
@@ -17,26 +18,49 @@ const (
 )
 
 // New - creates Adyen instance
+//
+// Description:
+//
+//     - env - Environment for next API calls
+//     - username - API username for authentication
+//     - password - API password for authentication
+//     - clientID - Used to load external JS files from Adyen, to encrypt client requests
+//     - merchantAccount - Merchant Account settings for payment and modification requests
+//
+// You can create new API user there: https://ca-test.adyen.com/ca/ca/config/users.shtml
 func New(env environment, username, password, clientID, merchantAccount string) *Adyen {
 	return &Adyen{
-		Credentials: NewCredentials(env, username, password, merchantAccount, clientID),
+		Credentials: newCredentials(env, username, password, merchantAccount, clientID),
 		Currency:    DefaultCurrency,
 	}
 }
 
 // NewWithHPP - create new Adyen instance with HPP credentials
 //
-// Use this constructor when you need to use Adyen HPP API
+// Use this constructor when you need to use Adyen HPP API.
+//
+// Description:
+//
+//     - env - Environment for next API calls
+//     - username - API username for authentication
+//     - password - API password for authentication
+//     - clientID - Used to load external JS files from Adyen, to encrypt client requests
+//     - merchantAccount - Merchant Account settings for payment and modification requests
+//     - hmac - is generated when new Skin is created in Adyen Customer Area
+//     - skinCode - skin code from Adyen CA
+//     - shopperLocale - merchant local settings (in ISO format)
+//
+// New skin can be created there https://ca-test.adyen.com/ca/ca/skin/skins.shtml
 func NewWithHPP(env environment, username, password, clientID, merchantAccount, hmac, skinCode, shopperLocale string) *Adyen {
 	return &Adyen{
-		Credentials: NewCredentialsWithHPPSettings(env, username, password, merchantAccount, clientID, hmac, skinCode, shopperLocale),
+		Credentials: newCredentialsWithHPPSettings(env, username, password, merchantAccount, clientID, hmac, skinCode, shopperLocale),
 		Currency:    DefaultCurrency,
 	}
 }
 
 // Adyen - base structure with configuration options
 type Adyen struct {
-	Credentials APICredentials
+	Credentials apiCredentials
 	Currency    string
 	Logger      *log.Logger
 }
@@ -46,17 +70,23 @@ func (a *Adyen) ClientURL() string {
 	return a.Credentials.Env.ClientURL(a.Credentials.ClientID)
 }
 
-// AdyenURL returns Adyen backend URL
-func (a *Adyen) AdyenURL(requestType string) string {
+// adyenURL returns Adyen backend URL
+func (a *Adyen) adyenURL(requestType string) string {
 	return a.Credentials.Env.BaseURL(APIVersion) + "/" + requestType
 }
 
-// CreateHPPUrl returns Adyen HPP url
-func (a *Adyen) CreateHPPUrl(requestType string) string {
+// createHPPUrl returns Adyen HPP url
+func (a *Adyen) createHPPUrl(requestType string) string {
 	return a.Credentials.Env.HppURL(requestType)
 }
 
 // AttachLogger attach logger to API instance
+//
+// Example:
+//
+//  instance := adyen.New(....)
+//  Logger = log.New(os.Stdout, "Adyen Playground: ", log.Ldate|log.Ltime|log.Lshortfile)
+//  instance.AttachLogger(Logger)
 func (a *Adyen) AttachLogger(Logger *log.Logger) {
 	a.Logger = Logger
 }
@@ -73,7 +103,7 @@ func (a *Adyen) execute(method string, requestEntity interface{}) (*Response, er
 		return nil, err
 	}
 
-	url := a.AdyenURL(method)
+	url := a.adyenURL(method)
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(body))
 	if err != nil {
 		return nil, err
@@ -118,7 +148,7 @@ func (a *Adyen) execute(method string, requestEntity interface{}) (*Response, er
 
 // executeHpp - execute request without authorization to Adyen Hosted Payment API
 func (a *Adyen) executeHpp(method string, requestEntity interface{}) (*Response, error) {
-	url := a.CreateHPPUrl(method)
+	url := a.createHPPUrl(method)
 
 	v, _ := query.Values(requestEntity)
 	url = url + "?" + v.Encode()
