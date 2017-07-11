@@ -71,3 +71,60 @@ func (r *DirectoryLookupRequest) CalculateSignature(adyen *Adyen) error {
 
 	return nil
 }
+
+// CalculateSignature calculate HMAC signature for request
+//
+// Link: https://docs.adyen.com/developers/payments/accepting-payments/hmac-signature-calculation
+// @todo: refactor this method
+func (r *SkipHppRequest) CalculateSignature(adyen *Adyen) error {
+	if len(adyen.Credentials.MerchantID) == 0 ||
+		len(adyen.Credentials.HppSettings.SkinCode) == 0 ||
+		len(adyen.Credentials.HppSettings.Hmac) == 0 {
+		return errors.New("merchantID, skinCode and HMAC hash need to be specified")
+	}
+
+	keys := "brandCode"
+	values := replaceSpecialChars(r.BrandCode)
+
+	keys += ":countryCode"
+	values += ":" + replaceSpecialChars(r.CountryCode)
+
+	keys += ":" + "currencyCode"
+	values += ":" + replaceSpecialChars(r.CurrencyCode)
+
+	keys += ":" + "merchantAccount"
+	values += ":" + replaceSpecialChars(adyen.Credentials.MerchantID)
+
+	keys += ":" + "merchantReference"
+	values += ":" + replaceSpecialChars(r.MerchantReference)
+
+	keys += ":" + "paymentAmount"
+	values += ":" + replaceSpecialChars(strconv.Itoa(r.PaymentAmount))
+
+	keys += ":" + "sessionValidity"
+	values += ":" + replaceSpecialChars(r.SessionsValidity)
+
+	keys += ":" + "shipBeforeDate"
+	values += ":" + replaceSpecialChars(r.ShipBeforeDate)
+
+	keys += ":" + "shopperLocale"
+	values += ":" + replaceSpecialChars(r.ShopperLocale)
+
+	keys += ":" + "skinCode"
+	values += ":" + replaceSpecialChars(adyen.Credentials.HppSettings.SkinCode)
+
+	fullString := keys + ":" + values
+
+	src, err := hex.DecodeString(adyen.Credentials.HppSettings.Hmac)
+
+	if err != nil {
+		return err
+	}
+
+	mac := hmac.New(sha256.New, src)
+	mac.Write([]byte(fullString))
+
+	r.MerchantSig = base64.StdEncoding.EncodeToString(mac.Sum(nil))
+
+	return nil
+}
