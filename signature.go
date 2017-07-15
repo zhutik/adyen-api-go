@@ -92,6 +92,9 @@ func (r *SkipHppRequest) CalculateSignature(adyen *Adyen) error {
 	keys += ":" + "currencyCode"
 	values += ":" + replaceSpecialChars(r.CurrencyCode)
 
+	keys += ":" + "issuerId"
+	values += ":" + replaceSpecialChars(r.IssuerId)
+
 	keys += ":" + "merchantAccount"
 	values += ":" + replaceSpecialChars(adyen.Credentials.MerchantID)
 
