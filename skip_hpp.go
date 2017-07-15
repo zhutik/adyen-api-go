@@ -17,5 +17,5 @@ type SkipHppRequest struct {
 	MerchantSig       string `url:"merchantSig"`
 	CountryCode       string `url:"countryCode"`
 	BrandCode         string `url:"brandCode"`
-	IssuerId          string `url:"issuerId"`
+	IssuerID          string `url:"issuerId"`
 }
