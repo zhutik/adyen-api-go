@@ -8,7 +8,7 @@ type Payment3DGateway struct {
 // authorise3DType - authorise type request, @TODO: move to enums
 const authorise3DType = "authorise3d"
 
-// Authorise - Perform authorise payment in Adyen
+// Authorise3D - Perform authorise payment in Adyen
 func (a *PaymentGateway) Authorise3D(req *Authorise3D) (*AuthoriseResponse, error) {
 	resp, err := a.execute(authorise3DType, req)
 

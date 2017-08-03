@@ -1,6 +1,6 @@
 package adyen
 
-// Authorise structure for Authorisation request (card is not encrypted)
+// Authorise3D structure for Authorisation request (card is not encrypted)
 type Authorise3D struct {
 	MD string `json:"md"`
 	MerchantAccount string     `json:"merchantAccount"`

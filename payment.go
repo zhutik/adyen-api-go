@@ -1,8 +1,10 @@
 package adyen
 
 const (
-	RECURRING = "RECURRING"
+	// One-click functionality gives the shopper the option to store their payment details with the merchant, within the Adyen environment. In this type of transaction, the shopper needs to enter the CVC code for the transaction to get through.
 	ONECLICK  = "ONECLICK"
+	// Same than for ONECLICK except than the shopper doesn't need to enter the CVC
+	RECURRING = "RECURRING"
 )
 
 // AuthoriseEncrypted structure for Authorisation request (with encrypted card information)
@@ -37,9 +39,9 @@ type AuthoriseResponse struct {
 	ResultCode    string `json:"resultCode"`
 	AuthCode      string `json:"authCode"`
 	RefusalReason string `json:"refusalReason"`
-	IssuerUrl string `json:"issuerUrl"`
-	MD string `json:"md"`
-	PaRequest string `json:"paRequest"`
+	IssuerURL     string `json:"issuerUrl"`
+	MD            string `json:"md"`
+	PaRequest     string `json:"paRequest"`
 }
 
 // AdditionalData stores encrypted information about customer's credit card
@@ -53,6 +55,7 @@ type BrowserInfo struct {
 	UserAgent    string `json:"userAgent"`
 }
 
+// Recurring hold the behavior for a future payment : could be ONECLICK or RECURRING
 type Recurring struct {
 	Contract string `json:"contract"`
 }
