@@ -3,10 +3,10 @@ package adyen
 /* One-click functionality gives the shopper the option to store their payment details with the merchant, within the Adyen environment. In this type of transaction, the shopper needs to enter the CVC code for the transaction to get through.
 Same than for ONECLICK except than the shopper doesn't need to enter the CVC */
 const (
-	ONECLICK                                 = "ONECLICK"
-	RECURRING                                = "RECURRING"
-	SHOPPER_INTERACTION_CONTAUTH             = "ContAuth"
-	SELECT_RECURRING_DETAIL_REFERENCE_LATEST = "LATEST"
+	RecurringPaymentOneClick              = "ONECLICK"
+	RecurringPaymentRecurring             = "RECURRING"
+	ShopperInteractionContAuth            = "ContAuth"
+	SelectRecurringDetailReferenceLatests = "LATEST"
 )
 
 // AuthoriseEncrypted structure for Authorisation request (with encrypted card information)
