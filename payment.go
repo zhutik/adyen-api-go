@@ -3,32 +3,38 @@ package adyen
 /* One-click functionality gives the shopper the option to store their payment details with the merchant, within the Adyen environment. In this type of transaction, the shopper needs to enter the CVC code for the transaction to get through.
 Same than for ONECLICK except than the shopper doesn't need to enter the CVC */
 const (
-	ONECLICK  = "ONECLICK"
-	RECURRING = "RECURRING"
+	RecurringPaymentOneClick              = "ONECLICK"
+	RecurringPaymentRecurring             = "RECURRING"
+	ShopperInteractionContAuth            = "ContAuth"
+	SelectRecurringDetailReferenceLatests = "LATEST"
 )
 
 // AuthoriseEncrypted structure for Authorisation request (with encrypted card information)
 type AuthoriseEncrypted struct {
-	AdditionalData  *AdditionalData `json:"additionalData"`
+	AdditionalData  *AdditionalData `json:"additionalData,omitempty"`
 	Amount          *Amount         `json:"amount"`
 	Reference       string          `json:"reference"`
 	MerchantAccount string          `json:"merchantAccount"`
 	// Mandatory for recurring payment
-	ShopperReference string     `json:"shopperReference,omitempty"`
-	Recurring        *Recurring `json:"recurring,omitempty"`
+	ShopperReference                 string     `json:"shopperReference,omitempty"`
+	Recurring                        *Recurring `json:"recurring,omitempty"`
+	ShopperInteraction               string     `json:"shopperInteraction,omitempty"`
+	SelectedRecurringDetailReference string     `json:"selectedRecurringDetailReference,omitempty"`
 	// Required for a 3DS process
 	BrowserInfo *BrowserInfo `json:"browserInfo,omitempty"`
 }
 
 // Authorise structure for Authorisation request (card is not encrypted)
 type Authorise struct {
-	Card            *Card   `json:"card"`
+	Card            *Card   `json:"card,omitempty"`
 	Amount          *Amount `json:"amount"`
 	Reference       string  `json:"reference"`
 	MerchantAccount string  `json:"merchantAccount"`
 	// Mandatory for recurring payment
-	ShopperReference string     `json:"shopperReference,omitempty"`
-	Recurring        *Recurring `json:"recurring,omitempty"`
+	ShopperReference                 string     `json:"shopperReference,omitempty"`
+	Recurring                        *Recurring `json:"recurring,omitempty"`
+	ShopperInteraction               string     `json:"shopperInteraction,omitempty"`
+	SelectedRecurringDetailReference string     `json:"selectedRecurringDetailReference,omitempty"`
 	// Required for a 3DS process
 	BrowserInfo *BrowserInfo `json:"browserInfo,omitempty"`
 }
