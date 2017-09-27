@@ -41,18 +41,21 @@ type Authorise struct {
 
 // AuthoriseResponse is a response structure for Adyen
 type AuthoriseResponse struct {
-	PspReference  string `json:"pspReference"`
-	ResultCode    string `json:"resultCode"`
-	AuthCode      string `json:"authCode"`
-	RefusalReason string `json:"refusalReason"`
-	IssuerURL     string `json:"issuerUrl"`
-	MD            string `json:"md"`
-	PaRequest     string `json:"paRequest"`
+	PspReference   string          `json:"pspReference"`
+	ResultCode     string          `json:"resultCode"`
+	AuthCode       string          `json:"authCode"`
+	RefusalReason  string          `json:"refusalReason"`
+	IssuerURL      string          `json:"issuerUrl"`
+	MD             string          `json:"md"`
+	PaRequest      string          `json:"paRequest"`
+	AdditionalData *AdditionalData `json:"additionalData,omitempty"`
 }
 
 // AdditionalData stores encrypted information about customer's credit card
 type AdditionalData struct {
-	Content string `json:"card.encrypted.json"`
+	Content   string `json:"card.encrypted.json,omitempty"`
+	AliasType string `json:"aliasType,omitempty"`
+	Alias     string `json:"alias,omitempty"`
 }
 
 // BrowserInfo hold information on the user browser
