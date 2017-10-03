@@ -5,12 +5,16 @@ go:
 
 sudo: false
 
-before_install:
-  - go get github.com/golang/lint/golint
-
-script:
+install:
   - source .default.env
-  - go vet ./...
-  - golint -set_exit_status ./...
-  - go get github.com/kisielk/errcheck && CGO_ENABLED=0 errcheck ./...
-  - go test -parallel 15 -v ./...
+  - go get ./...
+  - go get github.com/golang/lint/golint
+  - go get github.com/kisielk/errcheck
+
+jobs:
+  include:
+    - stage: verification
+      script: make verification
+
+    - stage: test
+      script: make test
