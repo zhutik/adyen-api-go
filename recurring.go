@@ -18,6 +18,7 @@ type RecurringDetailsResult struct {
 	ShopperReference         string `json:"shopperReference"`
 }
 
+// RecurringDetail structure to hold information associated to a recurring payment
 type RecurringDetail struct {
 	Acquirer        string `json:"acquirer"`
 	AcquirerAccount string `json:"acquirerAccount"`

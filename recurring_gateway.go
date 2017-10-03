@@ -8,7 +8,7 @@ type RecurringGateway struct {
 // listRecurringDetailsType - listRecurringDetails type request, @TODO: move to enums
 const listRecurringDetailsType = "listRecurringDetails"
 
-// AuthoriseEncrypted - Perform authorise payment in Adyen
+// ListRecurringDetails - Get list of recurring payments in Adyen
 func (a *RecurringGateway) ListRecurringDetails(req *RecurringDetailsRequest) (*RecurringDetailsResult, error) {
 	resp, err := a.execute(listRecurringDetailsType, RecurringService, req)
 
