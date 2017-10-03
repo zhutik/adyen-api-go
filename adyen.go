@@ -123,10 +123,16 @@ func (a *Adyen) execute(method string, requestEntity interface{}) (*Response, er
 		return nil, err
 	}
 
-	defer resp.Body.Close()
+	defer func() {
+		err = resp.Body.Close()
+	}()
 
 	buf := new(bytes.Buffer)
-	buf.ReadFrom(resp.Body)
+	_, err = buf.ReadFrom(resp.Body)
+
+	if err != nil {
+		return nil, err
+	}
 
 	if a.Logger != nil {
 		a.Logger.Printf("[Response]: %s %s\n%s", method, url, buf.String())
@@ -169,10 +175,16 @@ func (a *Adyen) executeHpp(method string, requestEntity interface{}) (*Response,
 		return nil, err
 	}
 
-	defer resp.Body.Close()
+	defer func() {
+		err = resp.Body.Close()
+	}()
 
 	buf := new(bytes.Buffer)
-	buf.ReadFrom(resp.Body)
+	_, err = buf.ReadFrom(resp.Body)
+
+	if err != nil {
+		return nil, err
+	}
 
 	if a.Logger != nil {
 		a.Logger.Printf("[Response]: %s %s\n%s", method, url, buf.String())
