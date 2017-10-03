@@ -65,7 +65,11 @@ func (r *DirectoryLookupRequest) CalculateSignature(adyen *Adyen) error {
 	}
 
 	mac := hmac.New(sha256.New, src)
-	mac.Write([]byte(fullString))
+	_, err = mac.Write([]byte(fullString))
+
+	if err != nil {
+		return err
+	}
 
 	r.MerchantSig = base64.StdEncoding.EncodeToString(mac.Sum(nil))
 
@@ -125,7 +129,11 @@ func (r *SkipHppRequest) CalculateSignature(adyen *Adyen) error {
 	}
 
 	mac := hmac.New(sha256.New, src)
-	mac.Write([]byte(fullString))
+	_, err = mac.Write([]byte(fullString))
+
+	if err != nil {
+		return err
+	}
 
 	r.MerchantSig = base64.StdEncoding.EncodeToString(mac.Sum(nil))
 

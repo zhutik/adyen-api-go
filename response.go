@@ -24,7 +24,12 @@ type Response struct {
 func (r *Response) handleHTTPError() error {
 	var a apiError
 
-	json.Unmarshal(r.Body, &a)
+	err := json.Unmarshal(r.Body, &a)
+
+	if err != nil {
+		return err
+	}
+
 	if a.Status > 299 {
 		return a
 	}
