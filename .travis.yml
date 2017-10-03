@@ -7,16 +7,14 @@ sudo: false
 
 install:
   - source .default.env
+  - go get ./...
   - go get github.com/golang/lint/golint
+  - go get github.com/kisielk/errcheck
 
 jobs:
   include:
     - stage: verification
-      script:
-        - go vet ./...
-        - golint -set_exit_status ./...
-        - go get github.com/kisielk/errcheck && CGO_ENABLED=0 errcheck ./...
+      script: make verification
 
     - stage: test
-      script:
-        - go test -parallel 5 -v ./...
+      script: make test
