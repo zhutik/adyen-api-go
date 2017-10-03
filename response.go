@@ -96,3 +96,13 @@ func (r *Response) directoryLookup() (*DirectoryLookupResponse, error) {
 
 	return &a, nil
 }
+
+// listRecurringDetails  - generate Adyen List Recurring Details response
+func (r *Response) listRecurringDetails() (*RecurringDetailsResult, error) {
+	var a RecurringDetailsResult
+	if err := json.Unmarshal(r.Body, &a); err != nil {
+		return nil, err
+	}
+
+	return &a, nil
+}

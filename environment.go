@@ -13,8 +13,8 @@ func newEnvironment(apiURL, clientURL, hppURL string) environment {
 }
 
 // BaseURL returns api base url
-func (e environment) BaseURL(version string) string {
-	return e.apiURL + "/" + version
+func (e environment) BaseURL(service string, version string) string {
+	return e.apiURL + "/" + service + "/" + version
 }
 
 // ClientURL returns Adyen Client URL to load external scripts
@@ -29,14 +29,14 @@ func (e environment) HppURL(request string) string {
 
 // Testing - instance of testing environment
 var Testing = newEnvironment(
-	"https://pal-test.adyen.com/pal/servlet/Payment",
+	"https://pal-test.adyen.com/pal/servlet",
 	"https://test.adyen.com/hpp/cse/js/",
 	"https://test.adyen.com/hpp/",
 )
 
 // Production - instance of production environment
 var Production = newEnvironment(
-	"https://pal-live.adyen.com/pal/servlet/Payment",
+	"https://pal-live.adyen.com/pal/servlet",
 	"https://live.adyen.com/hpp/cse/js/",
 	"https://live.adyen.com/hpp/",
 )

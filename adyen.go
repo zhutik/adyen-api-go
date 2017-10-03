@@ -17,6 +17,12 @@ const (
 	APIVersion = "v25"
 )
 
+// Enpoint service to use
+const (
+	PaymentService   = "Payment"
+	RecurringService = "Recurring"
+)
+
 // New - creates Adyen instance
 //
 // Description:
@@ -71,8 +77,8 @@ func (a *Adyen) ClientURL() string {
 }
 
 // adyenURL returns Adyen backend URL
-func (a *Adyen) adyenURL(requestType string) string {
-	return a.Credentials.Env.BaseURL(APIVersion) + "/" + requestType
+func (a *Adyen) adyenURL(service string, requestType string) string {
+	return a.Credentials.Env.BaseURL(service, APIVersion) + "/" + requestType
 }
 
 // createHPPUrl returns Adyen HPP url
@@ -97,13 +103,13 @@ func (a *Adyen) SetCurrency(currency string) {
 }
 
 // execute request on Adyen side, transforms "requestEntity" into JSON representation
-func (a *Adyen) execute(method string, requestEntity interface{}) (*Response, error) {
+func (a *Adyen) execute(method string, service string, requestEntity interface{}) (*Response, error) {
 	body, err := json.Marshal(requestEntity)
 	if err != nil {
 		return nil, err
 	}
 
-	url := a.adyenURL(method)
+	url := a.adyenURL(service, method) + "/" + service + "/"
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(body))
 	if err != nil {
 		return nil, err
@@ -194,4 +200,9 @@ func (a *Adyen) Payment() *PaymentGateway {
 // Modification - returns ModificationGateway
 func (a *Adyen) Modification() *ModificationGateway {
 	return &ModificationGateway{a}
+}
+
+// Recurring - returns RecurringGateway
+func (a *Adyen) Recurring() *RecurringGateway {
+	return &RecurringGateway{a}
 }

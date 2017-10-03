@@ -13,7 +13,7 @@ const directoryLookupURL = "directory/v2"
 
 // AuthoriseEncrypted - Perform authorise payment in Adyen
 func (a *PaymentGateway) AuthoriseEncrypted(req *AuthoriseEncrypted) (*AuthoriseResponse, error) {
-	resp, err := a.execute(authoriseType, req)
+	resp, err := a.execute(authoriseType, PaymentService, req)
 
 	if err != nil {
 		return nil, err
@@ -24,7 +24,7 @@ func (a *PaymentGateway) AuthoriseEncrypted(req *AuthoriseEncrypted) (*Authorise
 
 // Authorise - Perform authorise payment in Adyen
 func (a *PaymentGateway) Authorise(req *Authorise) (*AuthoriseResponse, error) {
-	resp, err := a.execute(authoriseType, req)
+	resp, err := a.execute(authoriseType, PaymentService, req)
 
 	if err != nil {
 		return nil, err
