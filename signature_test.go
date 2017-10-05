@@ -7,7 +7,9 @@ import (
 	"testing"
 )
 
-func initAdyenWithHPP() *Adyen {
+func TestSignatureCalculateSignature(t *testing.T) {
+	t.Parallel()
+
 	instance := NewWithHPP(
 		Testing,
 		os.Getenv("ADYEN_USERNAME"),
@@ -18,14 +20,6 @@ func initAdyenWithHPP() *Adyen {
 		os.Getenv("ADYEN_SKINCODE"),
 		os.Getenv("ADYEN_SHOPPER_LOCALE"),
 	)
-
-	return instance
-}
-
-func TestSignature_CalculateSignature(t *testing.T) {
-	t.Parallel()
-
-	instance := initAdyenWithHPP()
 
 	req := DirectoryLookupRequest{
 		CurrencyCode:      "EUR",
@@ -51,10 +45,19 @@ func TestSignature_CalculateSignature(t *testing.T) {
 	}
 }
 
-func TestSignature_CalculateSignatureForSkipHppRequest(t *testing.T) {
+func TestSignatureCalculateSignatureForSkipHppRequest(t *testing.T) {
 	t.Parallel()
 
-	instance := initAdyenWithHPP()
+	instance := NewWithHPP(
+		Testing,
+		os.Getenv("ADYEN_USERNAME"),
+		os.Getenv("ADYEN_PASSWORD"),
+		os.Getenv("ADYEN_CLIENT_TOKEN"),
+		os.Getenv("ADYEN_ACCOUNT"),
+		os.Getenv("ADYEN_HMAC"),
+		os.Getenv("ADYEN_SKINCODE"),
+		os.Getenv("ADYEN_SHOPPER_LOCALE"),
+	)
 
 	req := SkipHppRequest{
 		MerchantReference: "DE-100100GMWJGS",
