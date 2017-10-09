@@ -17,7 +17,7 @@ type ModificationGateway struct {
 
 // Capture - Perform capture payment in Adyen
 func (a *ModificationGateway) Capture(req *Capture) (*CaptureResponse, error) {
-	resp, err := a.execute(captureType, PaymentService, req)
+	resp, err := a.execute(PaymentService, captureType, req)
 
 	if err != nil {
 		return nil, err
@@ -28,7 +28,7 @@ func (a *ModificationGateway) Capture(req *Capture) (*CaptureResponse, error) {
 
 // Cancel - Perform cancellation of the authorised transaction
 func (a *ModificationGateway) Cancel(req *Cancel) (*CancelResponse, error) {
-	resp, err := a.execute(cancelType, PaymentService, req)
+	resp, err := a.execute(PaymentService, cancelType, req)
 
 	if err != nil {
 		return nil, err
@@ -40,7 +40,7 @@ func (a *ModificationGateway) Cancel(req *Cancel) (*CancelResponse, error) {
 // CancelOrRefund - Perform cancellation for not captured transaction
 // otherwise perform refund action
 func (a *ModificationGateway) CancelOrRefund(req *Cancel) (*CancelOrRefundResponse, error) {
-	resp, err := a.execute(cancelOrRefundType, PaymentService, req)
+	resp, err := a.execute(PaymentService, cancelOrRefundType, req)
 
 	if err != nil {
 		return nil, err
@@ -51,7 +51,7 @@ func (a *ModificationGateway) CancelOrRefund(req *Cancel) (*CancelOrRefundRespon
 
 // Refund - perform refund for already captured request
 func (a *ModificationGateway) Refund(req *Refund) (*RefundResponse, error) {
-	resp, err := a.execute(refundType, PaymentService, req)
+	resp, err := a.execute(PaymentService, refundType, req)
 
 	if err != nil {
 		return nil, err

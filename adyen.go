@@ -78,7 +78,7 @@ func (a *Adyen) ClientURL() string {
 
 // adyenURL returns Adyen backend URL
 func (a *Adyen) adyenURL(service string, requestType string) string {
-	return a.Credentials.Env.BaseURL(service, APIVersion) + "/" + requestType
+	return a.Credentials.Env.BaseURL(service, APIVersion) + "/" + requestType + "/" + service + "/"
 }
 
 // createHPPUrl returns Adyen HPP url
@@ -103,13 +103,13 @@ func (a *Adyen) SetCurrency(currency string) {
 }
 
 // execute request on Adyen side, transforms "requestEntity" into JSON representation
-func (a *Adyen) execute(method string, service string, requestEntity interface{}) (*Response, error) {
+func (a *Adyen) execute(service string, method string, requestEntity interface{}) (*Response, error) {
 	body, err := json.Marshal(requestEntity)
 	if err != nil {
 		return nil, err
 	}
 
-	url := a.adyenURL(service, method) + "/" + service + "/"
+	url := a.adyenURL(service, method)
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(body))
 	if err != nil {
 		return nil, err

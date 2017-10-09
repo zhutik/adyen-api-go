@@ -10,7 +10,7 @@ const listRecurringDetailsType = "listRecurringDetails"
 
 // ListRecurringDetails - Get list of recurring payments in Adyen
 func (a *RecurringGateway) ListRecurringDetails(req *RecurringDetailsRequest) (*RecurringDetailsResult, error) {
-	resp, err := a.execute(listRecurringDetailsType, RecurringService, req)
+	resp, err := a.execute(RecurringService, listRecurringDetailsType, req)
 
 	if err != nil {
 		return nil, err

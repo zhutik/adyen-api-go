@@ -10,7 +10,7 @@ const authorise3DType = "authorise3d"
 
 // Authorise3D - Perform authorise payment in Adyen
 func (a *PaymentGateway) Authorise3D(req *Authorise3D) (*AuthoriseResponse, error) {
-	resp, err := a.execute(authorise3DType, PaymentService, req)
+	resp, err := a.execute(PaymentService, authorise3DType, req)
 
 	if err != nil {
 		return nil, err
