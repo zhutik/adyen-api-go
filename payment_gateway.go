@@ -17,6 +17,20 @@ const directoryLookupURL = "directory/v2"
 const skipHppURL = "skipDetails"
 
 // AuthoriseEncrypted - Perform authorise payment in Adyen
+//
+// To perform recurring payment, AuthoriseEncrypted need to have contract specified and shopperReference
+//
+// Example:
+//   &adyen.AuthoriseEncrypted{
+//       Amount:           &adyen.Amount{Value: "2000", Currency: "EUR"},
+//       MerchantAccount:  "merchant-account",
+//       AdditionalData:   &adyen.AdditionalData{Content: r.Form.Get("adyen-encrypted-data")}, // encrypted CC data
+//       ShopperReference: "unique-customer-reference",
+//       Recurring:        &adyen.Recurring{Contract:adyen.RecurringPaymentRecurring}
+//       Reference:        "some-merchant-reference",
+//   }
+//}
+// adyen.Recurring{Contract:adyen.RecurringPaymentRecurring} as one of the contracts
 func (a *PaymentGateway) AuthoriseEncrypted(req *AuthoriseEncrypted) (*AuthoriseResponse, error) {
 	resp, err := a.execute(PaymentService, authoriseType, req)
 
@@ -28,6 +42,10 @@ func (a *PaymentGateway) AuthoriseEncrypted(req *AuthoriseEncrypted) (*Authorise
 }
 
 // Authorise - Perform authorise payment in Adyen
+//
+// Used to perform authorisation transaction without credit card data encrypted
+// NOTE: Due to PCI compliance, it's not recommended to send credit card data to server
+// Please use AuthoriseEncrypted instead and adyen frontend encryption library
 func (a *PaymentGateway) Authorise(req *Authorise) (*AuthoriseResponse, error) {
 	resp, err := a.execute(PaymentService, authoriseType, req)
 
