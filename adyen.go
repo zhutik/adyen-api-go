@@ -78,7 +78,7 @@ func (a *Adyen) ClientURL() string {
 
 // adyenURL returns Adyen backend URL
 func (a *Adyen) adyenURL(service string, requestType string) string {
-	return a.Credentials.Env.BaseURL(service, APIVersion) + "/" + requestType + "/" + service + "/"
+	return a.Credentials.Env.BaseURL(service, APIVersion) + "/" + requestType + "/"
 }
 
 // createHPPUrl returns Adyen HPP url
