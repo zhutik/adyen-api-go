@@ -18,7 +18,7 @@ const skipHppURL = "skipDetails"
 
 // AuthoriseEncrypted - Perform authorise payment in Adyen
 func (a *PaymentGateway) AuthoriseEncrypted(req *AuthoriseEncrypted) (*AuthoriseResponse, error) {
-	resp, err := a.execute(authoriseType, req)
+	resp, err := a.execute(PaymentService, authoriseType, req)
 
 	if err != nil {
 		return nil, err
@@ -29,7 +29,7 @@ func (a *PaymentGateway) AuthoriseEncrypted(req *AuthoriseEncrypted) (*Authorise
 
 // Authorise - Perform authorise payment in Adyen
 func (a *PaymentGateway) Authorise(req *Authorise) (*AuthoriseResponse, error) {
-	resp, err := a.execute(authoriseType, req)
+	resp, err := a.execute(PaymentService, authoriseType, req)
 
 	if err != nil {
 		return nil, err
