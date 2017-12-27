@@ -111,3 +111,15 @@ func (r *Response) listRecurringDetails() (*RecurringDetailsResult, error) {
 
 	return &a, nil
 }
+
+// disableRecurring  - generate Adyen disable recurring
+//
+// Link - https://docs.adyen.com/developers/api-reference/recurring-api#disableresult
+func (r *Response) disableRecurring() (*RecurringDisableResponse, error) {
+	var a RecurringDisableResponse
+	if err := json.Unmarshal(r.Body, &a); err != nil {
+		return nil, err
+	}
+
+	return &a, nil
+}

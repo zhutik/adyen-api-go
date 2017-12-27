@@ -1,6 +1,8 @@
 package adyen
 
 // RecurringDetailsRequest structure to list all recurring payment associated to a shopperReference
+//
+// Link - https://docs.adyen.com/developers/api-reference/recurring-api#recurringdetailsrequest
 type RecurringDetailsRequest struct {
 	MerchantAccount  string `json:"merchantAccount"`
 	ShopperReference string `json:"shopperReference,omitempty"`
@@ -9,6 +11,8 @@ type RecurringDetailsRequest struct {
 }
 
 // RecurringDetailsResult structure to hold the RecurringDetails
+//
+// Link - https://docs.adyen.com/developers/api-reference/recurring-api#recurringdetailsresult
 type RecurringDetailsResult struct {
 	CreationDate string `json:"creationDate"`
 	Details      []struct {
@@ -19,6 +23,8 @@ type RecurringDetailsResult struct {
 }
 
 // RecurringDetail structure to hold information associated to a recurring payment
+//
+// Link - https://docs.adyen.com/developers/api-reference/recurring-api#recurringdetail
 type RecurringDetail struct {
 	Acquirer        string `json:"acquirer"`
 	AcquirerAccount string `json:"acquirerAccount"`
@@ -40,6 +46,8 @@ type RecurringDetail struct {
 //
 // If `RecurringDetailReference` is specified, specific payment ID will be disabled
 // otherwise all customer saved payment methods will be disabled
+//
+// Link - https://docs.adyen.com/developers/api-reference/recurring-api#disablerequest
 type RecurringDisableRequest struct {
 	MerchantAccount          string `json:"merchantAccount"`
 	ShopperReference         string `json:"shopperReference"`
@@ -50,6 +58,8 @@ type RecurringDisableRequest struct {
 }
 
 // RecurringDisableResponse structure to hold response for disable recurring request
+//
+// Link - https://docs.adyen.com/developers/api-reference/recurring-api#disableresult
 type RecurringDisableResponse struct {
 	Response string `json:"response"`
 }
