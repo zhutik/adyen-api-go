@@ -44,7 +44,9 @@ func (a *PaymentGateway) AuthoriseEncrypted(req *AuthoriseEncrypted) (*Authorise
 // Authorise - Perform authorise payment in Adyen
 //
 // Used to perform authorisation transaction without credit card data encrypted
+//
 // NOTE: Due to PCI compliance, it's not recommended to send credit card data to server
+//
 // Please use AuthoriseEncrypted instead and adyen frontend encryption library
 func (a *PaymentGateway) Authorise(req *Authorise) (*AuthoriseResponse, error) {
 	resp, err := a.execute(PaymentService, authoriseType, req)

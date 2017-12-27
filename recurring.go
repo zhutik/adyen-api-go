@@ -35,3 +35,21 @@ type RecurringDetail struct {
 	RecurringDetailReference string   `json:"recurringDetailReference"`
 	Variant                  string   `json:"variant"`
 }
+
+// RecurringDisableRequest structure to hold information regarding disable recurring request
+//
+// If `RecurringDetailReference` is specified, specific payment ID will be disabled
+// otherwise all customer saved payment methods will be disabled
+type RecurringDisableRequest struct {
+	MerchantAccount          string `json:"merchantAccount"`
+	ShopperReference         string `json:"shopperReference"`
+	// Type of a contract ONECLICK, RECURRING, PAYOUT or combination of them
+	Contract                 string `json:"contract,omitempty"`
+	// ID of a customer saved payment method, all will be disabled if none is specified
+	RecurringDetailReference string `json:"recurringDetailReference,omitempty"`
+}
+
+// RecurringDisableResponse structure to hold response for disable recurring request
+type RecurringDisableResponse struct {
+	Response string `json:"response"`
+}
