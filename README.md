@@ -18,7 +18,7 @@ https://github.com/zhutik/adyen-api-go-example
 
 ## Usage
 
-```
+```go
 import "github.com/zhutik/adyen-api-go"
 
 // Configure Adyen API
@@ -31,8 +31,8 @@ instance := adyen.New(
 )
 
 req := &adyen.Authorise{
-  Amount:          &adyen.Amount{
-    Value: 1000, / amount * 100, f.e. 10,30 EUR = 1030
+  Amount: &adyen.Amount{
+    Value:    1000, // amount * 100, f.e. 10,30 EUR = 1030
     Currency: "EUR"
   },
   MerchantAccount: os.Getenv("ADYEN_ACCOUNT"),
@@ -47,14 +47,16 @@ g, err := instance.Payment().Authorise(req)
 
 Supported API Calls
 * Authorise (only encrypted)
+* Authorise 3D
+* Recurring payments
 * Capture
 * Cancel
 * Refund
 * CancelOrRefund
+* Notifications
 
 Next:
-* Notifications
-* Add tests
+* Add more tests
 
 ## To run example
 
@@ -85,7 +87,7 @@ $ export ADYEN_SHOPPER_LOCALE="YOUR_SHOPPER_LOCALE"
 
 Use HPP constructor to initialize new Adyen API instance
 
-```
+```go
 import "github.com/zhutik/adyen-api-go"
 
 // Configure Adyen API
@@ -104,7 +106,7 @@ instance := adyen.New(
 
 Perform requests as usual:
 
-```
+```go
 timeIn := time.Now().Local().Add(time.Minute * time.Duration(60))
 
 req := &adyen.DirectoryLookupRequest{
@@ -122,8 +124,6 @@ g, err := instance.Payment().DirectoryLookup(req)
 
 Supported Calls:
 * Directory Lookup
-
-Next:
 * Locale payment methods redirect
 
 ### Setup playgroup
