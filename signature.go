@@ -31,32 +31,42 @@ func (r *DirectoryLookupRequest) CalculateSignature(adyen *Adyen) error {
 		return errors.New("merchantID, skinCode and HMAC hash need to be specified")
 	}
 
-	// @todo write sorting for this map
-	keys := "countryCode"
-	values := replaceSpecialChars(r.CountryCode)
+	var sortedKeys = map[int]string{
+		0: "countryCode",
+		1: "currencyCode",
+		2: "merchantAccount",
+		3: "merchantReference",
+		4: "paymentAmount",
+		5: "sessionValidity",
+		6: "shipBeforeDate",
+		7: "skinCode",
+	}
 
-	keys += ":" + "currencyCode"
-	values += ":" + replaceSpecialChars(r.CurrencyCode)
+	var sortedValues = map[int]string{
+		0: replaceSpecialChars(r.CountryCode),
+		1: replaceSpecialChars(r.CurrencyCode),
+		2: replaceSpecialChars(adyen.Credentials.MerchantID),
+		3: replaceSpecialChars(r.MerchantReference),
+		4: replaceSpecialChars(strconv.Itoa(r.PaymentAmount)),
+		5: replaceSpecialChars(r.SessionsValidity),
+		6: replaceSpecialChars(r.ShipBeforeDate),
+		7: replaceSpecialChars(adyen.Credentials.HppSettings.SkinCode),
+	}
 
-	keys += ":" + "merchantAccount"
-	values += ":" + replaceSpecialChars(adyen.Credentials.MerchantID)
+	keysString := ""
+	valuesString := ""
 
-	keys += ":" + "merchantReference"
-	values += ":" + replaceSpecialChars(r.MerchantReference)
+	for k := 0; k <= 7; k++ {
+		if k == 0 {
+			keysString = sortedKeys[k]
+			valuesString = sortedValues[k]
+		} else {
+			keysString += ":" + sortedKeys[k]
+			valuesString += ":" + sortedValues[k]
+		}
+	}
 
-	keys += ":" + "paymentAmount"
-	values += ":" + replaceSpecialChars(strconv.Itoa(r.PaymentAmount))
-
-	keys += ":" + "sessionValidity"
-	values += ":" + replaceSpecialChars(r.SessionsValidity)
-
-	keys += ":" + "shipBeforeDate"
-	values += ":" + replaceSpecialChars(r.ShipBeforeDate)
-
-	keys += ":" + "skinCode"
-	values += ":" + replaceSpecialChars(adyen.Credentials.HppSettings.SkinCode)
-
-	fullString := keys + ":" + values
+	fullString := keysString + ":" + valuesString
 
 	src, err := hex.DecodeString(adyen.Credentials.HppSettings.Hmac)
 
@@ -87,40 +97,48 @@ func (r *SkipHppRequest) CalculateSignature(adyen *Adyen) error {
 		return errors.New("merchantID, skinCode and HMAC hash need to be specified")
 	}
 
-	keys := "brandCode"
-	values := replaceSpecialChars(r.BrandCode)
+	var sortedKeys = map[int]string{
+		0:  "brandCode",
+		1:  "countryCode",
+		2:  "currencyCode",
+		3:  "issuerId",
+		4:  "merchantAccount",
+		5:  "merchantReference",
+		6:  "paymentAmount",
+		7:  "sessionValidity",
+		8:  "shipBeforeDate",
+		9:  "shopperLocale",
+		10: "skinCode",
+	}
 
-	keys += ":countryCode"
-	values += ":" + replaceSpecialChars(r.CountryCode)
+	var sortedValues = map[int]string{
+		0:  replaceSpecialChars(r.BrandCode),
+		1:  replaceSpecialChars(r.CountryCode),
+		2:  replaceSpecialChars(r.CurrencyCode),
+		3:  replaceSpecialChars(r.IssuerID),
+		4:  replaceSpecialChars(adyen.Credentials.MerchantID),
+		5:  replaceSpecialChars(r.MerchantReference),
+		6:  replaceSpecialChars(strconv.Itoa(r.PaymentAmount)),
+		7:  replaceSpecialChars(r.SessionsValidity),
+		8:  replaceSpecialChars(r.ShipBeforeDate),
+		9:  replaceSpecialChars(r.ShopperLocale),
+		10: replaceSpecialChars(adyen.Credentials.HppSettings.SkinCode),
+	}
 
-	keys += ":" + "currencyCode"
-	values += ":" + replaceSpecialChars(r.CurrencyCode)
+	keysString := ""
+	valuesString := ""
 
-	keys += ":" + "issuerId"
-	values += ":" + replaceSpecialChars(r.IssuerID)
+	for k := 0; k <= 10; k++ {
+		if k == 0 {
+			keysString = sortedKeys[k]
+			valuesString = sortedValues[k]
+		} else {
+			keysString += ":" + sortedKeys[k]
+			valuesString += ":" + sortedValues[k]
+		}
+	}
 
-	keys += ":" + "merchantAccount"
-	values += ":" + replaceSpecialChars(adyen.Credentials.MerchantID)
-
-	keys += ":" + "merchantReference"
-	values += ":" + replaceSpecialChars(r.MerchantReference)
-
-	keys += ":" + "paymentAmount"
-	values += ":" + replaceSpecialChars(strconv.Itoa(r.PaymentAmount))
-
-	keys += ":" + "sessionValidity"
-	values += ":" + replaceSpecialChars(r.SessionsValidity)
-
-	keys += ":" + "shipBeforeDate"
-	values += ":" + replaceSpecialChars(r.ShipBeforeDate)
-
-	keys += ":" + "shopperLocale"
-	values += ":" + replaceSpecialChars(r.ShopperLocale)
-
-	keys += ":" + "skinCode"
-	values += ":" + replaceSpecialChars(adyen.Credentials.HppSettings.SkinCode)
-
-	fullString := keys + ":" + values
+	fullString := keysString + ":" + valuesString
 
 	src, err := hex.DecodeString(adyen.Credentials.HppSettings.Hmac)
 
