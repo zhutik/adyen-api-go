@@ -1,4 +1,4 @@
-# [WIP] Adyen API for Go
+# Adyen API for Go
 
 [![Build Status](https://travis-ci.org/zhutik/adyen-api-go.png)](https://travis-ci.org/zhutik/adyen-api-go)
 [![GoDoc](http://godoc.org/github.com/zhutik/adyen-api-go?status.png)](http://godoc.org/github.com/zhutik/adyen-api-go)
@@ -91,7 +91,7 @@ Use HPP constructor to initialize new Adyen API instance
 import "github.com/zhutik/adyen-api-go"
 
 // Configure Adyen API
-instance := adyen.New(
+instance := adyen.NewWithHPP(
   adyen.Testing,
   os.Getenv("ADYEN_USERNAME"),
   os.Getenv("ADYEN_PASSWORD"),
@@ -120,6 +120,32 @@ req := &adyen.DirectoryLookupRequest{
 
 g, err := instance.Payment().DirectoryLookup(req)
 
+```
+
+or generate redirect URL for selected payment method
+
+Example with iDEAL for Netherlands:
+
+```go
+timeIn := time.Now().Local().Add(time.Minute * time.Duration(60))
+
+req := &adyen.SkipHppRequest{
+    MerchantReference: "your-order-number",
+    PaymentAmount:     1000,
+    CurrencyCode:      "EUR",
+    ShipBeforeDate:    timeIn.Format(time.RFC3339),
+    SkinCode:          os.Getenv("ADYEN_SKINCODE"),
+    MerchantAccount:   os.Getenv("ADYEN_ACCOUNT"),
+    ShopperLocale:     "nl",
+    SessionsValidity:  timeIn.Format(time.RFC3339),
+		CountryCode:       "NL",
+		BrandCode:         "ideal",
+		IssuerID:          "1121",
+}
+
+url, err := instance.Payment().GetHPPRedirectURL(req)
+
+http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 ```
 
 Supported Calls:
