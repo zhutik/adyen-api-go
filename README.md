@@ -46,7 +46,7 @@ g, err := instance.Payment().Authorise(req)
 ```
 
 Supported API Calls
-* Authorise (only encrypted)
+* Authorise
 * Authorise 3D
 * Recurring payments
 * Capture
@@ -138,9 +138,9 @@ req := &adyen.SkipHppRequest{
     MerchantAccount:   os.Getenv("ADYEN_ACCOUNT"),
     ShopperLocale:     "nl",
     SessionsValidity:  timeIn.Format(time.RFC3339),
-		CountryCode:       "NL",
-		BrandCode:         "ideal",
-		IssuerID:          "1121",
+    CountryCode:       "NL",
+    BrandCode:         "ideal",
+    IssuerID:          "1121",
 }
 
 url, err := instance.Payment().GetHPPRedirectURL(req)
