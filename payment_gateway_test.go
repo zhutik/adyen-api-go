@@ -4,6 +4,7 @@ import (
 	"os"
 	"strings"
 	"testing"
+	"time"
 )
 
 // TestAuthoriseFailed
@@ -40,6 +41,9 @@ func TestAuthoriseFailed(t *testing.T) {
 }
 
 // TestAuthorise
+//
+// In order to have test running correctly, account should be configured to have full API permissions
+// Otherwise, Adyen API will return "not allowed" error. Please check https://github.com/Adyen/adyen-php-api-library/issues/20
 func TestAuthorise(t *testing.T) {
 	t.Parallel()
 
@@ -79,5 +83,63 @@ func TestAuthorise(t *testing.T) {
 
 	if response.ResultCode != "Authorised" {
 		t.Errorf("Response resultCode should be Authorised, Response - %s", response)
+	}
+}
+
+// TestDirectoryLookUpMissingData - DirectoryLookUp Request failing due to missing data
+func TestDirectoryLookUpMissingData(t *testing.T) {
+	t.Parallel()
+
+	instance := getTestInstance()
+
+	timeIn := time.Now().Local().Add(time.Minute * time.Duration(60))
+
+	directoryRequest := &DirectoryLookupRequest{
+		CurrencyCode:      "EUR",
+		PaymentAmount:     1000,
+		MerchantReference: "DE-TEST-1" + randomString(10),
+		SessionsValidity:  timeIn.Format(time.RFC3339),
+		CountryCode:       "NL",
+	}
+
+	_, err := instance.Payment().DirectoryLookup(directoryRequest)
+
+	if err == nil {
+		t.Error("Request should fail due to missing request data")
+	}
+
+	if err.Error() != "merchantID, skinCode and HMAC hash need to be specified" {
+		t.Errorf("Error should indicate that request is missing configuration data, error - %s", err)
+	}
+}
+
+// TestDirectoryLookUp - test directory lookup v2 integration
+//
+// In order to have test running correctly, Adyen Skin need to be configured and passed through environment variable
+func TestDirectoryLookUp(t *testing.T) {
+	t.Parallel()
+
+	instance := getTestInstanceWithHPP()
+
+	timeIn := time.Now().Local().Add(time.Minute * time.Duration(60))
+
+	directoryRequest := &DirectoryLookupRequest{
+		CurrencyCode:      "EUR",
+		MerchantAccount:   os.Getenv("ADYEN_ACCOUNT"),
+		PaymentAmount:     1000,
+		SkinCode:          os.Getenv("ADYEN_SKINCODE"),
+		MerchantReference: "DE-TEST-1" + randomString(10),
+		SessionsValidity:  timeIn.Format(time.RFC3339),
+		CountryCode:       "NL",
+	}
+
+	response, err := instance.Payment().DirectoryLookup(directoryRequest)
+
+	if err != nil {
+		t.Errorf("DirectoryLookup response should be successful, error - %s", err)
+	}
+
+	if len(response.PaymentMethods) == 0 {
+		t.Errorf("DirectoryLookup response should contain at least one payment method available, response - %s", response)
 	}
 }

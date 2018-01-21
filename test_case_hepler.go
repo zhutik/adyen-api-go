@@ -19,6 +19,22 @@ func getTestInstance() *Adyen {
 	return instance
 }
 
+// getTestInstanceWithHPP - instanciate adyen for tests
+func getTestInstanceWithHPP() *Adyen {
+	instance := NewWithHPP(
+		Testing,
+		os.Getenv("ADYEN_USERNAME"),
+		os.Getenv("ADYEN_PASSWORD"),
+		os.Getenv("ADYEN_CLIENT_TOKEN"),
+		os.Getenv("ADYEN_ACCOUNT"),
+		os.Getenv("ADYEN_HMAC"),
+		os.Getenv("ADYEN_SKINCODE"),
+		os.Getenv("ADYEN_SHOPPER_LOCALE"),
+	)
+
+	return instance
+}
+
 // randInt - get random integer from a given range
 func randInt(min int, max int) int {
 	return min + rand.Intn(max-min)

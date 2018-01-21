@@ -25,8 +25,8 @@ func replaceSpecialChars(value string) string {
 // Link: https://docs.adyen.com/developers/payments/accepting-payments/hmac-signature-calculation
 // @todo: refactor this method
 func (r *DirectoryLookupRequest) CalculateSignature(adyen *Adyen) error {
-	if len(adyen.Credentials.MerchantID) == 0 ||
-		len(adyen.Credentials.HppSettings.SkinCode) == 0 ||
+	if len(r.MerchantAccount) == 0 ||
+		len(r.SkinCode) == 0 ||
 		len(adyen.Credentials.HppSettings.Hmac) == 0 {
 		return errors.New("merchantID, skinCode and HMAC hash need to be specified")
 	}
@@ -45,12 +45,12 @@ func (r *DirectoryLookupRequest) CalculateSignature(adyen *Adyen) error {
 	var sortedValues = map[int]string{
 		0: replaceSpecialChars(r.CountryCode),
 		1: replaceSpecialChars(r.CurrencyCode),
-		2: replaceSpecialChars(adyen.Credentials.MerchantID),
+		2: replaceSpecialChars(r.MerchantAccount),
 		3: replaceSpecialChars(r.MerchantReference),
 		4: replaceSpecialChars(strconv.Itoa(r.PaymentAmount)),
 		5: replaceSpecialChars(r.SessionsValidity),
 		6: replaceSpecialChars(r.ShipBeforeDate),
-		7: replaceSpecialChars(adyen.Credentials.HppSettings.SkinCode),
+		7: replaceSpecialChars(r.SkinCode),
 	}
 
 	keysString := ""
@@ -91,8 +91,8 @@ func (r *DirectoryLookupRequest) CalculateSignature(adyen *Adyen) error {
 // Link: https://docs.adyen.com/developers/payments/accepting-payments/hmac-signature-calculation
 // @todo: refactor this method
 func (r *SkipHppRequest) CalculateSignature(adyen *Adyen) error {
-	if len(adyen.Credentials.MerchantID) == 0 ||
-		len(adyen.Credentials.HppSettings.SkinCode) == 0 ||
+	if len(r.MerchantAccount) == 0 ||
+		len(r.SkinCode) == 0 ||
 		len(adyen.Credentials.HppSettings.Hmac) == 0 {
 		return errors.New("merchantID, skinCode and HMAC hash need to be specified")
 	}
@@ -116,13 +116,13 @@ func (r *SkipHppRequest) CalculateSignature(adyen *Adyen) error {
 		1:  replaceSpecialChars(r.CountryCode),
 		2:  replaceSpecialChars(r.CurrencyCode),
 		3:  replaceSpecialChars(r.IssuerID),
-		4:  replaceSpecialChars(adyen.Credentials.MerchantID),
+		4:  replaceSpecialChars(r.MerchantAccount),
 		5:  replaceSpecialChars(r.MerchantReference),
 		6:  replaceSpecialChars(strconv.Itoa(r.PaymentAmount)),
 		7:  replaceSpecialChars(r.SessionsValidity),
 		8:  replaceSpecialChars(r.ShipBeforeDate),
 		9:  replaceSpecialChars(r.ShopperLocale),
-		10: replaceSpecialChars(adyen.Credentials.HppSettings.SkinCode),
+		10: replaceSpecialChars(r.SkinCode),
 	}
 
 	keysString := ""
