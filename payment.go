@@ -43,6 +43,8 @@ type Authorise struct {
 }
 
 // AuthoriseResponse is a response structure for Adyen
+//
+// Link - https://docs.adyen.com/developers/api-reference/payments-api#paymentresult
 type AuthoriseResponse struct {
 	PspReference   string          `json:"pspReference"`
 	ResultCode     string          `json:"resultCode"`
