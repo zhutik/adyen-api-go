@@ -26,7 +26,6 @@ instance := adyen.New(
   adyen.Testing,
   os.Getenv("ADYEN_USERNAME"),
   os.Getenv("ADYEN_PASSWORD"),
-  os.Getenv("ADYEN_ACCOUNT"),
 )
 
 req := &adyen.AuthoriseEncrypted{
@@ -52,7 +51,6 @@ instance := adyen.New(
   adyen.Testing,
   os.Getenv("ADYEN_USERNAME"),
   os.Getenv("ADYEN_PASSWORD"),
-  os.Getenv("ADYEN_ACCOUNT"),
 )
 
 url := &adyen.ClientURL(os.Getenv("ADYEN_CLIENT_TOKEN"))
@@ -105,11 +103,10 @@ Use HPP constructor to initialize new Adyen API instance
 import "github.com/zhutik/adyen-api-go"
 
 // Configure Adyen API
-instance := adyen.NewWithHPP(
+instance := adyen.NewWithHMAC(
   adyen.Testing,
   os.Getenv("ADYEN_USERNAME"),
   os.Getenv("ADYEN_PASSWORD"),
-  os.Getenv("ADYEN_ACCOUNT"),
   os.Getenv("ADYEN_HMAC"),
 )
 

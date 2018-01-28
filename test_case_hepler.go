@@ -12,7 +12,6 @@ func getTestInstance() *Adyen {
 		Testing,
 		os.Getenv("ADYEN_USERNAME"),
 		os.Getenv("ADYEN_PASSWORD"),
-		os.Getenv("ADYEN_ACCOUNT"),
 	)
 
 	return instance
@@ -24,7 +23,6 @@ func getTestInstanceWithHPP() *Adyen {
 		Testing,
 		os.Getenv("ADYEN_USERNAME"),
 		os.Getenv("ADYEN_PASSWORD"),
-		os.Getenv("ADYEN_ACCOUNT"),
 		os.Getenv("ADYEN_HMAC"),
 	)
 

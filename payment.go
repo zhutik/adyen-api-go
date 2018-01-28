@@ -13,6 +13,8 @@ const (
 )
 
 // AuthoriseEncrypted structure for Authorisation request (with encrypted card information)
+//
+// Link - https://docs.adyen.com/developers/api-reference/payments-api#paymentrequest
 type AuthoriseEncrypted struct {
 	AdditionalData                   *AdditionalData `json:"additionalData,omitempty"`
 	Amount                           *Amount         `json:"amount"`
@@ -26,6 +28,8 @@ type AuthoriseEncrypted struct {
 }
 
 // Authorise structure for Authorisation request (card is not encrypted)
+//
+// Link - https://docs.adyen.com/developers/api-reference/payments-api#paymentrequest
 type Authorise struct {
 	Card                             *Card        `json:"card,omitempty"`
 	Amount                           *Amount      `json:"amount"`

@@ -31,12 +31,11 @@ const (
 //     - env - Environment for next API calls
 //     - username - API username for authentication
 //     - password - API password for authentication
-//     - merchantAccount - Merchant Account settings for payment and modification requests
 //
 // You can create new API user there: https://ca-test.adyen.com/ca/ca/config/users.shtml
-func New(env environment, username, password, merchantAccount string) *Adyen {
+func New(env environment, username, password string) *Adyen {
 	return &Adyen{
-		Credentials: newCredentials(env, username, password, merchantAccount),
+		Credentials: newCredentials(env, username, password),
 		Currency:    DefaultCurrency,
 	}
 }
@@ -50,13 +49,12 @@ func New(env environment, username, password, merchantAccount string) *Adyen {
 //     - env - Environment for next API calls
 //     - username - API username for authentication
 //     - password - API password for authentication
-//     - merchantAccount - Merchant Account settings for payment and modification requests
 //     - hmac - is generated when new Skin is created in Adyen Customer Area
 //
 // New skin can be created there https://ca-test.adyen.com/ca/ca/skin/skins.shtml
-func NewWithHMAC(env environment, username, password, merchantAccount, hmac string) *Adyen {
+func NewWithHMAC(env environment, username, password, hmac string) *Adyen {
 	return &Adyen{
-		Credentials: newCredentialsWithHMAC(env, username, password, merchantAccount, hmac),
+		Credentials: newCredentialsWithHMAC(env, username, password, hmac),
 		Currency:    DefaultCurrency,
 	}
 }
