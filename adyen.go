@@ -60,10 +60,19 @@ func NewWithHMAC(env environment, username, password, hmac string) *Adyen {
 }
 
 // Adyen - base structure with configuration options
+//
+//       - Credentials instance of API creditials to connect to Adyen API
+//       - Currency is a default request currency. Request data overrides this setting
+//       - MerchantAccount is default merchant account to be used. Request data overrides this setting
+//       - Logger is an optional logger instance
+//
+// Currency and MerchantAccount should be used only to store the data and be able to use it later.
+// Requests won't be automatically populated with given values
 type Adyen struct {
-	Credentials apiCredentials
-	Currency    string
-	Logger      *log.Logger
+	Credentials     apiCredentials
+	Currency        string
+	MerchantAccount string
+	Logger          *log.Logger
 }
 
 // ClientURL - returns URl, that need to loaded in UI, to encrypt Credit Card information
@@ -94,12 +103,30 @@ func (a *Adyen) AttachLogger(Logger *log.Logger) {
 	a.Logger = Logger
 }
 
+// GetCurrency get currency for current settion
+func (a *Adyen) GetCurrency() string {
+	return a.Currency
+}
+
 // SetCurrency set default currency for transactions
 func (a *Adyen) SetCurrency(currency string) {
 	a.Currency = currency
 }
 
+// GetMerchantAccount get default merchant account that is currency set
+func (a *Adyen) GetMerchantAccount() string {
+	return a.MerchantAccount
+}
+
+// SetMerchantAccount set default merchant account for current instance
+func (a *Adyen) SetMerchantAccount(account string) {
+	a.MerchantAccount = account
+}
+
 // execute request on Adyen side, transforms "requestEntity" into JSON representation
+//
+// internal method to do a request to Adyen API endpoint
+// request Type: POST, request body format - JSON
 func (a *Adyen) execute(service string, method string, requestEntity interface{}) (*Response, error) {
 	body, err := json.Marshal(requestEntity)
 	if err != nil {
@@ -156,6 +183,8 @@ func (a *Adyen) execute(service string, method string, requestEntity interface{}
 }
 
 // executeHpp - execute request without authorization to Adyen Hosted Payment API
+//
+// internal method to request Adyen HPP API via GET
 func (a *Adyen) executeHpp(method string, requestEntity interface{}) (*Response, error) {
 	url := a.createHPPUrl(method)
 

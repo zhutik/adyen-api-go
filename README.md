@@ -31,7 +31,7 @@ instance := adyen.New(
 req := &adyen.AuthoriseEncrypted{
   Amount: &adyen.Amount{
     Value:    1000, // amount * 100, f.e. 10,30 EUR = 1030
-    Currency: "EUR"
+    Currency: "EUR" // or use instance.getCurrency()
   },
   MerchantAccount: os.Getenv("ADYEN_ACCOUNT"), // your merchant account in Adyen
   AdditionalData:  &adyen.AdditionalData{Content: "encryptedData"}, // encrypted data from a form
@@ -54,6 +54,35 @@ instance := adyen.New(
 )
 
 url := &adyen.ClientURL(os.Getenv("ADYEN_CLIENT_TOKEN"))
+```
+
+Currently, MerchantAccount and Currency need to be set for every request manually
+
+To shortcut configuration, additional methods could be used to set and retrieve those settings.
+
+```go
+
+// Configure Adyen API
+instance := adyen.New(
+  adyen.Testing,
+  os.Getenv("ADYEN_USERNAME"),
+  os.Getenv("ADYEN_PASSWORD"),
+)
+
+// set parameters once for current instance
+instance.SetCurrency("USD")
+instance.SetMerchantAccount("TEST_MERCHANT_ACCOUNT")
+
+// futher, information could be retrieved to populate request 
+req := &adyen.AuthoriseEncrypted{
+  Amount: &adyen.Amount{
+    Value:    1000,
+    Currency: instance.GetCurrency()
+  },
+  MerchantAccount: instance.GetMerchantAccount(),
+  AdditionalData:  &adyen.AdditionalData{Content: "encryptedData"}, // encrypted data from a form
+  Reference:       "your-order-number",
+}
 
 ```
 
