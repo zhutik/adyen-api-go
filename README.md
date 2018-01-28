@@ -26,22 +26,36 @@ instance := adyen.New(
   adyen.Testing,
   os.Getenv("ADYEN_USERNAME"),
   os.Getenv("ADYEN_PASSWORD"),
-  os.Getenv("ADYEN_CLIENT_TOKEN"),
   os.Getenv("ADYEN_ACCOUNT"),
 )
 
-req := &adyen.Authorise{
+req := &adyen.AuthoriseEncrypted{
   Amount: &adyen.Amount{
     Value:    1000, // amount * 100, f.e. 10,30 EUR = 1030
     Currency: "EUR"
   },
-  MerchantAccount: os.Getenv("ADYEN_ACCOUNT"),
-  AdditionalData:  &adyen.AdditionalData{Content: "encryptedData"},
+  MerchantAccount: os.Getenv("ADYEN_ACCOUNT"), // your merchant account in Adyen
+  AdditionalData:  &adyen.AdditionalData{Content: "encryptedData"}, // encrypted data from a form
   Reference:       "your-order-number",
 }
 
 // Perform authorise transaction
-g, err := instance.Payment().Authorise(req)
+g, err := instance.Payment().AuthoriseEncrypted(req)
+
+```
+
+Load Client Side JS for form encryption to include on credit card form page
+
+```go
+// Configure Adyen API
+instance := adyen.New(
+  adyen.Testing,
+  os.Getenv("ADYEN_USERNAME"),
+  os.Getenv("ADYEN_PASSWORD"),
+  os.Getenv("ADYEN_ACCOUNT"),
+)
+
+url := &adyen.ClientURL(os.Getenv("ADYEN_CLIENT_TOKEN"))
 
 ```
 
@@ -95,11 +109,8 @@ instance := adyen.NewWithHPP(
   adyen.Testing,
   os.Getenv("ADYEN_USERNAME"),
   os.Getenv("ADYEN_PASSWORD"),
-  os.Getenv("ADYEN_CLIENT_TOKEN"),
   os.Getenv("ADYEN_ACCOUNT"),
   os.Getenv("ADYEN_HMAC"),
-  os.Getenv("ADYEN_SKINCODE"),
-  os.Getenv("ADYEN_SHOPPER_LOCALE"),
 )
 
 ```

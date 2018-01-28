@@ -29,8 +29,7 @@ type NotificationRequestItem struct {
 		Amount              Amount             `json:"amount"`
 		PspReference        string             `json:"pspReference"`
 		EventCode           string             `json:"eventCode"`
-		// Event date in time.RFC3339 format
-		EventDate           time.Time          `json:"eventDate"`
+		EventDate           time.Time          `json:"eventDate"` // Event date in time.RFC3339 format
 		MerchantAccountCode string             `json:"merchantAccountCode"`
 		Operations          []string           `json:"operations"`
 		MerchantReference   string             `json:"merchantReference"`

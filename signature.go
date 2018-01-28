@@ -27,7 +27,7 @@ func replaceSpecialChars(value string) string {
 func (r *DirectoryLookupRequest) CalculateSignature(adyen *Adyen) error {
 	if len(r.MerchantAccount) == 0 ||
 		len(r.SkinCode) == 0 ||
-		len(adyen.Credentials.HppSettings.Hmac) == 0 {
+		len(adyen.Credentials.Hmac) == 0 {
 		return errors.New("merchantID, skinCode and HMAC hash need to be specified")
 	}
 
@@ -68,7 +68,7 @@ func (r *DirectoryLookupRequest) CalculateSignature(adyen *Adyen) error {
 
 	fullString := keysString + ":" + valuesString
 
-	src, err := hex.DecodeString(adyen.Credentials.HppSettings.Hmac)
+	src, err := hex.DecodeString(adyen.Credentials.Hmac)
 
 	if err != nil {
 		return err
@@ -93,7 +93,7 @@ func (r *DirectoryLookupRequest) CalculateSignature(adyen *Adyen) error {
 func (r *SkipHppRequest) CalculateSignature(adyen *Adyen) error {
 	if len(r.MerchantAccount) == 0 ||
 		len(r.SkinCode) == 0 ||
-		len(adyen.Credentials.HppSettings.Hmac) == 0 {
+		len(adyen.Credentials.Hmac) == 0 {
 		return errors.New("merchantID, skinCode and HMAC hash need to be specified")
 	}
 
@@ -140,7 +140,7 @@ func (r *SkipHppRequest) CalculateSignature(adyen *Adyen) error {
 
 	fullString := keysString + ":" + valuesString
 
-	src, err := hex.DecodeString(adyen.Credentials.HppSettings.Hmac)
+	src, err := hex.DecodeString(adyen.Credentials.Hmac)
 
 	if err != nil {
 		return err

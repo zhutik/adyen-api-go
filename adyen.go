@@ -4,9 +4,10 @@ package adyen
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/google/go-querystring/query"
 	"log"
 	"net/http"
+
+	"github.com/google/go-querystring/query"
 )
 
 // DefaultCurrency default currency for transactions
@@ -30,18 +31,17 @@ const (
 //     - env - Environment for next API calls
 //     - username - API username for authentication
 //     - password - API password for authentication
-//     - clientID - Used to load external JS files from Adyen, to encrypt client requests
 //     - merchantAccount - Merchant Account settings for payment and modification requests
 //
 // You can create new API user there: https://ca-test.adyen.com/ca/ca/config/users.shtml
-func New(env environment, username, password, clientID, merchantAccount string) *Adyen {
+func New(env environment, username, password, merchantAccount string) *Adyen {
 	return &Adyen{
-		Credentials: newCredentials(env, username, password, merchantAccount, clientID),
+		Credentials: newCredentials(env, username, password, merchantAccount),
 		Currency:    DefaultCurrency,
 	}
 }
 
-// NewWithHPP - create new Adyen instance with HPP credentials
+// NewWithHMAC - create new Adyen instance with HPP credentials
 //
 // Use this constructor when you need to use Adyen HPP API.
 //
@@ -50,16 +50,13 @@ func New(env environment, username, password, clientID, merchantAccount string) 
 //     - env - Environment for next API calls
 //     - username - API username for authentication
 //     - password - API password for authentication
-//     - clientID - Used to load external JS files from Adyen, to encrypt client requests
 //     - merchantAccount - Merchant Account settings for payment and modification requests
 //     - hmac - is generated when new Skin is created in Adyen Customer Area
-//     - skinCode - skin code from Adyen CA
-//     - shopperLocale - merchant local settings (in ISO format)
 //
 // New skin can be created there https://ca-test.adyen.com/ca/ca/skin/skins.shtml
-func NewWithHPP(env environment, username, password, clientID, merchantAccount, hmac, skinCode, shopperLocale string) *Adyen {
+func NewWithHMAC(env environment, username, password, merchantAccount, hmac string) *Adyen {
 	return &Adyen{
-		Credentials: newCredentialsWithHPPSettings(env, username, password, merchantAccount, clientID, hmac, skinCode, shopperLocale),
+		Credentials: newCredentialsWithHMAC(env, username, password, merchantAccount, hmac),
 		Currency:    DefaultCurrency,
 	}
 }
@@ -72,8 +69,10 @@ type Adyen struct {
 }
 
 // ClientURL - returns URl, that need to loaded in UI, to encrypt Credit Card information
-func (a *Adyen) ClientURL() string {
-	return a.Credentials.Env.ClientURL(a.Credentials.ClientID)
+//
+//           - clientID - Used to load external JS files from Adyen, to encrypt client requests
+func (a *Adyen) ClientURL(clientID string) string {
+	return a.Credentials.Env.ClientURL(clientID)
 }
 
 // adyenURL returns Adyen backend URL

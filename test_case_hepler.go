@@ -12,7 +12,6 @@ func getTestInstance() *Adyen {
 		Testing,
 		os.Getenv("ADYEN_USERNAME"),
 		os.Getenv("ADYEN_PASSWORD"),
-		os.Getenv("ADYEN_CLIENT_TOKEN"),
 		os.Getenv("ADYEN_ACCOUNT"),
 	)
 
@@ -21,15 +20,12 @@ func getTestInstance() *Adyen {
 
 // getTestInstanceWithHPP - instanciate adyen for tests
 func getTestInstanceWithHPP() *Adyen {
-	instance := NewWithHPP(
+	instance := NewWithHMAC(
 		Testing,
 		os.Getenv("ADYEN_USERNAME"),
 		os.Getenv("ADYEN_PASSWORD"),
-		os.Getenv("ADYEN_CLIENT_TOKEN"),
 		os.Getenv("ADYEN_ACCOUNT"),
 		os.Getenv("ADYEN_HMAC"),
-		os.Getenv("ADYEN_SKINCODE"),
-		os.Getenv("ADYEN_SHOPPER_LOCALE"),
 	)
 
 	return instance
