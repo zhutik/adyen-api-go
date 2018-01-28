@@ -4,9 +4,10 @@ package adyen
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/google/go-querystring/query"
 	"log"
 	"net/http"
+
+	"github.com/google/go-querystring/query"
 )
 
 // DefaultCurrency default currency for transactions
@@ -30,18 +31,16 @@ const (
 //     - env - Environment for next API calls
 //     - username - API username for authentication
 //     - password - API password for authentication
-//     - clientID - Used to load external JS files from Adyen, to encrypt client requests
-//     - merchantAccount - Merchant Account settings for payment and modification requests
 //
 // You can create new API user there: https://ca-test.adyen.com/ca/ca/config/users.shtml
-func New(env environment, username, password, clientID, merchantAccount string) *Adyen {
+func New(env environment, username, password string) *Adyen {
 	return &Adyen{
-		Credentials: newCredentials(env, username, password, merchantAccount, clientID),
+		Credentials: newCredentials(env, username, password),
 		Currency:    DefaultCurrency,
 	}
 }
 
-// NewWithHPP - create new Adyen instance with HPP credentials
+// NewWithHMAC - create new Adyen instance with HPP credentials
 //
 // Use this constructor when you need to use Adyen HPP API.
 //
@@ -50,30 +49,37 @@ func New(env environment, username, password, clientID, merchantAccount string) 
 //     - env - Environment for next API calls
 //     - username - API username for authentication
 //     - password - API password for authentication
-//     - clientID - Used to load external JS files from Adyen, to encrypt client requests
-//     - merchantAccount - Merchant Account settings for payment and modification requests
 //     - hmac - is generated when new Skin is created in Adyen Customer Area
-//     - skinCode - skin code from Adyen CA
-//     - shopperLocale - merchant local settings (in ISO format)
 //
 // New skin can be created there https://ca-test.adyen.com/ca/ca/skin/skins.shtml
-func NewWithHPP(env environment, username, password, clientID, merchantAccount, hmac, skinCode, shopperLocale string) *Adyen {
+func NewWithHMAC(env environment, username, password, hmac string) *Adyen {
 	return &Adyen{
-		Credentials: newCredentialsWithHPPSettings(env, username, password, merchantAccount, clientID, hmac, skinCode, shopperLocale),
+		Credentials: newCredentialsWithHMAC(env, username, password, hmac),
 		Currency:    DefaultCurrency,
 	}
 }
 
 // Adyen - base structure with configuration options
+//
+//       - Credentials instance of API creditials to connect to Adyen API
+//       - Currency is a default request currency. Request data overrides this setting
+//       - MerchantAccount is default merchant account to be used. Request data overrides this setting
+//       - Logger is an optional logger instance
+//
+// Currency and MerchantAccount should be used only to store the data and be able to use it later.
+// Requests won't be automatically populated with given values
 type Adyen struct {
-	Credentials apiCredentials
-	Currency    string
-	Logger      *log.Logger
+	Credentials     apiCredentials
+	Currency        string
+	MerchantAccount string
+	Logger          *log.Logger
 }
 
 // ClientURL - returns URl, that need to loaded in UI, to encrypt Credit Card information
-func (a *Adyen) ClientURL() string {
-	return a.Credentials.Env.ClientURL(a.Credentials.ClientID)
+//
+//           - clientID - Used to load external JS files from Adyen, to encrypt client requests
+func (a *Adyen) ClientURL(clientID string) string {
+	return a.Credentials.Env.ClientURL(clientID)
 }
 
 // adyenURL returns Adyen backend URL
@@ -97,12 +103,30 @@ func (a *Adyen) AttachLogger(Logger *log.Logger) {
 	a.Logger = Logger
 }
 
+// GetCurrency get currency for current settion
+func (a *Adyen) GetCurrency() string {
+	return a.Currency
+}
+
 // SetCurrency set default currency for transactions
 func (a *Adyen) SetCurrency(currency string) {
 	a.Currency = currency
 }
 
+// GetMerchantAccount get default merchant account that is currency set
+func (a *Adyen) GetMerchantAccount() string {
+	return a.MerchantAccount
+}
+
+// SetMerchantAccount set default merchant account for current instance
+func (a *Adyen) SetMerchantAccount(account string) {
+	a.MerchantAccount = account
+}
+
 // execute request on Adyen side, transforms "requestEntity" into JSON representation
+//
+// internal method to do a request to Adyen API endpoint
+// request Type: POST, request body format - JSON
 func (a *Adyen) execute(service string, method string, requestEntity interface{}) (*Response, error) {
 	body, err := json.Marshal(requestEntity)
 	if err != nil {
@@ -159,6 +183,8 @@ func (a *Adyen) execute(service string, method string, requestEntity interface{}
 }
 
 // executeHpp - execute request without authorization to Adyen Hosted Payment API
+//
+// internal method to request Adyen HPP API via GET
 func (a *Adyen) executeHpp(method string, requestEntity interface{}) (*Response, error) {
 	url := a.createHPPUrl(method)
 

@@ -6,40 +6,40 @@ package adyen
 //
 // Link: https://docs.adyen.com/developers/api-reference/payments-api#recurring
 const (
-    RecurringPaymentOneClick              = "ONECLICK"
+	RecurringPaymentOneClick              = "ONECLICK"
 	RecurringPaymentRecurring             = "RECURRING"
 	ShopperInteractionContAuth            = "ContAuth"
 	SelectRecurringDetailReferenceLatests = "LATEST"
 )
 
 // AuthoriseEncrypted structure for Authorisation request (with encrypted card information)
+//
+// Link - https://docs.adyen.com/developers/api-reference/payments-api#paymentrequest
 type AuthoriseEncrypted struct {
 	AdditionalData                   *AdditionalData `json:"additionalData,omitempty"`
 	Amount                           *Amount         `json:"amount"`
 	Reference                        string          `json:"reference"`
 	MerchantAccount                  string          `json:"merchantAccount"`
-	// Mandatory for recurring payment
-	ShopperReference                 string          `json:"shopperReference,omitempty"`
+	ShopperReference                 string          `json:"shopperReference,omitempty"` // Mandatory for recurring payment
 	Recurring                        *Recurring      `json:"recurring,omitempty"`
 	ShopperInteraction               string          `json:"shopperInteraction,omitempty"`
 	SelectedRecurringDetailReference string          `json:"selectedRecurringDetailReference,omitempty"`
-	// Required for a 3DS process
-	BrowserInfo *BrowserInfo `json:"browserInfo,omitempty"`
+	BrowserInfo                      *BrowserInfo    `json:"browserInfo,omitempty"` // Required for a 3DS process
 }
 
 // Authorise structure for Authorisation request (card is not encrypted)
+//
+// Link - https://docs.adyen.com/developers/api-reference/payments-api#paymentrequest
 type Authorise struct {
-	Card                             *Card      `json:"card,omitempty"`
-	Amount                           *Amount    `json:"amount"`
-	Reference                        string     `json:"reference"`
-	MerchantAccount                  string     `json:"merchantAccount"`
-	// Mandatory for recurring payment
-	ShopperReference                 string     `json:"shopperReference,omitempty"`
-	Recurring                        *Recurring `json:"recurring,omitempty"`
-	ShopperInteraction               string     `json:"shopperInteraction,omitempty"`
-	SelectedRecurringDetailReference string     `json:"selectedRecurringDetailReference,omitempty"`
-	// Required for a 3DS process
-	BrowserInfo *BrowserInfo `json:"browserInfo,omitempty"`
+	Card                             *Card        `json:"card,omitempty"`
+	Amount                           *Amount      `json:"amount"`
+	Reference                        string       `json:"reference"`
+	MerchantAccount                  string       `json:"merchantAccount"`
+	ShopperReference                 string       `json:"shopperReference,omitempty"` // Mandatory for recurring payment
+	Recurring                        *Recurring   `json:"recurring,omitempty"`
+	ShopperInteraction               string       `json:"shopperInteraction,omitempty"`
+	SelectedRecurringDetailReference string       `json:"selectedRecurringDetailReference,omitempty"`
+	BrowserInfo                      *BrowserInfo `json:"browserInfo,omitempty"` // Required for a 3DS process
 }
 
 // AuthoriseResponse is a response structure for Adyen
