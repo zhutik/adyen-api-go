@@ -3,18 +3,37 @@
 [![Build Status](https://travis-ci.org/zhutik/adyen-api-go.png)](https://travis-ci.org/zhutik/adyen-api-go)
 [![GoDoc](http://godoc.org/github.com/zhutik/adyen-api-go?status.png)](http://godoc.org/github.com/zhutik/adyen-api-go)
 
-## Install
+A Go client library for [Adyen](https://www.adyen.com/en/) payments platform.
+
+This is *not* an official client library. Adyen has official libraries for multiple platforms [Github](https://github.com/adyen/), but not Go yet.
+
+This package provides core functionality to perform most common types of a Payment requests to an API. 
+If you see some functionality is missing, please, open an issue (or better yet, a pull request).
+
+## Installation
 
 ```
 go get github.com/zhutik/adyen-api-go
 ```
 
-## Playgroup and examples
+## Playground and examples
 
-Please check separate repository with Adyen API playgroup, where you can test API
-and get some usage example for Adyen API library
+Please check separate repository with Adyen API playground, where you can test API
+and get some usage examples for Adyen API library
 
 https://github.com/zhutik/adyen-api-go-example
+
+Or you can visit [Wiki page](https://github.com/zhutik/adyen-api-go/wiki) for more details and examples
+
+## Supported API Calls
+
+* Authorise (Encrypted in recommended)
+* Authorise 3D
+* Recurring payments and retrieving stored payment methods
+* Capture
+* Cancel
+* Refund (CancelOrRefund)
+* Notifications
 
 ## Usage
 
@@ -85,19 +104,6 @@ req := &adyen.AuthoriseEncrypted{
 }
 
 ```
-
-Supported API Calls
-* Authorise
-* Authorise 3D
-* Recurring payments
-* Capture
-* Cancel
-* Refund
-* CancelOrRefund
-* Notifications
-
-Next:
-* Add more tests
 
 ## To run example
 
