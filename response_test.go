@@ -31,7 +31,6 @@ func TestResponseErrorResponseStatus(t *testing.T) {
 
 	buf := new(bytes.Buffer)
 	_, err := buf.ReadFrom(resp.Body)
-
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -42,13 +41,11 @@ func TestResponseErrorResponseStatus(t *testing.T) {
 	}
 
 	err = providerResponse.handleHTTPError()
-
 	if err == nil {
 		t.Fatal("Response should raise an error - got nil")
 	}
 
 	errorContent := "[authorise][501]: (501) sample error"
-
 	if err.Error() != errorContent {
 		t.Fatal("Expected error message ", errorContent, " got ", err.Error())
 	}
@@ -69,7 +66,6 @@ func TestResponseNotValidJson(t *testing.T) {
 
 	buf := new(bytes.Buffer)
 	_, err := buf.ReadFrom(resp.Body)
-
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -80,7 +76,6 @@ func TestResponseNotValidJson(t *testing.T) {
 	}
 
 	err = providerResponse.handleHTTPError()
-
 	if err == nil {
 		t.Fatal("Response should raise an error - got nil")
 	}

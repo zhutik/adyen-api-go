@@ -1,12 +1,12 @@
 package adyen
 
 import (
-	"testing"
-	"strings"
-	"net/http"
-	"io/ioutil"
 	"bytes"
 	"encoding/json"
+	"io/ioutil"
+	"net/http"
+	"strings"
+	"testing"
 	"time"
 )
 
@@ -82,19 +82,16 @@ func TestNotificationRequest(t *testing.T) {
 	}
 
 	buf := new(bytes.Buffer)
-	_, err := buf.ReadFrom(resp.Body)
-
-	if err != nil {
+	if _, err := buf.ReadFrom(resp.Body); err != nil {
 		t.Error(err)
 	}
 
 	var notification NotificationRequest
-
 	if err := json.Unmarshal(buf.Bytes(), &notification); err != nil {
 		t.Error(err)
 	}
 
-	if notification.Live != false {
+	if notification.Live {
 		t.Errorf("Expected notification environment should not be live, %t given", notification.Live)
 	}
 
@@ -136,7 +133,7 @@ func TestNotificationRequest(t *testing.T) {
 		t.Errorf("Expected to have 1234:7777:12/2012 reason, %s given", item.Reason)
 	}
 
-	if item.Success != true {
+	if !item.Success {
 		t.Errorf("Expected to have successful notification, %t given", item.Success)
 	}
 }

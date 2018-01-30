@@ -22,16 +22,13 @@ type Response struct {
 
 // handleHTTPError - handle non 200 response from Adyen and create Error response instance
 func (r *Response) handleHTTPError() error {
-	var a apiError
-
-	err := json.Unmarshal(r.Body, &a)
-
-	if err != nil {
+	var aerr apiError
+	if err := json.Unmarshal(r.Body, &aerr); err != nil {
 		return err
 	}
 
-	if a.Status > 299 {
-		return a
+	if aerr.Status >= http.StatusBadRequest {
+		return aerr
 	}
 
 	return nil

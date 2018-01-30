@@ -24,9 +24,8 @@ func TestSignatureCalculateSignature(t *testing.T) {
 	}
 
 	err := req.CalculateSignature(instance)
-
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 
 	v, _ := query.Values(req)
@@ -35,10 +34,8 @@ func TestSignatureCalculateSignature(t *testing.T) {
 	// to debug request signature, print URL params, login to https://ca-test.adyen.com and follow full link below
 	url := "https://ca-test.adyen.com/ca/ca/skin/checkhmac.shtml" + "?" + v.Encode()
 
-	_, err = http.NewRequest("GET", url, nil)
-
-	if err != nil {
-		t.Error(err)
+	if _, err = http.NewRequest(http.MethodGet, url, nil); err != nil {
+		t.Fatal(err)
 	}
 }
 
@@ -61,9 +58,8 @@ func TestSignatureCalculateSignatureForSkipHppRequest(t *testing.T) {
 	}
 
 	err := req.CalculateSignature(instance)
-
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 
 	v, _ := query.Values(req)
@@ -72,9 +68,7 @@ func TestSignatureCalculateSignatureForSkipHppRequest(t *testing.T) {
 	// to debug request signature, print URL params, login to https://ca-test.adyen.com and follow full link below
 	url := "https://ca-test.adyen.com/ca/ca/skin/checkhmac.shtml" + "?" + v.Encode()
 
-	_, err = http.NewRequest("GET", url, nil)
-
-	if err != nil {
-		t.Error(err)
+	if _, err = http.NewRequest(http.MethodGet, url, nil); err != nil {
+		t.Fatal(err)
 	}
 }

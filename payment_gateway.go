@@ -84,8 +84,7 @@ func (a *PaymentGateway) DirectoryLookup(req *DirectoryLookupRequest) (*Director
 // Link - https://docs.adyen.com/developers/api-reference/hosted-payment-pages-api
 func (a *PaymentGateway) GetHPPRedirectURL(req *SkipHppRequest) (string, error) {
 	// Calculate HMAC signature to request
-	err := req.CalculateSignature(a.Adyen)
-	if err != nil {
+	if err := req.CalculateSignature(a.Adyen); err != nil {
 		return "", err
 	}
 

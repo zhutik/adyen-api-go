@@ -30,7 +30,6 @@ func TestAuthoriseFailed(t *testing.T) {
 	}
 
 	_, err := instance.Payment().Authorise(authRequest)
-
 	if err == nil {
 		t.Error("Request should fail, due to missing reference error")
 	}
@@ -68,7 +67,6 @@ func TestAuthorise(t *testing.T) {
 	response, err := instance.Payment().Authorise(authRequest)
 
 	knownError, ok := err.(apiError)
-
 	if ok {
 		t.Errorf("Response should be succesfull. Known API Error: Code - %s, Message - %s, Type - %s", knownError.ErrorCode, knownError.Message, knownError.ErrorType)
 	}
@@ -103,7 +101,6 @@ func TestDirectoryLookUpMissingData(t *testing.T) {
 	}
 
 	_, err := instance.Payment().DirectoryLookup(directoryRequest)
-
 	if err == nil {
 		t.Error("Request should fail due to missing request data")
 	}

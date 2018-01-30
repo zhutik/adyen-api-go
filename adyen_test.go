@@ -1,10 +1,26 @@
 package adyen
 
 import (
+	"io/ioutil"
+	"log"
 	"math/rand"
 	"os"
+	"testing"
 	"time"
+
+	"github.com/joho/godotenv"
 )
+
+func TestMain(m *testing.M) {
+	// Set environment variables for subsequent tests.
+	if err := godotenv.Load(".default.env"); err != nil {
+		log.Fatalf("error loading .env file: %v", err)
+	}
+
+	os.Exit(m.Run())
+}
+
+var noopLogger = log.New(ioutil.Discard, "", log.LstdFlags)
 
 // getTestInstance - instanciate adyen for tests
 func getTestInstance() *Adyen {
@@ -12,7 +28,7 @@ func getTestInstance() *Adyen {
 		Testing,
 		os.Getenv("ADYEN_USERNAME"),
 		os.Getenv("ADYEN_PASSWORD"),
-	)
+		noopLogger)
 
 	return instance
 }
@@ -24,7 +40,7 @@ func getTestInstanceWithHPP() *Adyen {
 		os.Getenv("ADYEN_USERNAME"),
 		os.Getenv("ADYEN_PASSWORD"),
 		os.Getenv("ADYEN_HMAC"),
-	)
+		noopLogger)
 
 	return instance
 }
@@ -35,6 +51,7 @@ func randInt(min int, max int) int {
 }
 
 // randomString - generate randorm string of given length
+// note: not for use in live code
 func randomString(l int) string {
 	rand.Seed(time.Now().UTC().UnixNano())
 
