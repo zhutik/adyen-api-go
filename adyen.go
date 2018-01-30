@@ -31,6 +31,7 @@ const (
 //     - env - Environment for next API calls
 //     - username - API username for authentication
 //     - password - API password for authentication
+//     - logger optionally logs to a configured io.Writer.
 //
 // You can create new API user there: https://ca-test.adyen.com/ca/ca/config/users.shtml
 func New(env environment, username, password string, logger *log.Logger) *Adyen {
@@ -51,6 +52,7 @@ func New(env environment, username, password string, logger *log.Logger) *Adyen 
 //     - username - API username for authentication
 //     - password - API password for authentication
 //     - hmac - is generated when new Skin is created in Adyen Customer Area
+//     - logger optionally logs to a configured io.Writer.
 //
 // New skin can be created there https://ca-test.adyen.com/ca/ca/skin/skins.shtml
 func NewWithHMAC(env environment, username, password, hmac string, logger *log.Logger) *Adyen {

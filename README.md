@@ -40,17 +40,20 @@ Or you can visit [Wiki page](https://github.com/zhutik/adyen-api-go/wiki) for mo
 ```go
 import "github.com/zhutik/adyen-api-go"
 
+logger := log.New(os.Stdout, "Adyen API: ", log.Ldate|log.Ltime|log.Lshortfile)
+
 // Configure Adyen API
 instance := adyen.New(
   adyen.Testing,
   os.Getenv("ADYEN_USERNAME"),
   os.Getenv("ADYEN_PASSWORD"),
+  logger,
 )
 
 req := &adyen.AuthoriseEncrypted{
   Amount: &adyen.Amount{
     Value:    1000, // amount * 100, f.e. 10,30 EUR = 1030
-    Currency: "EUR" // or use instance.getCurrency()
+    Currency: "EUR" // or use instance.Currency
   },
   MerchantAccount: os.Getenv("ADYEN_ACCOUNT"), // your merchant account in Adyen
   AdditionalData:  &adyen.AdditionalData{Content: "encryptedData"}, // encrypted data from a form
@@ -65,11 +68,14 @@ g, err := instance.Payment().AuthoriseEncrypted(req)
 Load Client Side JS for form encryption to include on credit card form page
 
 ```go
+logger := log.New(os.Stdout, "Adyen API: ", log.Ldate|log.Ltime|log.Lshortfile)
+
 // Configure Adyen API
 instance := adyen.New(
   adyen.Testing,
   os.Getenv("ADYEN_USERNAME"),
   os.Getenv("ADYEN_PASSWORD"),
+  logger,
 )
 
 url := &adyen.ClientURL(os.Getenv("ADYEN_CLIENT_TOKEN"))
@@ -80,25 +86,27 @@ Currently, MerchantAccount and Currency need to be set for every request manuall
 To shortcut configuration, additional methods could be used to set and retrieve those settings.
 
 ```go
+logger := log.New(os.Stdout, "Adyen API: ", log.Ldate|log.Ltime|log.Lshortfile)
 
 // Configure Adyen API
 instance := adyen.New(
   adyen.Testing,
   os.Getenv("ADYEN_USERNAME"),
   os.Getenv("ADYEN_PASSWORD"),
+  logger,
 )
 
 // set parameters once for current instance
-instance.SetCurrency("USD")
-instance.SetMerchantAccount("TEST_MERCHANT_ACCOUNT")
+instance.Currency = "USD"
+instance.MerchantAccount = "TEST_MERCHANT_ACCOUNT"
 
 // futher, information could be retrieved to populate request 
 req := &adyen.AuthoriseEncrypted{
   Amount: &adyen.Amount{
     Value:    1000,
-    Currency: instance.GetCurrency()
+    Currency: instance.Currency
   },
-  MerchantAccount: instance.GetMerchantAccount(),
+  MerchantAccount: instance.MerchantAccount,
   AdditionalData:  &adyen.AdditionalData{Content: "encryptedData"}, // encrypted data from a form
   Reference:       "your-order-number",
 }
@@ -137,12 +145,15 @@ Use HPP constructor to initialize new Adyen API instance
 ```go
 import "github.com/zhutik/adyen-api-go"
 
+logger := log.New(os.Stdout, "Adyen API: ", log.Ldate|log.Ltime|log.Lshortfile)
+
 // Configure Adyen API
 instance := adyen.NewWithHMAC(
   adyen.Testing,
   os.Getenv("ADYEN_USERNAME"),
   os.Getenv("ADYEN_PASSWORD"),
   os.Getenv("ADYEN_HMAC"),
+  logger,
 )
 
 ```
