@@ -7,9 +7,18 @@ type environment struct {
 	hppURL    string
 }
 
-// newEnvironment create environment based on api url
-func newEnvironment(apiURL, clientURL, hppURL string) environment {
-	return environment{apiURL: apiURL, clientURL: clientURL, hppURL: hppURL}
+// Testing - instance of testing environment
+var Testing = environment{
+	apiURL:    "https://pal-test.adyen.com/pal/servlet",
+	clientURL: "https://test.adyen.com/hpp/cse/js/",
+	hppURL:    "https://test.adyen.com/hpp/",
+}
+
+// Production - instance of production environment
+var Production = environment{
+	apiURL:    "https://pal-live.adyen.com/pal/servlet",
+	clientURL: "https://live.adyen.com/hpp/cse/js/",
+	hppURL:    "https://live.adyen.com/hpp/",
 }
 
 // BaseURL returns api base url
@@ -26,17 +35,3 @@ func (e environment) ClientURL(clientID string) string {
 func (e environment) HppURL(request string) string {
 	return e.hppURL + request + ".shtml"
 }
-
-// Testing - instance of testing environment
-var Testing = newEnvironment(
-	"https://pal-test.adyen.com/pal/servlet",
-	"https://test.adyen.com/hpp/cse/js/",
-	"https://test.adyen.com/hpp/",
-)
-
-// Production - instance of production environment
-var Production = newEnvironment(
-	"https://pal-live.adyen.com/pal/servlet",
-	"https://live.adyen.com/hpp/cse/js/",
-	"https://live.adyen.com/hpp/",
-)

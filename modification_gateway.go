@@ -1,8 +1,6 @@
 package adyen
 
-/*
-  Adyen Modification actions
-*/
+// Adyen Modification actions
 const (
 	captureType        = "capture"
 	cancelType         = "cancel"

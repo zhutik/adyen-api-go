@@ -207,3 +207,8 @@ https://github.com/zhutik/adyen-api-go-example
 Open http://localhost:8080 in your browser and check implemented actions.
 
 Test credit cards could be found https://docs.adyen.com/support/integration#testcardnumbers
+
+## TODOs
+
+* Move some constants into enum files.
+* Parse URLs for environment's BaseURL, ClientURL and HppURL methods instead of string concatenation (needs to return an error as well)

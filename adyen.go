@@ -10,17 +10,17 @@ import (
 	"github.com/google/go-querystring/query"
 )
 
-// DefaultCurrency default currency for transactions
-const DefaultCurrency = "EUR"
-
-// Version of a current Adyen API
 const (
+	// DefaultCurrency default currency for transactions
+	DefaultCurrency = "EUR"
+
+	// APIVersion of current Adyen API
 	APIVersion = "v25"
-)
 
-// Enpoint service to use
-const (
-	PaymentService   = "Payment"
+	// PaymentService is used to identify the standard payment workflow.
+	PaymentService = "Payment"
+
+	// RecurringService is used to identify the recurring payment workflow.
 	RecurringService = "Recurring"
 )
 
@@ -33,10 +33,11 @@ const (
 //     - password - API password for authentication
 //
 // You can create new API user there: https://ca-test.adyen.com/ca/ca/config/users.shtml
-func New(env environment, username, password string) *Adyen {
+func New(env environment, username, password string, logger *log.Logger) *Adyen {
 	return &Adyen{
 		Credentials: newCredentials(env, username, password),
 		Currency:    DefaultCurrency,
+		Logger:      logger,
 	}
 }
 
@@ -52,10 +53,11 @@ func New(env environment, username, password string) *Adyen {
 //     - hmac - is generated when new Skin is created in Adyen Customer Area
 //
 // New skin can be created there https://ca-test.adyen.com/ca/ca/skin/skins.shtml
-func NewWithHMAC(env environment, username, password, hmac string) *Adyen {
+func NewWithHMAC(env environment, username, password, hmac string, logger *log.Logger) *Adyen {
 	return &Adyen{
 		Credentials: newCredentialsWithHMAC(env, username, password, hmac),
 		Currency:    DefaultCurrency,
+		Logger:      logger,
 	}
 }
 
@@ -64,7 +66,7 @@ func NewWithHMAC(env environment, username, password, hmac string) *Adyen {
 //       - Credentials instance of API creditials to connect to Adyen API
 //       - Currency is a default request currency. Request data overrides this setting
 //       - MerchantAccount is default merchant account to be used. Request data overrides this setting
-//       - Logger is an optional logger instance
+//       - Logger optionally logs to a configured io.Writer.
 //
 // Currency and MerchantAccount should be used only to store the data and be able to use it later.
 // Requests won't be automatically populated with given values
@@ -92,37 +94,6 @@ func (a *Adyen) createHPPUrl(requestType string) string {
 	return a.Credentials.Env.HppURL(requestType)
 }
 
-// AttachLogger attach logger to API instance
-//
-// Example:
-//
-//  instance := adyen.New(....)
-//  Logger = log.New(os.Stdout, "Adyen Playground: ", log.Ldate|log.Ltime|log.Lshortfile)
-//  instance.AttachLogger(Logger)
-func (a *Adyen) AttachLogger(Logger *log.Logger) {
-	a.Logger = Logger
-}
-
-// GetCurrency get currency for current settion
-func (a *Adyen) GetCurrency() string {
-	return a.Currency
-}
-
-// SetCurrency set default currency for transactions
-func (a *Adyen) SetCurrency(currency string) {
-	a.Currency = currency
-}
-
-// GetMerchantAccount get default merchant account that is currency set
-func (a *Adyen) GetMerchantAccount() string {
-	return a.MerchantAccount
-}
-
-// SetMerchantAccount set default merchant account for current instance
-func (a *Adyen) SetMerchantAccount(account string) {
-	a.MerchantAccount = account
-}
-
 // execute request on Adyen side, transforms "requestEntity" into JSON representation
 //
 // internal method to do a request to Adyen API endpoint
@@ -134,48 +105,38 @@ func (a *Adyen) execute(service string, method string, requestEntity interface{}
 	}
 
 	url := a.adyenURL(service, method)
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(body))
+	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(body))
 	if err != nil {
 		return nil, err
 	}
 
-	if a.Logger != nil {
-		a.Logger.Printf("[Request]: %s %s\n%s", method, url, body)
-	}
+	a.Logger.Printf("[Request]: %s %s\n%s", method, url, body)
 
 	req.Header.Set("Content-Type", "application/json")
 	req.SetBasicAuth(a.Credentials.Username, a.Credentials.Password)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
-
 	if err != nil {
 		return nil, err
 	}
-
 	defer func() {
 		err = resp.Body.Close()
 	}()
 
 	buf := new(bytes.Buffer)
-	_, err = buf.ReadFrom(resp.Body)
-
-	if err != nil {
+	if _, err = buf.ReadFrom(resp.Body); err != nil {
 		return nil, err
 	}
 
-	if a.Logger != nil {
-		a.Logger.Printf("[Response]: %s %s\n%s", method, url, buf.String())
-	}
+	a.Logger.Printf("[Response]: %s %s\n%s", method, url, buf.String())
 
 	providerResponse := &Response{
 		Response: resp,
 		Body:     buf.Bytes(),
 	}
 
-	err = providerResponse.handleHTTPError()
-
-	if err != nil {
+	if err = providerResponse.handleHTTPError(); err != nil {
 		return nil, err
 	}
 
@@ -191,14 +152,12 @@ func (a *Adyen) executeHpp(method string, requestEntity interface{}) (*Response,
 	v, _ := query.Values(requestEntity)
 	url = url + "?" + v.Encode()
 
-	req, err := http.NewRequest("GET", url, nil)
+	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	if a.Logger != nil {
-		a.Logger.Printf("[Request]: %s %s", method, url)
-	}
+	a.Logger.Printf("[Request]: %s %s", method, url)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -212,15 +171,11 @@ func (a *Adyen) executeHpp(method string, requestEntity interface{}) (*Response,
 	}()
 
 	buf := new(bytes.Buffer)
-	_, err = buf.ReadFrom(resp.Body)
-
-	if err != nil {
+	if _, err = buf.ReadFrom(resp.Body); err != nil {
 		return nil, err
 	}
 
-	if a.Logger != nil {
-		a.Logger.Printf("[Response]: %s %s\n%s", method, url, buf.String())
-	}
+	a.Logger.Printf("[Response]: %s %s\n%s", method, url, buf.String())
 
 	providerResponse := &Response{
 		Response: resp,

@@ -10,6 +10,7 @@ install:
   - go get ./...
   - go get github.com/golang/lint/golint
   - go get github.com/kisielk/errcheck
+  - go get github.com/joho/godotenv
 
 jobs:
   include:
