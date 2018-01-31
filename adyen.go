@@ -164,7 +164,9 @@ func (a *Adyen) execute(service string, method string, requestEntity interface{}
 	req.Header.Set("Content-Type", "application/json")
 	req.SetBasicAuth(a.Credentials.Username, a.Credentials.Password)
 
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: a.ClientTimeout,
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
@@ -208,7 +210,9 @@ func (a *Adyen) executeHpp(method string, requestEntity interface{}) (*Response,
 
 	a.Logger.Printf("[Request]: %s %s", method, url)
 
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: a.ClientTimeout,
+	}
 	resp, err := client.Do(req)
 
 	if err != nil {
