@@ -57,7 +57,7 @@ type Adyen struct {
 //     - opts - an optional collection of functions that allow you to tweak configurations.
 //
 // You can create new API user there: https://ca-test.adyen.com/ca/ca/config/users.shtml
-func New(env environment, username, password string, logger *log.Logger, opts ...Option) *Adyen {
+func New(env Environment, username, password string, logger *log.Logger, opts ...Option) *Adyen {
 	creds := makeCredentials(env, username, password)
 	return NewWithCredentials(env, creds, logger, opts...)
 }
@@ -76,7 +76,7 @@ func New(env environment, username, password string, logger *log.Logger, opts ..
 //     - opts - an optional collection of functions that allow you to tweak configurations.
 //
 // New skin can be created there https://ca-test.adyen.com/ca/ca/skin/skins.shtml
-func NewWithHMAC(env environment, username, password, hmac string, logger *log.Logger, opts ...Option) *Adyen {
+func NewWithHMAC(env Environment, username, password, hmac string, logger *log.Logger, opts ...Option) *Adyen {
 	creds := makeCredentialsWithHMAC(env, username, password, hmac)
 	return NewWithCredentials(env, creds, logger, opts...)
 }
@@ -91,7 +91,7 @@ func NewWithHMAC(env environment, username, password, hmac string, logger *log.L
 //     - opts - an optional collection of functions that allow you to tweak configurations.
 //
 // New skin can be created there https://ca-test.adyen.com/ca/ca/skin/skins.shtml
-func NewWithCredentials(env environment, creds apiCredentials, logger *log.Logger, opts ...Option) *Adyen {
+func NewWithCredentials(env Environment, creds apiCredentials, logger *log.Logger, opts ...Option) *Adyen {
 	a := Adyen{
 		Credentials:   creds,
 		Currency:      DefaultCurrency,

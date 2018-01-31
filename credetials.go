@@ -12,14 +12,14 @@ package adyen
 // You can create new API user there: https://ca-test.adyen.com/ca/ca/config/users.shtml
 // New skin can be created there https://ca-test.adyen.com/ca/ca/skin/skins.shtml
 type apiCredentials struct {
-	Env      environment
+	Env      Environment
 	Username string
 	Password string
 	Hmac     string
 }
 
 // makeCredentials create new APICredentials
-func makeCredentials(env environment, username, password string) apiCredentials {
+func makeCredentials(env Environment, username, password string) apiCredentials {
 	return apiCredentials{
 		Env:      env,
 		Username: username,
@@ -28,7 +28,7 @@ func makeCredentials(env environment, username, password string) apiCredentials 
 }
 
 // makeCredentialsWithHMAC create new APICredentials with HMAC singature
-func makeCredentialsWithHMAC(env environment, username, password, hmac string) apiCredentials {
+func makeCredentialsWithHMAC(env Environment, username, password, hmac string) apiCredentials {
 	return apiCredentials{
 		Env:      env,
 		Username: username,
