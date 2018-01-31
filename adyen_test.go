@@ -5,11 +5,15 @@ import (
 	"log"
 	"math/rand"
 	"os"
+	"reflect"
 	"testing"
 	"time"
 
 	"github.com/joho/godotenv"
 )
+
+// noopLogger keeps the logs quite during verbose testing.
+var noopLogger = log.New(ioutil.Discard, "", log.LstdFlags)
 
 func TestMain(m *testing.M) {
 	// Set environment variables for subsequent tests.
@@ -20,7 +24,44 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-var noopLogger = log.New(ioutil.Discard, "", log.LstdFlags)
+func TestNewWithTimeout(t *testing.T) {
+	const timeout = time.Second * 123
+
+	act := New(Testing, "un", "pw", nil, WithTimeout(timeout))
+	equals(t, timeout, act.ClientTimeout)
+}
+
+func TestNewWithCurrency(t *testing.T) {
+	const currency = "USD"
+
+	act := New(Testing, "un", "pw", nil, WithCurrency(currency))
+	equals(t, currency, act.Currency)
+}
+
+func TestNewWithCustomOptions(t *testing.T) {
+	const merchant, currency, timeout = "merch", "JPY", time.Second * 21
+
+	f1 := func(a *Adyen) {
+		a.Currency = currency
+		a.ClientTimeout = timeout
+	}
+
+	f2 := func(a *Adyen) {
+		a.MerchantAccount = merchant
+	}
+
+	act := New(Testing, "un", "pw", nil, f1, f2)
+	equals(t, merchant, act.MerchantAccount)
+	equals(t, currency, act.Currency)
+	equals(t, timeout, act.ClientTimeout)
+}
+
+func equals(tb testing.TB, exp interface{}, act interface{}) {
+	tb.Helper()
+	if !reflect.DeepEqual(exp, act) {
+		tb.Fatalf("\n\texp: %[1]v (%[1]T)\n\tgot: %[2]v (%[2]T)\n", exp, act)
+	}
+}
 
 // getTestInstance - instanciate adyen for tests
 func getTestInstance() *Adyen {

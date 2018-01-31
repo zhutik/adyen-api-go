@@ -18,8 +18,8 @@ type apiCredentials struct {
 	Hmac     string
 }
 
-// newCredentials create new APICredentials
-func newCredentials(env environment, username, password string) apiCredentials {
+// makeCredentials create new APICredentials
+func makeCredentials(env environment, username, password string) apiCredentials {
 	return apiCredentials{
 		Env:      env,
 		Username: username,
@@ -27,8 +27,8 @@ func newCredentials(env environment, username, password string) apiCredentials {
 	}
 }
 
-// newCredentialsWithHMAC create new APICredentials with HMAC singature
-func newCredentialsWithHMAC(env environment, username, password, hmac string) apiCredentials {
+// makeCredentialsWithHMAC create new APICredentials with HMAC singature
+func makeCredentialsWithHMAC(env environment, username, password, hmac string) apiCredentials {
 	return apiCredentials{
 		Env:      env,
 		Username: username,
