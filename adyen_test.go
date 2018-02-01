@@ -1,11 +1,14 @@
 package adyen
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"math/rand"
 	"os"
+	"path/filepath"
 	"reflect"
+	"runtime"
 	"testing"
 	"time"
 
@@ -56,10 +59,13 @@ func TestNewWithCustomOptions(t *testing.T) {
 	equals(t, timeout, act.ClientTimeout)
 }
 
-func equals(tb testing.TB, exp interface{}, act interface{}) {
-	tb.Helper()
+func equals(tb *testing.T, exp interface{}, act interface{}) {
+	_, fullPath, line, _ := runtime.Caller(1)
+	file := filepath.Base(fullPath)
+
 	if !reflect.DeepEqual(exp, act) {
-		tb.Fatalf("\n\texp: %[1]v (%[1]T)\n\tgot: %[2]v (%[2]T)\n", exp, act)
+		fmt.Printf("%s:%d:\n\texp: %[3]v (%[3]T)\n\tgot: %[4]v (%[4]T)\n", file, line, exp, act)
+		tb.FailNow()
 	}
 }
 
