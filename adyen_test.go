@@ -1,15 +1,22 @@
 package adyen
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"math/rand"
 	"os"
+	"path/filepath"
+	"reflect"
+	"runtime"
 	"testing"
 	"time"
 
 	"github.com/joho/godotenv"
 )
+
+// noopLogger keeps the logs quite during verbose testing.
+var noopLogger = log.New(ioutil.Discard, "", log.LstdFlags)
 
 func TestMain(m *testing.M) {
 	// Set environment variables for subsequent tests.
@@ -20,7 +27,47 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-var noopLogger = log.New(ioutil.Discard, "", log.LstdFlags)
+func TestNewWithTimeout(t *testing.T) {
+	const timeout = time.Second * 123
+
+	act := New(Testing, "un", "pw", nil, WithTimeout(timeout))
+	equals(t, timeout, act.ClientTimeout)
+}
+
+func TestNewWithCurrency(t *testing.T) {
+	const currency = "USD"
+
+	act := New(Testing, "un", "pw", nil, WithCurrency(currency))
+	equals(t, currency, act.Currency)
+}
+
+func TestNewWithCustomOptions(t *testing.T) {
+	const merchant, currency, timeout = "merch", "JPY", time.Second * 21
+
+	f1 := func(a *Adyen) {
+		a.Currency = currency
+		a.ClientTimeout = timeout
+	}
+
+	f2 := func(a *Adyen) {
+		a.MerchantAccount = merchant
+	}
+
+	act := New(Testing, "un", "pw", nil, f1, f2)
+	equals(t, merchant, act.MerchantAccount)
+	equals(t, currency, act.Currency)
+	equals(t, timeout, act.ClientTimeout)
+}
+
+func equals(tb *testing.T, exp interface{}, act interface{}) {
+	_, fullPath, line, _ := runtime.Caller(1)
+	file := filepath.Base(fullPath)
+
+	if !reflect.DeepEqual(exp, act) {
+		fmt.Printf("%s:%d:\n\texp: %[3]v (%[3]T)\n\tgot: %[4]v (%[4]T)\n", file, line, exp, act)
+		tb.FailNow()
+	}
+}
 
 // getTestInstance - instanciate adyen for tests
 func getTestInstance() *Adyen {

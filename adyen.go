@@ -6,11 +6,16 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"time"
 )
 
 const (
-	// DefaultCurrency default currency for transactions
+	// DefaultCurrency is the default currency for transactions
 	DefaultCurrency = "EUR"
+
+	// DefaultClientTimeout is the default timeout used when making
+	// HTTP requests to Adyen.
+	DefaultClientTimeout = time.Second * 10
 
 	// PaymentAPIVersion - API version of current payment API
 	PaymentAPIVersion = "v30"
@@ -25,45 +30,6 @@ const (
 	RecurringService = "Recurring"
 )
 
-// New - creates Adyen instance
-//
-// Description:
-//
-//     - env - Environment for next API calls
-//     - username - API username for authentication
-//     - password - API password for authentication
-//     - logger optionally logs to a configured io.Writer.
-//
-// You can create new API user there: https://ca-test.adyen.com/ca/ca/config/users.shtml
-func New(env environment, username, password string, logger *log.Logger) *Adyen {
-	return &Adyen{
-		Credentials: newCredentials(env, username, password),
-		Currency:    DefaultCurrency,
-		Logger:      logger,
-	}
-}
-
-// NewWithHMAC - create new Adyen instance with HPP credentials
-//
-// Use this constructor when you need to use Adyen HPP API.
-//
-// Description:
-//
-//     - env - Environment for next API calls
-//     - username - API username for authentication
-//     - password - API password for authentication
-//     - hmac - is generated when new Skin is created in Adyen Customer Area
-//     - logger optionally logs to a configured io.Writer.
-//
-// New skin can be created there https://ca-test.adyen.com/ca/ca/skin/skins.shtml
-func NewWithHMAC(env environment, username, password, hmac string, logger *log.Logger) *Adyen {
-	return &Adyen{
-		Credentials: newCredentialsWithHMAC(env, username, password, hmac),
-		Currency:    DefaultCurrency,
-		Logger:      logger,
-	}
-}
-
 // Adyen - base structure with configuration options
 //
 //       - Credentials instance of API creditials to connect to Adyen API
@@ -77,7 +43,88 @@ type Adyen struct {
 	Credentials     apiCredentials
 	Currency        string
 	MerchantAccount string
+	ClientTimeout   time.Duration
 	Logger          *log.Logger
+}
+
+// New - creates Adyen instance
+//
+// Description:
+//
+//     - env - Environment for next API calls
+//     - username - API username for authentication
+//     - password - API password for authentication
+//     - logger optionally logs to a configured io.Writer.
+//     - opts - an optional collection of functions that allow you to tweak configurations.
+//
+// You can create new API user there: https://ca-test.adyen.com/ca/ca/config/users.shtml
+func New(env Environment, username, password string, logger *log.Logger, opts ...Option) *Adyen {
+	creds := makeCredentials(env, username, password)
+	return NewWithCredentials(env, creds, logger, opts...)
+}
+
+// NewWithHMAC - create new Adyen instance with HPP credentials
+//
+// Use this constructor when you need to use Adyen HPP API.
+//
+// Description:
+//
+//     - env - Environment for next API calls
+//     - username - API username for authentication
+//     - password - API password for authentication
+//     - hmac - is generated when new Skin is created in Adyen Customer Area
+//     - logger optionally logs to a configured io.Writer.
+//     - opts - an optional collection of functions that allow you to tweak configurations.
+//
+// New skin can be created there https://ca-test.adyen.com/ca/ca/skin/skins.shtml
+func NewWithHMAC(env Environment, username, password, hmac string, logger *log.Logger, opts ...Option) *Adyen {
+	creds := makeCredentialsWithHMAC(env, username, password, hmac)
+	return NewWithCredentials(env, creds, logger, opts...)
+}
+
+// NewWithCredentials - create new Adyen instance with pre-configured credentials.
+//
+// Description:
+//
+//     - env - Environment for next API calls
+//     - credentials - configured apiCredentials to use when interacting with Adyen.
+//     - logger - optionally logs to a configured io.Writer.
+//     - opts - an optional collection of functions that allow you to tweak configurations.
+//
+// New skin can be created there https://ca-test.adyen.com/ca/ca/skin/skins.shtml
+func NewWithCredentials(env Environment, creds apiCredentials, logger *log.Logger, opts ...Option) *Adyen {
+	a := Adyen{
+		Credentials:   creds,
+		Currency:      DefaultCurrency,
+		ClientTimeout: DefaultClientTimeout,
+		Logger:        logger,
+	}
+
+	if opts != nil {
+		for _, opt := range opts {
+			opt(&a)
+		}
+	}
+
+	return &a
+}
+
+// Option allows for custom configuration overrides.
+type Option func(*Adyen)
+
+// WithTimeout allows for a custom timeout to be provided to the underlying
+// HTTP client that's used to communicate with Adyen.
+func WithTimeout(d time.Duration) func(*Adyen) {
+	return func(a *Adyen) {
+		a.ClientTimeout = d
+	}
+}
+
+// WithCurrency allows for custom currencies to be provided to the Adyen.
+func WithCurrency(c string) func(*Adyen) {
+	return func(a *Adyen) {
+		a.Currency = c
+	}
 }
 
 // ClientURL - returns URl, that need to loaded in UI, to encrypt Credit Card information
@@ -117,7 +164,9 @@ func (a *Adyen) execute(url string, requestEntity interface{}) (*Response, error
 	req.Header.Set("Content-Type", "application/json")
 	req.SetBasicAuth(a.Credentials.Username, a.Credentials.Password)
 
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: a.ClientTimeout,
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
@@ -156,7 +205,9 @@ func (a *Adyen) executeHpp(url string, requestEntity interface{}) (*Response, er
 
 	a.Logger.Printf("[Request]: %s", url)
 
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: a.ClientTimeout,
+	}
 	resp, err := client.Do(req)
 
 	if err != nil {
