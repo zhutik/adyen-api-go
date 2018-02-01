@@ -7,8 +7,6 @@ import (
 	"log"
 	"net/http"
 	"time"
-
-	"github.com/google/go-querystring/query"
 )
 
 const (
@@ -19,8 +17,11 @@ const (
 	// HTTP requests to Adyen.
 	DefaultClientTimeout = time.Second * 10
 
-	// APIVersion of current Adyen API
-	APIVersion = "v25"
+	// PaymentAPIVersion - API version of current payment API
+	PaymentAPIVersion = "v30"
+
+	// RecurringAPIVersion - API version of current recurring API
+	RecurringAPIVersion = "v25"
 
 	// PaymentService is used to identify the standard payment workflow.
 	PaymentService = "Payment"
@@ -134,8 +135,8 @@ func (a *Adyen) ClientURL(clientID string) string {
 }
 
 // adyenURL returns Adyen backend URL
-func (a *Adyen) adyenURL(service string, requestType string) string {
-	return a.Credentials.Env.BaseURL(service, APIVersion) + "/" + requestType + "/"
+func (a *Adyen) adyenURL(service, requestType, apiVersion string) string {
+	return a.Credentials.Env.BaseURL(service, apiVersion) + "/" + requestType + "/"
 }
 
 // createHPPUrl returns Adyen HPP url
@@ -147,19 +148,18 @@ func (a *Adyen) createHPPUrl(requestType string) string {
 //
 // internal method to do a request to Adyen API endpoint
 // request Type: POST, request body format - JSON
-func (a *Adyen) execute(service string, method string, requestEntity interface{}) (*Response, error) {
+func (a *Adyen) execute(url string, requestEntity interface{}) (*Response, error) {
 	body, err := json.Marshal(requestEntity)
 	if err != nil {
 		return nil, err
 	}
 
-	url := a.adyenURL(service, method)
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(body))
 	if err != nil {
 		return nil, err
 	}
 
-	a.Logger.Printf("[Request]: %s %s\n%s", method, url, body)
+	a.Logger.Printf("[Request]: %s\n%s", url, body)
 
 	req.Header.Set("Content-Type", "application/json")
 	req.SetBasicAuth(a.Credentials.Username, a.Credentials.Password)
@@ -180,7 +180,7 @@ func (a *Adyen) execute(service string, method string, requestEntity interface{}
 		return nil, err
 	}
 
-	a.Logger.Printf("[Response]: %s %s\n%s", method, url, buf.String())
+	a.Logger.Printf("[Response]: %s\n%s", url, buf.String())
 
 	providerResponse := &Response{
 		Response: resp,
@@ -197,18 +197,13 @@ func (a *Adyen) execute(service string, method string, requestEntity interface{}
 // executeHpp - execute request without authorization to Adyen Hosted Payment API
 //
 // internal method to request Adyen HPP API via GET
-func (a *Adyen) executeHpp(method string, requestEntity interface{}) (*Response, error) {
-	url := a.createHPPUrl(method)
-
-	v, _ := query.Values(requestEntity)
-	url = url + "?" + v.Encode()
-
+func (a *Adyen) executeHpp(url string, requestEntity interface{}) (*Response, error) {
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	a.Logger.Printf("[Request]: %s %s", method, url)
+	a.Logger.Printf("[Request]: %s", url)
 
 	client := &http.Client{
 		Timeout: a.ClientTimeout,
@@ -228,7 +223,7 @@ func (a *Adyen) executeHpp(method string, requestEntity interface{}) (*Response,
 		return nil, err
 	}
 
-	a.Logger.Printf("[Response]: %s %s\n%s", method, url, buf.String())
+	a.Logger.Printf("[Response]: %s\n%s", url, buf.String())
 
 	providerResponse := &Response{
 		Response: resp,
