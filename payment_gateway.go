@@ -32,7 +32,9 @@ const skipHppURL = "skipDetails"
 //}
 // adyen.Recurring{Contract:adyen.RecurringPaymentRecurring} as one of the contracts
 func (a *PaymentGateway) AuthoriseEncrypted(req *AuthoriseEncrypted) (*AuthoriseResponse, error) {
-	resp, err := a.execute(PaymentService, authoriseType, req)
+	url := a.adyenURL(PaymentService, authoriseType, PaymentAPIVersion)
+
+	resp, err := a.execute(url, req)
 
 	if err != nil {
 		return nil, err
@@ -49,7 +51,9 @@ func (a *PaymentGateway) AuthoriseEncrypted(req *AuthoriseEncrypted) (*Authorise
 //
 // Please use AuthoriseEncrypted instead and adyen frontend encryption library
 func (a *PaymentGateway) Authorise(req *Authorise) (*AuthoriseResponse, error) {
-	resp, err := a.execute(PaymentService, authoriseType, req)
+	url := a.adyenURL(PaymentService, authoriseType, PaymentAPIVersion)
+
+	resp, err := a.execute(url, req)
 
 	if err != nil {
 		return nil, err
@@ -69,7 +73,12 @@ func (a *PaymentGateway) DirectoryLookup(req *DirectoryLookupRequest) (*Director
 		return nil, err
 	}
 
-	resp, err := a.executeHpp(directoryLookupURL, req)
+	url := a.createHPPUrl(directoryLookupURL)
+
+	v, _ := query.Values(req)
+	url = url + "?" + v.Encode()
+
+	resp, err := a.executeHpp(url, req)
 
 	if err != nil {
 		return nil, err
