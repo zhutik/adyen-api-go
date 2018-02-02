@@ -12,6 +12,10 @@ install:
   - go get -u github.com/modocache/gover
   - go get -u github.com/mattn/goveralls
 
+stages:
+  - verification
+  - test
+
 jobs:
   include:
     - stage: verification
@@ -21,9 +25,9 @@ jobs:
     - stage: test
       go: 1.9
       script:
-        - make test-coverage
+        - make test
         - gover
-        - goveralls -service=travis-ci -coverprofile=gover.coverprofile
+        - goveralls -service=travis-ci -coverprofile=gover.coverprofile -repotoken $COVERALLS_TOKEN
 
     - stage: test
       go: 1.8
