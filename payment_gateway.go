@@ -16,6 +16,9 @@ const directoryLookupURL = "directory/v2"
 // skipHppUrl - SkipDetails request endpoint
 const skipHppURL = "skipDetails"
 
+// authorise3DType - authorise type request, @TODO: move to enums
+const authorise3DType = "authorise3d"
+
 // AuthoriseEncrypted - Perform authorise payment in Adyen
 //
 // To perform recurring payment, AuthoriseEncrypted need to have contract specified and shopperReference
@@ -103,4 +106,17 @@ func (a *PaymentGateway) GetHPPRedirectURL(req *SkipHppRequest) (string, error) 
 	url = url + "?" + v.Encode()
 
 	return url, nil
+}
+
+// Authorise3D - Perform authorise payment in Adyen
+func (a *PaymentGateway) Authorise3D(req *Authorise3D) (*AuthoriseResponse, error) {
+	url := a.adyenURL(PaymentService, authorise3DType, PaymentAPIVersion)
+
+	resp, err := a.execute(url, req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return resp.authorize()
 }
