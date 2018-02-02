@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/zhutik/adyen-api-go.png)](https://travis-ci.org/zhutik/adyen-api-go)
 [![GoDoc](http://godoc.org/github.com/zhutik/adyen-api-go?status.png)](http://godoc.org/github.com/zhutik/adyen-api-go)
+[![Coverage Status](https://coveralls.io/repos/github/zhutik/adyen-api-go/badge.svg)](https://coveralls.io/github/zhutik/adyen-api-go)
 
 A Go client library for [Adyen](https://www.adyen.com/en/) payments platform.
 
