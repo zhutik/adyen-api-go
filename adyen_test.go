@@ -1,14 +1,17 @@
 package adyen
 
 import (
+	"bytes"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"math/rand"
+	"net/http"
 	"os"
 	"path/filepath"
 	"reflect"
 	"runtime"
+	"strings"
 	"testing"
 	"time"
 
@@ -107,4 +110,30 @@ func randomString(l int) string {
 		bytes[i] = byte(randInt(65, 90))
 	}
 	return string(bytes)
+}
+
+// createTestResponse - create response object for tests
+func createTestResponse(input, status string, code int) (*Response, error) {
+	body := strings.NewReader(input)
+
+	resp := &http.Response{
+		Status:        status,
+		StatusCode:    code,
+		ContentLength: int64(body.Len()),
+		Body:          ioutil.NopCloser(body),
+	}
+
+	buf := new(bytes.Buffer)
+	_, err := buf.ReadFrom(resp.Body)
+
+	if err != nil {
+		return nil, err
+	}
+
+	response := &Response{
+		Response: resp,
+		Body:     buf.Bytes(),
+	}
+
+	return response, nil
 }
