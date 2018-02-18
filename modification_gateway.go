@@ -2,10 +2,11 @@ package adyen
 
 // Adyen Modification actions
 const (
-	captureType        = "capture"
-	cancelType         = "cancel"
-	cancelOrRefundType = "cancelOrRefund"
-	refundType         = "refund"
+	captureType         = "capture"
+	cancelType          = "cancel"
+	cancelOrRefundType  = "cancelOrRefund"
+	refundType          = "refund"
+	adjustAuthorisation = "adjustAuthorisation"
 )
 
 // ModificationGateway - Adyen modification transaction logic, capture, cancel, refunds and e.t.c
@@ -64,4 +65,19 @@ func (a *ModificationGateway) Refund(req *Refund) (*RefundResponse, error) {
 	}
 
 	return resp.refund()
+}
+
+// AdjustAuthorisation - perform adjustAuthorisation request to modify already authorised amount
+//
+// Link - https://docs.adyen.com/developers/payment-modifications#adjustauthorisation
+func (a *ModificationGateway) AdjustAuthorisation(req *AdjustAuthorisation) (*AdjustAuthorisationResponse, error) {
+	url := a.adyenURL(PaymentService, adjustAuthorisation, PaymentAPIVersion)
+
+	resp, err := a.execute(url, req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return resp.adjustAuthorisation()
 }
