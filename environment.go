@@ -1,30 +1,24 @@
 package adyen
 
 import (
+	"errors"
 	"fmt"
-	"strings"
 )
 
 // Environment allows clients to be configured for Testing
 // and Production environments.
 type Environment struct {
-	Name      string
 	apiURL    string
 	clientURL string
 	hppURL    string
 }
 
-const (
-	// EnvironmentTesting identifies the Adyen testing environment.
-	EnvironmentTesting = "test"
-
-	// EnvironmentProduction identifies the Adyen live environment.
-	EnvironmentProduction = "prod"
+var (
+	errProdEnvValidation = errors.New("production requires random and company name fields as per https://docs.adyen.com/developers/api-reference/live-endpoints")
 )
 
 // Testing - instance of testing environment
 var Testing = Environment{
-	Name:      EnvironmentTesting,
 	apiURL:    "https://pal-test.adyen.com/pal/servlet",
 	clientURL: "https://test.adyen.com/hpp/cse/js/",
 	hppURL:    "https://test.adyen.com/hpp/",
@@ -32,32 +26,25 @@ var Testing = Environment{
 
 // Production - instance of production environment
 var Production = Environment{
-	Name:      EnvironmentProduction,
-	apiURL:    "https://pal-live.adyen.com/pal/servlet",
+	apiURL:    "https://%s-%s-pal-live.adyen.com/pal/servlet",
 	clientURL: "https://live.adyen.com/hpp/cse/js/",
 	hppURL:    "https://live.adyen.com/hpp/",
 }
 
-type errParseEnvironment struct {
-	name string
+// TestEnvironment returns test environment configuration.
+func TestEnvironment() (e Environment) {
+	return Testing
 }
 
-func (err errParseEnvironment) Error() string {
-	return fmt.Sprintf("%q is not a valid environment name", err.name)
-}
-
-// ParseEnvironment returns an Adyen environment from a given name.
-func ParseEnvironment(name string) (e Environment, err error) {
-	switch strings.ToLower(name) {
-	case EnvironmentTesting:
-		e = Testing
-	case EnvironmentProduction:
-		e = Production
-	default:
-		err = errParseEnvironment{name: name}
+// ProductionEnvironment returns production environment configuration.
+func ProductionEnvironment(random, companyName string) (e Environment, err error) {
+	if random == "" || companyName == "" {
+		err = errProdEnvValidation
+		return
 	}
-
-	return
+	e = Production
+	e.apiURL = fmt.Sprintf(e.apiURL, random, companyName)
+	return e, nil
 }
 
 // BaseURL returns api base url

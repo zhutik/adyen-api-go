@@ -2,71 +2,100 @@ package adyen
 
 import "testing"
 
-func TestBaseURL(t *testing.T) {
-	act := Testing.BaseURL("service", "version")
+func TestTestEnvironment(t *testing.T) {
+	act := TestEnvironment()
+	equals(t, Testing.apiURL, act.apiURL)
+	equals(t, Testing.clientURL, act.clientURL)
+	equals(t, Testing.hppURL, act.hppURL)
+}
+
+func TestBaseURLEnvironmentTesting(t *testing.T) {
+	env := TestEnvironment()
+	act := env.BaseURL("service", "version")
 	exp := "https://pal-test.adyen.com/pal/servlet/service/version"
 
-	if act != exp {
-		t.Fatalf("exp %q but got %q", exp, act)
-	}
+	equals(t, exp, act)
 }
 
-func TestClientURL(t *testing.T) {
-	act := Testing.ClientURL("clientID")
+func TestClientURLEnvironmentTesting(t *testing.T) {
+	env := TestEnvironment()
+	act := env.ClientURL("clientID")
 	exp := "https://test.adyen.com/hpp/cse/js/clientID.shtml"
 
-	if act != exp {
-		t.Fatalf("exp %q but got %q", exp, act)
-	}
+	equals(t, exp, act)
 }
 
-func TestHppURL(t *testing.T) {
-	act := Testing.HppURL("request")
+func TestHppURLEnvironmentTest(t *testing.T) {
+	env := TestEnvironment()
+	act := env.HppURL("request")
 	exp := "https://test.adyen.com/hpp/request.shtml"
 
-	if act != exp {
-		t.Fatalf("exp %q but got %q", exp, act)
-	}
+	equals(t, exp, act)
 }
 
-func TestParseEnvironment(t *testing.T) {
+func TestEnvironmentProductionValidation(t *testing.T) {
 	cases := []struct {
-		name    string
-		input   string
-		expName string
-		expErr  bool
+		name        string
+		random      string
+		companyName string
 	}{
 		{
-			name:    EnvironmentTesting,
-			input:   EnvironmentTesting,
-			expName: EnvironmentTesting,
+			name:        "missing random",
+			random:      "",
+			companyName: "AcmeAccount123",
 		},
 		{
-			name:    EnvironmentProduction,
-			input:   EnvironmentProduction,
-			expName: EnvironmentProduction,
+			name:        "missing company name",
+			random:      "5409c4fd1cc98a4e",
+			companyName: "",
 		},
 		{
-			name:    "invalid",
-			input:   "blah",
-			expName: "",
-			expErr:  true,
+			name:        "missing random and company name",
+			random:      "",
+			companyName: "",
 		},
 	}
 
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			e, err := ParseEnvironment(c.input)
-
-			if c.expErr {
-				if err == nil {
-					t.Fatal("expected error but didn't get one")
-				}
-				equals(t, errParseEnvironment{name: c.input}, err)
-				return
-			}
-
-			equals(t, c.expName, e.Name)
+			_, err := ProductionEnvironment(c.random, c.companyName)
+			equals(t, errProdEnvValidation, err)
 		})
 	}
+}
+
+func TestBaseURLEnvironmentProduction(t *testing.T) {
+	env, err := ProductionEnvironment("5409c4fd1cc98a4e", "AcmeAccount123")
+	if err != nil {
+		t.Fatalf("error creating production environment: %v", err)
+	}
+
+	act := env.BaseURL("service", "version")
+	exp := "https://5409c4fd1cc98a4e-AcmeAccount123-pal-live.adyen.com/pal/servlet/service/version"
+
+	equals(t, exp, act)
+}
+
+func TestClientURLEnvironmentProduction(t *testing.T) {
+	env, err := ProductionEnvironment("5409c4fd1cc98a4e", "AcmeAccount123")
+	if err != nil {
+		t.Fatalf("error creating production environment: %v", err)
+	}
+
+	act := env.ClientURL("clientID")
+	exp := "https://live.adyen.com/hpp/cse/js/clientID.shtml"
+
+	equals(t, exp, act)
+}
+
+func TestHppURLEnvironmentProduction(t *testing.T) {
+	env, err := ProductionEnvironment("5409c4fd1cc98a4e", "AcmeAccount123")
+	if err != nil {
+		t.Fatalf("error creating production environment: %v", err)
+	}
+
+	act := env.HppURL("request")
+	exp := "https://live.adyen.com/hpp/request.shtml"
+
+	equals(t, exp, act)
 }
