@@ -1,6 +1,7 @@
 package adyen
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 )
@@ -22,6 +23,10 @@ const (
 	EnvironmentProduction = "prod"
 )
 
+var (
+	errProdEnvValidation = errors.New("production requires random and company name fields as per https://docs.adyen.com/developers/api-reference/live-endpoints")
+)
+
 // Testing - instance of testing environment
 var Testing = Environment{
 	Name:      EnvironmentTesting,
@@ -33,7 +38,7 @@ var Testing = Environment{
 // Production - instance of production environment
 var Production = Environment{
 	Name:      EnvironmentProduction,
-	apiURL:    "https://pal-live.adyen.com/pal/servlet",
+	apiURL:    "https://%s-%s-pal-live.adyen.com/pal/servlet",
 	clientURL: "https://live.adyen.com/hpp/cse/js/",
 	hppURL:    "https://live.adyen.com/hpp/",
 }
@@ -47,12 +52,19 @@ func (err errParseEnvironment) Error() string {
 }
 
 // ParseEnvironment returns an Adyen environment from a given name.
-func ParseEnvironment(name string) (e Environment, err error) {
+func ParseEnvironment(name, random, companyName string) (e Environment, err error) {
 	switch strings.ToLower(name) {
 	case EnvironmentTesting:
 		e = Testing
+		return
 	case EnvironmentProduction:
+		if random == "" || companyName == "" {
+			err = errProdEnvValidation
+			return
+		}
 		e = Production
+		e.apiURL = fmt.Sprintf(e.apiURL, random, companyName)
+		return
 	default:
 		err = errParseEnvironment{name: name}
 	}
