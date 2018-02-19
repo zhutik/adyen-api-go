@@ -111,7 +111,24 @@ req := &adyen.AuthoriseEncrypted{
   AdditionalData:  &adyen.AdditionalData{Content: "encryptedData"}, // encrypted data from a form
   Reference:       "your-order-number",
 }
+```
 
+### Environment configuration
+
+Adyen's Production environment requires additional configuration to the Test environment for security reasons.  Namely, this includes a random hexadecimal string that's generated for your account and the company account name.
+
+In the following examples, the environmenst have been hard-coded for clarity.  They would typically come from environments variables instead.
+
+To target the Test environment:
+
+``` go
+env := adyen.TestEnvironment()
+```
+
+To target the Production environment:
+
+``` go
+env, err := adyen.ProductionEnvironment("5409c4fd1cc98a4e", "AcmeAccount123")
 ```
 
 ## To run example
