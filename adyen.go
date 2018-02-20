@@ -46,8 +46,9 @@ type Adyen struct {
 	Credentials     apiCredentials
 	Currency        string
 	MerchantAccount string
-	ClientTimeout   time.Duration
 	Logger          *log.Logger
+
+	client *http.Client
 }
 
 // New - creates Adyen instance
@@ -97,10 +98,10 @@ func NewWithHMAC(env Environment, username, password, hmac string, logger *log.L
 // New skin can be created there https://ca-test.adyen.com/ca/ca/skin/skins.shtml
 func NewWithCredentials(env Environment, creds apiCredentials, logger *log.Logger, opts ...Option) *Adyen {
 	a := Adyen{
-		Credentials:   creds,
-		Currency:      DefaultCurrency,
-		ClientTimeout: DefaultClientTimeout,
-		Logger:        logger,
+		Credentials: creds,
+		Currency:    DefaultCurrency,
+		Logger:      logger,
+		client:      &http.Client{},
 	}
 
 	if opts != nil {
@@ -119,7 +120,7 @@ type Option func(*Adyen)
 // HTTP client that's used to communicate with Adyen.
 func WithTimeout(d time.Duration) func(*Adyen) {
 	return func(a *Adyen) {
-		a.ClientTimeout = d
+		a.client.Timeout = d
 	}
 }
 
@@ -172,10 +173,7 @@ func (a *Adyen) execute(url string, requestEntity interface{}) (*Response, error
 	req.Header.Set("Content-Type", "application/json")
 	req.SetBasicAuth(a.Credentials.Username, a.Credentials.Password)
 
-	client := &http.Client{
-		Timeout: a.ClientTimeout,
-	}
-	resp, err := client.Do(req)
+	resp, err := a.client.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -215,10 +213,7 @@ func (a *Adyen) executeHpp(url string, requestEntity interface{}) (*Response, er
 
 	a.Logger.Printf("[Request]: %s", url)
 
-	client := &http.Client{
-		Timeout: a.ClientTimeout,
-	}
-	resp, err := client.Do(req)
+	resp, err := a.client.Do(req)
 
 	if err != nil {
 		return nil, err
