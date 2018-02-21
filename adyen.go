@@ -172,7 +172,9 @@ func (a *Adyen) execute(url string, requestEntity interface{}) (*Response, error
 		return nil, err
 	}
 	defer func() {
-		err = resp.Body.Close()
+		if closeErr := resp.Body.Close(); closeErr != nil {
+			a.Logger.Print(closeErr)
+		}
 	}()
 
 	buf := new(bytes.Buffer)
@@ -215,7 +217,9 @@ func (a *Adyen) executeHpp(url string, requestEntity interface{}) (*Response, er
 	}
 
 	defer func() {
-		err = resp.Body.Close()
+		if closeErr := resp.Body.Close(); closeErr != nil {
+			a.Logger.Print(closeErr)
+		}
 	}()
 
 	buf := new(bytes.Buffer)
