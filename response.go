@@ -130,3 +130,13 @@ func (r *Response) disableRecurring() (*RecurringDisableResponse, error) {
 
 	return &a, nil
 }
+
+// paymentMethods - generate Adyen CheckoutAPI paymentMethods response.
+func (r *Response) paymentMethods() (*PaymentMethodsResponse, error) {
+	var a PaymentMethodsResponse
+	if err := json.Unmarshal(r.Body, &a); err != nil {
+		return nil, err
+	}
+	
+	return &a, nil
+}
