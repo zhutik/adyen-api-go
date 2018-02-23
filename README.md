@@ -239,6 +239,7 @@ Test credit cards could be found https://docs.adyen.com/support/integration#test
 
 ## TODOs
 
+* Add CheckoutAPI call to get payment status.
 * Move some constants into enum files.
 * Parse URLs for environment's BaseURL, ClientURL and HppURL methods instead of string concatenation (needs to return an error as well).
 * Reduced API surface by making most types and functions unexported.

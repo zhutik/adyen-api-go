@@ -8,9 +8,10 @@ import (
 // Environment allows clients to be configured for Testing
 // and Production environments.
 type Environment struct {
-	apiURL    string
-	clientURL string
-	hppURL    string
+	apiURL      string
+	clientURL   string
+	hppURL      string
+	checkoutURL string
 }
 
 var (
@@ -19,16 +20,18 @@ var (
 
 // Testing - instance of testing environment
 var Testing = Environment{
-	apiURL:    "https://pal-test.adyen.com/pal/servlet",
-	clientURL: "https://test.adyen.com/hpp/cse/js/",
-	hppURL:    "https://test.adyen.com/hpp/",
+	apiURL:      "https://pal-test.adyen.com/pal/servlet",
+	clientURL:   "https://test.adyen.com/hpp/cse/js/",
+	hppURL:      "https://test.adyen.com/hpp/",
+	checkoutURL: "https://checkout-test.adyen.com/services/PaymentSetupAndVerification",
 }
 
 // Production - instance of production environment
 var Production = Environment{
-	apiURL:    "https://%s-%s-pal-live.adyen.com/pal/servlet",
-	clientURL: "https://live.adyen.com/hpp/cse/js/",
-	hppURL:    "https://live.adyen.com/hpp/",
+	apiURL:      "https://%s-%s-pal-live.adyen.com/pal/servlet",
+	clientURL:   "https://live.adyen.com/hpp/cse/js/",
+	hppURL:      "https://live.adyen.com/hpp/",
+	checkoutURL: "https://%s-%s-checkout-live.adyen.com/services/PaymentSetupAndVerification",
 }
 
 // TestEnvironment returns test environment configuration.
@@ -44,6 +47,7 @@ func ProductionEnvironment(random, companyName string) (e Environment, err error
 	}
 	e = Production
 	e.apiURL = fmt.Sprintf(e.apiURL, random, companyName)
+	e.checkoutURL = fmt.Sprintf(e.checkoutURL, random, companyName)
 	return e, nil
 }
 
@@ -60,4 +64,9 @@ func (e Environment) ClientURL(clientID string) string {
 // HppURL returns Adyen HPP url to execute Hosted Payment Paged API requests
 func (e Environment) HppURL(request string) string {
 	return e.hppURL + request + ".shtml"
+}
+
+// CheckoutURL returns the full URL to a Checkout API endpoint.
+func (e Environment) CheckoutURL(service string, version string) string {
+	return e.checkoutURL + "/" + version + "/" + service
 }

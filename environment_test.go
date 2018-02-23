@@ -33,6 +33,14 @@ func TestHppURLEnvironmentTest(t *testing.T) {
 	equals(t, exp, act)
 }
 
+func TestCheckoutURLEnvironmentTesting(t *testing.T) {
+	env := TestEnvironment()
+	act := env.CheckoutURL("service", "version")
+	exp := "https://checkout-test.adyen.com/services/PaymentSetupAndVerification/version/service"
+
+	equals(t, exp, act)
+}
+
 func TestEnvironmentProductionValidation(t *testing.T) {
 	cases := []struct {
 		name        string
@@ -97,5 +105,17 @@ func TestHppURLEnvironmentProduction(t *testing.T) {
 	act := env.HppURL("request")
 	exp := "https://live.adyen.com/hpp/request.shtml"
 
+	equals(t, exp, act)
+}
+
+func TestCheckoutURLEnvironmentProduction(t *testing.T) {
+	env, err := ProductionEnvironment("5409c4fd1cc98a4e", "AcmeAccount123")
+	if err != nil {
+		t.Fatalf("error creating production environment: %v", err)
+	}
+	
+	act := env.CheckoutURL("service", "version")
+	exp := "https://5409c4fd1cc98a4e-AcmeAccount123-checkout-live.adyen.com/services/PaymentSetupAndVerification/version/service"
+	
 	equals(t, exp, act)
 }

@@ -28,6 +28,9 @@ const (
 
 	// RecurringService is used to identify the recurring payment workflow.
 	RecurringService = "Recurring"
+
+	// CheckoutAPIVersion - API version of current checkout API
+	CheckoutAPIVersion = "v32"
 )
 
 // Adyen - base structure with configuration options
@@ -144,6 +147,11 @@ func (a *Adyen) createHPPUrl(requestType string) string {
 	return a.Credentials.Env.HppURL(requestType)
 }
 
+// checkoutURL returns the Adyen checkout URL.
+func (a *Adyen) checkoutURL(requestType, apiVersion string) string {
+	return a.Credentials.Env.CheckoutURL(requestType, apiVersion)
+}
+
 // execute request on Adyen side, transforms "requestEntity" into JSON representation
 //
 // internal method to do a request to Adyen API endpoint
@@ -250,4 +258,9 @@ func (a *Adyen) Modification() *ModificationGateway {
 // Recurring - returns RecurringGateway
 func (a *Adyen) Recurring() *RecurringGateway {
 	return &RecurringGateway{a}
+}
+
+// Checkout - returns CheckoutGateway
+func (a *Adyen) Checkout() *CheckoutGateway {
+	return &CheckoutGateway{a}
 }
