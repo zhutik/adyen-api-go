@@ -34,7 +34,7 @@ func TestNewWithTimeout(t *testing.T) {
 	const timeout = time.Second * 123
 
 	act := New(Testing, "un", "pw", nil, WithTimeout(timeout))
-	equals(t, timeout, act.ClientTimeout)
+	equals(t, timeout, act.client.Timeout)
 }
 
 func TestNewWithCurrency(t *testing.T) {
@@ -49,7 +49,7 @@ func TestNewWithCustomOptions(t *testing.T) {
 
 	f1 := func(a *Adyen) {
 		a.Currency = currency
-		a.ClientTimeout = timeout
+		a.client.Timeout = timeout
 	}
 
 	f2 := func(a *Adyen) {
@@ -59,7 +59,7 @@ func TestNewWithCustomOptions(t *testing.T) {
 	act := New(Testing, "un", "pw", nil, f1, f2)
 	equals(t, merchant, act.MerchantAccount)
 	equals(t, currency, act.Currency)
-	equals(t, timeout, act.ClientTimeout)
+	equals(t, timeout, act.client.Timeout)
 }
 
 func equals(tb *testing.T, exp interface{}, act interface{}) {
