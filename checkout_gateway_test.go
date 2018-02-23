@@ -5,9 +5,11 @@ import (
 	"testing"
 )
 
+// TestPaymentMethods - test for https://docs.adyen.com/developers/checkout/api-integration
+//
+// This test requires CheckoutAPI access.  To obtain, visit https://docs.adyen.com/developers/user-management/how-to-get-the-checkout-api-key.
 func TestPaymentMethods(t *testing.T) {
 	t.Parallel()
-	t.Skip("This test requires CheckoutAPI access.  To obtain, visit https://docs.adyen.com/developers/user-management/how-to-get-the-checkout-api-key.")
 
 	instance := getTestInstance()
 
