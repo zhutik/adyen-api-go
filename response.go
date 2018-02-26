@@ -6,8 +6,8 @@ import (
 	"net/http"
 )
 
-// apiError - handle error (non 200 status) response from Adyen
-type apiError struct {
+// APIError - handle error (non 200 status) response from Adyen
+type APIError struct {
 	ErrorType string `json:"errorType"`
 	ErrorCode string `json:"errorCode"`
 	Message   string `json:"message"`
@@ -22,7 +22,7 @@ type Response struct {
 
 // handleHTTPError - handle non 200 response from Adyen and create Error response instance
 func (r *Response) handleHTTPError() error {
-	var aerr apiError
+	var aerr APIError
 	if err := json.Unmarshal(r.Body, &aerr); err != nil {
 		return err
 	}
@@ -35,7 +35,7 @@ func (r *Response) handleHTTPError() error {
 }
 
 // Error - error interface for ApiError
-func (e apiError) Error() string {
+func (e APIError) Error() string {
 	return fmt.Sprintf("[%s][%d]: (%s) %s", e.ErrorType, e.Status, e.ErrorCode, e.Message)
 }
 
@@ -137,6 +137,6 @@ func (r *Response) paymentMethods() (*PaymentMethodsResponse, error) {
 	if err := json.Unmarshal(r.Body, &a); err != nil {
 		return nil, err
 	}
-	
+
 	return &a, nil
 }
