@@ -66,7 +66,7 @@ func TestAuthorise(t *testing.T) {
 
 	response, err := instance.Payment().Authorise(authRequest)
 
-	knownError, ok := err.(apiError)
+	knownError, ok := err.(APIError)
 	if ok {
 		t.Errorf("Response should be succesfull. Known API Error: Code - %s, Message - %s, Type - %s", knownError.ErrorCode, knownError.Message, knownError.ErrorType)
 	}
