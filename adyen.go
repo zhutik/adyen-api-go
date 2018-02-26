@@ -4,7 +4,6 @@ package adyen
 import (
 	"bytes"
 	"encoding/json"
-	"log"
 	"net/http"
 	"time"
 )
@@ -38,7 +37,6 @@ const (
 //       - Credentials instance of API creditials to connect to Adyen API
 //       - Currency is a default request currency. Request data overrides this setting
 //       - MerchantAccount is default merchant account to be used. Request data overrides this setting
-//       - Logger optionally logs to a configured io.Writer.
 //
 // Currency and MerchantAccount should be used only to store the data and be able to use it later.
 // Requests won't be automatically populated with given values
@@ -46,7 +44,6 @@ type Adyen struct {
 	Credentials     apiCredentials
 	Currency        string
 	MerchantAccount string
-	Logger          *log.Logger
 
 	client *http.Client
 }
@@ -58,13 +55,12 @@ type Adyen struct {
 //     - env - Environment for next API calls
 //     - username - API username for authentication
 //     - password - API password for authentication
-//     - logger optionally logs to a configured io.Writer.
 //     - opts - an optional collection of functions that allow you to tweak configurations.
 //
 // You can create new API user there: https://ca-test.adyen.com/ca/ca/config/users.shtml
-func New(env Environment, username, password string, logger *log.Logger, opts ...Option) *Adyen {
+func New(env Environment, username, password string, opts ...Option) *Adyen {
 	creds := makeCredentials(env, username, password)
-	return NewWithCredentials(env, creds, logger, opts...)
+	return NewWithCredentials(env, creds, opts...)
 }
 
 // NewWithHMAC - create new Adyen instance with HPP credentials
@@ -77,13 +73,12 @@ func New(env Environment, username, password string, logger *log.Logger, opts ..
 //     - username - API username for authentication
 //     - password - API password for authentication
 //     - hmac - is generated when new Skin is created in Adyen Customer Area
-//     - logger optionally logs to a configured io.Writer.
 //     - opts - an optional collection of functions that allow you to tweak configurations.
 //
 // New skin can be created there https://ca-test.adyen.com/ca/ca/skin/skins.shtml
-func NewWithHMAC(env Environment, username, password, hmac string, logger *log.Logger, opts ...Option) *Adyen {
+func NewWithHMAC(env Environment, username, password, hmac string, opts ...Option) *Adyen {
 	creds := makeCredentialsWithHMAC(env, username, password, hmac)
-	return NewWithCredentials(env, creds, logger, opts...)
+	return NewWithCredentials(env, creds, opts...)
 }
 
 // NewWithCredentials - create new Adyen instance with pre-configured credentials.
@@ -92,15 +87,13 @@ func NewWithHMAC(env Environment, username, password, hmac string, logger *log.L
 //
 //     - env - Environment for next API calls
 //     - credentials - configured apiCredentials to use when interacting with Adyen.
-//     - logger - optionally logs to a configured io.Writer.
 //     - opts - an optional collection of functions that allow you to tweak configurations.
 //
 // New skin can be created there https://ca-test.adyen.com/ca/ca/skin/skins.shtml
-func NewWithCredentials(env Environment, creds apiCredentials, logger *log.Logger, opts ...Option) *Adyen {
+func NewWithCredentials(env Environment, creds apiCredentials, opts ...Option) *Adyen {
 	a := Adyen{
 		Credentials: creds,
 		Currency:    DefaultCurrency,
-		Logger:      logger,
 		client:      &http.Client{},
 	}
 
@@ -157,7 +150,7 @@ func (a *Adyen) checkoutURL(requestType, apiVersion string) string {
 //
 // internal method to do a request to Adyen API endpoint
 // request Type: POST, request body format - JSON
-func (a *Adyen) execute(url string, requestEntity interface{}) (*Response, error) {
+func (a *Adyen) execute(url string, requestEntity interface{}) (r *Response, err error) {
 	body, err := json.Marshal(requestEntity)
 	if err != nil {
 		return nil, err
@@ -168,8 +161,6 @@ func (a *Adyen) execute(url string, requestEntity interface{}) (*Response, error
 		return nil, err
 	}
 
-	a.Logger.Printf("[Request]: %s\n%s", url, body)
-
 	req.Header.Set("Content-Type", "application/json")
 	req.SetBasicAuth(a.Credentials.Username, a.Credentials.Password)
 
@@ -178,8 +169,8 @@ func (a *Adyen) execute(url string, requestEntity interface{}) (*Response, error
 		return nil, err
 	}
 	defer func() {
-		if closeErr := resp.Body.Close(); closeErr != nil {
-			a.Logger.Print(closeErr)
+		if cerr := resp.Body.Close(); cerr != nil {
+			err = cerr
 		}
 	}()
 
@@ -188,40 +179,35 @@ func (a *Adyen) execute(url string, requestEntity interface{}) (*Response, error
 		return nil, err
 	}
 
-	a.Logger.Printf("[Response]: %s\n%s", url, buf.String())
-
-	providerResponse := &Response{
+	r = &Response{
 		Response: resp,
 		Body:     buf.Bytes(),
 	}
 
-	if err = providerResponse.handleHTTPError(); err != nil {
+	if err = r.handleHTTPError(); err != nil {
 		return nil, err
 	}
 
-	return providerResponse, nil
+	return
 }
 
 // executeHpp - execute request without authorization to Adyen Hosted Payment API
 //
 // internal method to request Adyen HPP API via GET
-func (a *Adyen) executeHpp(url string, requestEntity interface{}) (*Response, error) {
+func (a *Adyen) executeHpp(url string, requestEntity interface{}) (r *Response, err error) {
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
-
-	a.Logger.Printf("[Request]: %s", url)
 
 	resp, err := a.client.Do(req)
 
 	if err != nil {
 		return nil, err
 	}
-
 	defer func() {
-		if closeErr := resp.Body.Close(); closeErr != nil {
-			a.Logger.Print(closeErr)
+		if cerr := resp.Body.Close(); cerr != nil {
+			err = cerr
 		}
 	}()
 
@@ -230,14 +216,12 @@ func (a *Adyen) executeHpp(url string, requestEntity interface{}) (*Response, er
 		return nil, err
 	}
 
-	a.Logger.Printf("[Response]: %s\n%s", url, buf.String())
-
-	providerResponse := &Response{
+	r = &Response{
 		Response: resp,
 		Body:     buf.Bytes(),
 	}
 
-	return providerResponse, nil
+	return
 }
 
 // Payment - returns PaymentGateway
