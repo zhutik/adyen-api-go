@@ -22,11 +22,17 @@ const (
 type AuthoriseEncrypted struct {
 	AdditionalData                   *AdditionalData `json:"additionalData,omitempty"`
 	Amount                           *Amount         `json:"amount"`
+	BillingAddress                   *Address        `json:"billingAddress,omitempty"`
+	DeliveryAddress                  *Address        `json:"deliveryAddress,omitempty"`
 	Reference                        string          `json:"reference"`
 	MerchantAccount                  string          `json:"merchantAccount"`
 	ShopperReference                 string          `json:"shopperReference,omitempty"` // Mandatory for recurring payment
 	Recurring                        *Recurring      `json:"recurring,omitempty"`
+	ShopperEmail                     string          `json:"shopperEmail,omitempty"`
 	ShopperInteraction               string          `json:"shopperInteraction,omitempty"`
+	ShopperIP                        string          `json:"shopperIP,omitempty"`
+	ShopperLocale                    string          `json:"shopperLocale,omitempty"`
+	ShopperName                      *Name           `json:"shopperName,omitempty"`
 	SelectedRecurringDetailReference string          `json:"selectedRecurringDetailReference,omitempty"`
 	BrowserInfo                      *BrowserInfo    `json:"browserInfo,omitempty"` // Required for a 3DS process
 }
@@ -37,11 +43,17 @@ type AuthoriseEncrypted struct {
 type Authorise struct {
 	Card                             *Card        `json:"card,omitempty"`
 	Amount                           *Amount      `json:"amount"`
+	BillingAddress                   *Address     `json:"billingAddress,omitempty"`
+	DeliveryAddress                  *Address     `json:"deliveryAddress,omitempty"`
 	Reference                        string       `json:"reference"`
 	MerchantAccount                  string       `json:"merchantAccount"`
 	ShopperReference                 string       `json:"shopperReference,omitempty"` // Mandatory for recurring payment
 	Recurring                        *Recurring   `json:"recurring,omitempty"`
+	ShopperEmail                     string       `json:"shopperEmail,omitempty"`
 	ShopperInteraction               string       `json:"shopperInteraction,omitempty"`
+	ShopperIP                        string       `json:"shopperIP,omitempty"`
+	ShopperLocale                    string       `json:"shopperLocale,omitempty"`
+	ShopperName                      *Name        `json:"shopperName,omitempty"`
 	SelectedRecurringDetailReference string       `json:"selectedRecurringDetailReference,omitempty"`
 	BrowserInfo                      *BrowserInfo `json:"browserInfo,omitempty"` // Required for a 3DS process
 }
@@ -86,11 +98,16 @@ type Recurring struct {
 //
 // https://docs.adyen.com/developers/api-reference/payments-api#paymentrequest3d
 type Authorise3D struct {
+	BillingAddress  *Address     `json:"billingAddress,omitempty"`
+	DeliveryAddress *Address     `json:"deliveryAddress,omitempty"`
 	MD              string       `json:"md"`
 	MerchantAccount string       `json:"merchantAccount"`
 	BrowserInfo     *BrowserInfo `json:"browserInfo"`
 	PaResponse      string       `json:"paResponse"`
+	ShopperEmail    string       `json:"shopperEmail,omitempty"`
 	ShopperIP       string       `json:"shopperIP,omitempty"`
+	ShopperLocale   string       `json:"shopperLocale,omitempty"`
+	ShopperName     *Name        `json:"shopperName,omitempty"`
 }
 
 /*******************
