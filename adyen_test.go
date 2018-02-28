@@ -18,9 +18,6 @@ import (
 	"github.com/joho/godotenv"
 )
 
-// noopLogger keeps the logs quite during verbose testing.
-var noopLogger = log.New(ioutil.Discard, "", log.LstdFlags)
-
 func TestMain(m *testing.M) {
 	// Set environment variables for subsequent tests.
 	if err := godotenv.Load(".default.env"); err != nil {
@@ -33,14 +30,14 @@ func TestMain(m *testing.M) {
 func TestNewWithTimeout(t *testing.T) {
 	const timeout = time.Second * 123
 
-	act := New(Testing, "un", "pw", nil, WithTimeout(timeout))
+	act := New(Testing, "un", "pw", WithTimeout(timeout))
 	equals(t, timeout, act.client.Timeout)
 }
 
 func TestNewWithCurrency(t *testing.T) {
 	const currency = "USD"
 
-	act := New(Testing, "un", "pw", nil, WithCurrency(currency))
+	act := New(Testing, "un", "pw", WithCurrency(currency))
 	equals(t, currency, act.Currency)
 }
 
@@ -56,7 +53,7 @@ func TestNewWithCustomOptions(t *testing.T) {
 		a.MerchantAccount = merchant
 	}
 
-	act := New(Testing, "un", "pw", nil, f1, f2)
+	act := New(Testing, "un", "pw", f1, f2)
 	equals(t, merchant, act.MerchantAccount)
 	equals(t, currency, act.Currency)
 	equals(t, timeout, act.client.Timeout)
@@ -87,8 +84,7 @@ func getTestInstance() *Adyen {
 	instance := New(
 		Testing,
 		os.Getenv("ADYEN_USERNAME"),
-		os.Getenv("ADYEN_PASSWORD"),
-		noopLogger)
+		os.Getenv("ADYEN_PASSWORD"))
 
 	return instance
 }
@@ -99,8 +95,7 @@ func getTestInstanceWithHPP() *Adyen {
 		Testing,
 		os.Getenv("ADYEN_USERNAME"),
 		os.Getenv("ADYEN_PASSWORD"),
-		os.Getenv("ADYEN_HMAC"),
-		noopLogger)
+		os.Getenv("ADYEN_HMAC"))
 
 	return instance
 }
