@@ -37,6 +37,7 @@ const (
 //       - Credentials instance of API creditials to connect to Adyen API
 //       - Currency is a default request currency. Request data overrides this setting
 //       - MerchantAccount is default merchant account to be used. Request data overrides this setting
+//       - client is http client instance
 //
 // Currency and MerchantAccount should be used only to store the data and be able to use it later.
 // Requests won't be automatically populated with given values
@@ -114,6 +115,13 @@ type Option func(*Adyen)
 func WithTimeout(d time.Duration) func(*Adyen) {
 	return func(a *Adyen) {
 		a.client.Timeout = d
+	}
+}
+
+// WithTransport allows customer HTTP transports to be provider to the Adyen
+func WithTransport(transport http.RoundTripper) func(*Adyen) {
+	return func(a *Adyen) {
+		a.client.Transport = transport
 	}
 }
 
