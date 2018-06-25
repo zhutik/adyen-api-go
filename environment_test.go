@@ -113,9 +113,9 @@ func TestCheckoutURLEnvironmentProduction(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error creating production environment: %v", err)
 	}
-	
+
 	act := env.CheckoutURL("service", "version")
-	exp := "https://5409c4fd1cc98a4e-AcmeAccount123-checkout-live.adyen.com/services/PaymentSetupAndVerification/version/service"
-	
+	exp := "https://5409c4fd1cc98a4e-AcmeAccount123-checkout-live.adyenpayments.com/services/PaymentSetupAndVerification/version/service"
+
 	equals(t, exp, act)
 }
