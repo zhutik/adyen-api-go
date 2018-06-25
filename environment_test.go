@@ -79,7 +79,7 @@ func TestBaseURLEnvironmentProduction(t *testing.T) {
 	}
 
 	act := env.BaseURL("service", "version")
-	exp := "https://5409c4fd1cc98a4e-AcmeAccount123-pal-live.adyen.com/pal/servlet/service/version"
+	exp := "https://5409c4fd1cc98a4e-AcmeAccount123-pal-live.adyenpayments.com/pal/servlet/service/version"
 
 	equals(t, exp, act)
 }
