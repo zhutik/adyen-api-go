@@ -31,7 +31,7 @@ var Production = Environment{
 	apiURL:      "https://%s-%s-pal-live.adyenpayments.com/pal/servlet",
 	clientURL:   "https://live.adyen.com/hpp/cse/js/",
 	hppURL:      "https://live.adyen.com/hpp/",
-	checkoutURL: "https://%s-%s-checkout-live.adyen.com/services/PaymentSetupAndVerification",
+	checkoutURL: "https://%s-%s-checkout-live.adyenpayments.com/services/PaymentSetupAndVerification",
 }
 
 // TestEnvironment returns test environment configuration.
