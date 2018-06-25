@@ -28,7 +28,7 @@ var Testing = Environment{
 
 // Production - instance of production environment
 var Production = Environment{
-	apiURL:      "https://%s-%s-pal-live.adyen.com/pal/servlet",
+	apiURL:      "https://%s-%s-pal-live.adyenpayments.com/pal/servlet",
 	clientURL:   "https://live.adyen.com/hpp/cse/js/",
 	hppURL:      "https://live.adyen.com/hpp/",
 	checkoutURL: "https://%s-%s-checkout-live.adyen.com/services/PaymentSetupAndVerification",
