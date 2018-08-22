@@ -74,9 +74,10 @@ type AuthoriseResponse struct {
 
 // AdditionalData stores encrypted information about customer's credit card
 type AdditionalData struct {
-	Content   string `json:"card.encrypted.json,omitempty"`
-	AliasType string `json:"aliasType,omitempty"`
-	Alias     string `json:"alias,omitempty"`
+	Content       string      `json:"card.encrypted.json,omitempty"`
+	AliasType     string      `json:"aliasType,omitempty"`
+	Alias         string      `json:"alias,omitempty"`
+	ExecuteThreeD *stringBool `json:"executeThreeD,omitempty"`
 }
 
 // BrowserInfo hold information on the user browser

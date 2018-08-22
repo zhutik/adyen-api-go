@@ -22,3 +22,16 @@ func (b *stringBool) UnmarshalJSON(data []byte) (err error) {
 	*b = stringBool(parsed)
 	return
 }
+
+func (b stringBool) MarshalJSON() ([]byte, error) {
+	boolResult := bool(b)
+	var boolString string
+
+	if boolResult {
+		boolString = `"true"`
+	} else {
+		boolString = `"false"`
+	}
+
+	return []byte(boolString), nil
+}
