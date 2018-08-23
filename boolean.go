@@ -9,6 +9,11 @@ import (
 // which appear as strings instead of bools.
 type stringBool bool
 
+func NewStringBool(b bool) *stringBool {
+	sb := stringBool(b)
+	return &sb
+}
+
 func (b *stringBool) UnmarshalJSON(data []byte) (err error) {
 	str := strings.TrimFunc(strings.ToLower(string(data)), func(c rune) bool {
 		return c == ' ' || c == '"'
