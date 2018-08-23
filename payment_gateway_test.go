@@ -1,6 +1,7 @@
 package adyen
 
 import (
+	"encoding/json"
 	"os"
 	"strings"
 	"testing"
@@ -75,12 +76,18 @@ func TestAuthorise(t *testing.T) {
 		t.Errorf("Response should be succesfull, error - %s", err.Error())
 	}
 
+	responseBytes, err := json.Marshal(response)
+
+	if err != nil {
+		t.Error("Response can't be converted to JSON")
+	}
+
 	if response.PspReference == "" {
-		t.Errorf("Response should contain PSP Reference. Response - %s", response)
+		t.Errorf("Response should contain PSP Reference. Response - %s", string(responseBytes))
 	}
 
 	if response.ResultCode != "Authorised" {
-		t.Errorf("Response resultCode should be Authorised, Response - %s", response)
+		t.Errorf("Response resultCode should be Authorised, Response - %s", string(responseBytes))
 	}
 }
 
