@@ -45,6 +45,61 @@ func TestResponseNotValidJson(t *testing.T) {
 	}
 }
 
+func TestAuthorizeResponse(t *testing.T) {
+	cases := []struct {
+		name       string
+		input      string
+		reference  string
+		resultCode string
+		authCode   string
+		expErr     bool
+	}{
+		{
+			name: "authorize response",
+			input: `{
+				"pspReference" : "8413547924770610",
+				"ResultCode" : "Authorised",
+				"AuthCode" : "53187"
+			}`,
+			reference:  "8413547924770610",
+			resultCode: "Authorised",
+			authCode:   "53187",
+		},
+		{
+			name:       "authorize returns errors",
+			input:      "some error string",
+			reference:  "",
+			resultCode: "",
+			authCode:   "",
+			expErr:     true,
+		},
+	}
+
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			response, err := createTestResponse(c.input, "OK 200", 200)
+
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			res, err := response.authorize()
+
+			if c.expErr {
+				if err == nil {
+					t.Fatal("expected error but didn't get one")
+				}
+
+				return
+			}
+
+			equals(t, c.reference, res.PspReference)
+			equals(t, c.resultCode, res.ResultCode)
+			equals(t, c.authCode, res.AuthCode)
+		})
+	}
+}
+
 func TestCaptureResponse(t *testing.T) {
 	cases := []struct {
 		name      string
@@ -240,6 +295,133 @@ func TestRefundResponse(t *testing.T) {
 			}
 
 			equals(t, c.reference, res.PspReference)
+			equals(t, c.response, res.Response)
+		})
+	}
+}
+
+func TestListRecurringDetailsResponse(t *testing.T) {
+	cases := []struct {
+		name                     string
+		input                    string
+		shopperReference         string
+		recurringDetailReference string
+		cartHolderName           string
+		expErr                   bool
+	}{
+		{
+			name: "listRecurringDetails response",
+			input: `{
+				"creationDate": "2018-05-23T15:25:40+02:00",
+				"details": [
+					{
+						"RecurringDetail": {
+							"additionalData": {
+								"cardBin": "411111"
+							},
+							"alias": "K333136193308394",
+							"aliasType": "Default",
+							"card": {
+								"expiryMonth": "8",
+								"expiryYear": "2018",
+								"holderName": "John Smith",
+								"number": "1111"
+							},
+							"contractTypes": [
+								"PAYOUT",
+								"RECURRING",
+								"ONECLICK"
+							],
+							"creationDate": "2018-08-10T10:28:43+02:00",
+							"firstPspReference": "8815338897222637",
+							"paymentMethodVariant": "visa",
+							"recurringDetailReference": "8415336862463792",
+							"variant": "visa"
+						}
+					}
+				],
+				"shopperReference": "yourShopperId_IOfW3k9G2PvXFu2j"
+			}`,
+			shopperReference:         "yourShopperId_IOfW3k9G2PvXFu2j",
+			recurringDetailReference: "8415336862463792",
+			cartHolderName:           "John Smith",
+		},
+		{
+			name:                     "listRecurringDetails error response",
+			input:                    "some error string",
+			shopperReference:         "",
+			recurringDetailReference: "",
+			cartHolderName:           "",
+			expErr:                   true,
+		},
+	}
+
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			response, err := createTestResponse(c.input, "OK 200", 200)
+
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			res, err := response.listRecurringDetails()
+
+			if c.expErr {
+				if err == nil {
+					t.Fatal("expected error but didn't get one")
+				}
+
+				return
+			}
+
+			equals(t, c.shopperReference, res.ShopperReference)
+			equals(t, 1, len(res.Details))
+			equals(t, c.recurringDetailReference, res.Details[0].RecurringDetail.RecurringDetailReference)
+			equals(t, c.cartHolderName, res.Details[0].RecurringDetail.Card.HolderName)
+		})
+	}
+}
+
+func TestDisableRecurringResponse(t *testing.T) {
+	cases := []struct {
+		name     string
+		input    string
+		response string
+		expErr   bool
+	}{
+		{
+			name: "disableRecurring response",
+			input: `{
+				"response" : "[detail-successfully-disabled]"
+			}`,
+			response: "[detail-successfully-disabled]",
+		},
+		{
+			name:     "disableRecurring returns errors",
+			input:    "some error string",
+			response: "",
+			expErr:   true,
+		},
+	}
+
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			response, err := createTestResponse(c.input, "OK 200", 200)
+
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			res, err := response.disableRecurring()
+
+			if c.expErr {
+				if err == nil {
+					t.Fatal("expected error but didn't get one")
+				}
+
+				return
+			}
+
 			equals(t, c.response, res.Response)
 		})
 	}
