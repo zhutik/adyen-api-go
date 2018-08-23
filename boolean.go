@@ -5,11 +5,18 @@ import (
 	"strings"
 )
 
-// stringBool allows us to unmarhsal Adyen Boolean values
+// StringBool allows us to unmarhsal Adyen Boolean values
 // which appear as strings instead of bools.
-type stringBool bool
+type StringBool bool
 
-func (b *stringBool) UnmarshalJSON(data []byte) (err error) {
+// NewStringBool returns an instance of StringBool representing a given bool
+func NewStringBool(b bool) *StringBool {
+	sb := StringBool(b)
+	return &sb
+}
+
+// UnmarshalJSON unmarshalls to a StringBool from a slice of bytes
+func (b *StringBool) UnmarshalJSON(data []byte) (err error) {
 	str := strings.TrimFunc(strings.ToLower(string(data)), func(c rune) bool {
 		return c == ' ' || c == '"'
 	})
@@ -19,11 +26,12 @@ func (b *stringBool) UnmarshalJSON(data []byte) (err error) {
 		return
 	}
 
-	*b = stringBool(parsed)
+	*b = StringBool(parsed)
 	return
 }
 
-func (b stringBool) MarshalJSON() ([]byte, error) {
+// MarshalJSON marshalls a StringBool to a slice of bytes
+func (b StringBool) MarshalJSON() ([]byte, error) {
 	boolResult := bool(b)
 	var boolString string
 

@@ -6,11 +6,11 @@ import (
 )
 
 type thing struct {
-	Bool stringBool `json:"value"`
+	Bool StringBool `json:"value"`
 }
 
 type thingWithEmpty struct {
-	Bool *stringBool `json:"value,omitempty"`
+	Bool *StringBool `json:"value,omitempty"`
 }
 
 func TestStringBool_Unmarshal(t *testing.T) {
@@ -84,7 +84,7 @@ func TestStringBool_Unmarshal(t *testing.T) {
 				t.Fatalf("expected error but didn't get one")
 			}
 
-			if stringBool(c.exp) != th.Bool {
+			if StringBool(c.exp) != th.Bool {
 				t.Fatalf("my exp: %v but got %v", c.exp, th.Bool)
 			}
 		})
@@ -99,12 +99,12 @@ func TestStringBool_Marshal(t *testing.T) {
 	}{
 		{
 			name:     "true",
-			object:   thing{Bool: stringBool(true)},
+			object:   thing{Bool: StringBool(true)},
 			expected: `{"value":"true"}`,
 		},
 		{
 			name:     "false",
-			object:   thing{Bool: stringBool(false)},
+			object:   thing{Bool: StringBool(false)},
 			expected: `{"value":"false"}`,
 		},
 	}
@@ -122,8 +122,8 @@ func TestStringBool_Marshal(t *testing.T) {
 }
 
 func TestStringBool_MarshalWithOmitempty(t *testing.T) {
-	valueTrue := stringBool(true)
-	valueFalse := stringBool(false)
+	valueTrue := StringBool(true)
+	valueFalse := StringBool(false)
 
 	cases := []struct {
 		name     string

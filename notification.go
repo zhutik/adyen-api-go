@@ -6,7 +6,7 @@ import "time"
 //
 // Link - https://docs.adyen.com/developers/api-reference/notifications-api#notificationrequest
 type NotificationRequest struct {
-	Live              stringBool                `json:"live"`
+	Live              StringBool                `json:"live"`
 	NotificationItems []NotificationRequestItem `json:"notificationItems"`
 }
 
@@ -40,5 +40,5 @@ type NotificationRequestItemData struct {
 	OriginalReference   string     `json:"originalReference,omitempty"`
 	PaymentMethod       string     `json:"paymentMethod"`
 	Reason              string     `json:"reason,omitempty"`
-	Success             stringBool `json:"success"`
+	Success             StringBool `json:"success"`
 }
