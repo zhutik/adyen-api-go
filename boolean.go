@@ -9,11 +9,13 @@ import (
 // which appear as strings instead of bools.
 type StringBool bool
 
+// NewStringBool returns an instance of StringBool representing a given bool
 func NewStringBool(b bool) *StringBool {
 	sb := StringBool(b)
 	return &sb
 }
 
+// UnmarshalJSON unmarshalls to a StringBool from a slice of bytes
 func (b *StringBool) UnmarshalJSON(data []byte) (err error) {
 	str := strings.TrimFunc(strings.ToLower(string(data)), func(c rune) bool {
 		return c == ' ' || c == '"'
@@ -28,6 +30,7 @@ func (b *StringBool) UnmarshalJSON(data []byte) (err error) {
 	return
 }
 
+// MarshalJSON marshalls a StringBool to a slice of bytes
 func (b StringBool) MarshalJSON() ([]byte, error) {
 	boolResult := bool(b)
 	var boolString string
