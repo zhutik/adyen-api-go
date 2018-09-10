@@ -7,6 +7,7 @@ const (
 	cancelOrRefundType  = "cancelOrRefund"
 	refundType          = "refund"
 	adjustAuthorisation = "adjustAuthorisation"
+	technicalCancel     = "technicalCancel"
 )
 
 // ModificationGateway - Adyen modification transaction logic, capture, cancel, refunds and e.t.c
@@ -80,4 +81,19 @@ func (a *ModificationGateway) AdjustAuthorisation(req *AdjustAuthorisation) (*Ad
 	}
 
 	return resp.adjustAuthorisation()
+}
+
+// TechnicalCancel - perform cancellation without knowing orinal payment reference (PSP), f.e. in case of technical error
+//
+// Link - https://docs.adyen.com/developers/payment-modifications#technicalcancel
+func (a *ModificationGateway) TechnicalCancel(req *TechnicalCancel) (*TechnicalCancelResponse, error) {
+	url := a.adyenURL(PaymentService, technicalCancel, PaymentAPIVersion)
+
+	resp, err := a.execute(url, req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return resp.technicalCancel()
 }

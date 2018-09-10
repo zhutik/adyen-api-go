@@ -87,3 +87,22 @@ type AdjustAuthorisationResponse struct {
 	PspReference string `json:"pspReference"`
 	Response     string `json:"response"`
 }
+
+/******************
+* Techical Cancel *
+******************/
+
+// TechnicalCancel structure for performing technical cancellation
+//
+// Link - https://docs.adyen.com/developers/payment-modifications#technicalcancel
+type TechnicalCancel struct {
+	MerchantAccount           string `json:"merchantAccount"`
+	OriginalMerchantReference string `json:"originalMerchantReference"`
+	Reference                 string `json:"reference,omitempty"`
+}
+
+// TechnicalCancelResponse is a response for TechnicalCancel request
+type TechnicalCancelResponse struct {
+	PspReference string `json:"pspReference"`
+	Response     string `json:"response"`
+}
