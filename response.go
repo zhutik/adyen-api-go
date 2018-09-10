@@ -99,6 +99,16 @@ func (r *Response) adjustAuthorisation() (*AdjustAuthorisationResponse, error) {
 	return &a, nil
 }
 
+// technicalCancel - generate Adyen Technical Cancel API Response
+func (r *Response) technicalCancel() (*TechnicalCancelResponse, error) {
+	var a TechnicalCancelResponse
+	if err := json.Unmarshal(r.Body, &a); err != nil {
+		return nil, err
+	}
+
+	return &a, nil
+}
+
 // directoryLookup - generate Adyen Directory Lookup response
 func (r *Response) directoryLookup() (*DirectoryLookupResponse, error) {
 	var a DirectoryLookupResponse

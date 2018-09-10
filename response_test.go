@@ -476,3 +476,53 @@ func TestAdjustAuthorisationResponse(t *testing.T) {
 		})
 	}
 }
+
+func TestTechnicalCancelResponse(t *testing.T) {
+	cases := []struct {
+		name      string
+		input     string
+		reference string
+		response  string
+		expErr    bool
+	}{
+		{
+			name: "technicalCancel response",
+			input: `{
+				"pspReference" : "8413547924770610",
+				"response" : "[technical-cancel-received]"
+			}`,
+			reference: "8413547924770610",
+			response:  "[technical-cancel-received]",
+		},
+		{
+			name:      "technicalCancel returns errors",
+			input:     "some error string",
+			reference: "",
+			response:  "",
+			expErr:    true,
+		},
+	}
+
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			response, err := createTestResponse(c.input, "OK 200", 200)
+
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			res, err := response.technicalCancel()
+
+			if c.expErr {
+				if err == nil {
+					t.Fatal("expected error but didn't get one")
+				}
+
+				return
+			}
+
+			equals(t, c.reference, res.PspReference)
+			equals(t, c.response, res.Response)
+		})
+	}
+}
