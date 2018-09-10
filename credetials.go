@@ -27,7 +27,7 @@ func makeCredentials(env Environment, username, password string) apiCredentials 
 	}
 }
 
-// makeCredentialsWithHMAC create new APICredentials with HMAC singature
+// makeCredentialsWithHMAC create new APICredentials with HMAC signature
 func makeCredentialsWithHMAC(env Environment, username, password, hmac string) apiCredentials {
 	return apiCredentials{
 		Env:      env,
