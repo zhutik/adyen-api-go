@@ -15,7 +15,7 @@ install:
 stages:
   - verification
   - test
-  
+
 jobs:
   include:
     - stage: verification
