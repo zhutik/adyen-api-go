@@ -21,14 +21,24 @@ jobs:
     - stage: verification
       go: 1.9
       script: make verification
-
+   - stage: verification
+      go: 1.10
+      script: make verification
+   - stage: verification
+      go: 1.11
+      script: make verification
     - stage: test
-      go: 1.9
+      go: 1.11
       script:
         - make test
         - gover
         - goveralls -service=travis-ci -coverprofile=gover.coverprofile -repotoken $COVERALLS_TOKEN
-
+    - stage: test
+      go: 1.10
+      script: make test
+    - stage: test
+      go: 1.9
+      script: make test
     - stage: test
       go: 1.8
       script: make test
