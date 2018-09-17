@@ -49,11 +49,15 @@ instance := adyen.New(
   os.Getenv("ADYEN_PASSWORD"),
 )
 
-req := &adyen.AuthoriseEncrypted{
-  Amount: &adyen.Amount{
+amount := &adyen.Amount{
     Value:    1000, // amount * 100, f.e. 10,30 EUR = 1030
     Currency: "EUR" // or use instance.Currency
-  },
+}
+
+// or amount := adyen.NewAmount("EUR", 10), in this case decimal points would be adjusted automatically
+
+req := &adyen.AuthoriseEncrypted{
+  Amount: amount,
   MerchantAccount: os.Getenv("ADYEN_ACCOUNT"), // your merchant account in Adyen
   AdditionalData:  &adyen.AdditionalData{Content: "encryptedData"}, // encrypted data from a form
   Reference:       "your-order-number",
@@ -95,10 +99,7 @@ instance.MerchantAccount = "TEST_MERCHANT_ACCOUNT"
 
 // futher, information could be retrieved to populate request 
 req := &adyen.AuthoriseEncrypted{
-  Amount: &adyen.Amount{
-    Value:    1000,
-    Currency: instance.Currency
-  },
+  Amount: adyen.NewAmount(instance.Currency, 10.00),
   MerchantAccount: instance.MerchantAccount,
   AdditionalData:  &adyen.AdditionalData{Content: "encryptedData"}, // encrypted data from a form
   Reference:       "your-order-number",
