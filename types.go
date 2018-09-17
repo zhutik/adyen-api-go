@@ -25,16 +25,6 @@ type Address struct {
 	Street            string `json:"street"`
 }
 
-/*********
-* Amount *
-*********/
-
-// Amount value/currency representation
-type Amount struct {
-	Value    float32 `json:"value"`
-	Currency string  `json:"currency"`
-}
-
 /*******
 * Card *
 *******/
