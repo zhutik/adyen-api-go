@@ -1,4 +1,4 @@
-module github.com/Seklfreak/adyen-api-go
+module github.com/zhutik/adyen-api-go
 
 require (
 	github.com/google/go-querystring v1.0.0
