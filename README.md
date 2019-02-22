@@ -2,7 +2,8 @@
 
 [![Build Status](https://travis-ci.org/zhutik/adyen-api-go.png)](https://travis-ci.org/zhutik/adyen-api-go)
 [![GoDoc](http://godoc.org/github.com/zhutik/adyen-api-go?status.png)](http://godoc.org/github.com/zhutik/adyen-api-go)
-[![Coverage Status](https://coveralls.io/repos/github/zhutik/adyen-api-go/badge.svg)](https://coveralls.io/github/zhutik/adyen-api-go)
+[![Maintainability](https://api.codeclimate.com/v1/badges/47b60e74a4ee14812282/maintainability)](https://codeclimate.com/github/zhutik/adyen-api-go/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/47b60e74a4ee14812282/test_coverage)](https://codeclimate.com/github/zhutik/adyen-api-go/test_coverage)
 [![Go Report Card](https://goreportcard.com/badge/github.com/zhutik/adyen-api-go)](https://goreportcard.com/report/github.com/zhutik/adyen-api-go)
 
 A Go client library for [Adyen](https://www.adyen.com/en/) payments platform.
