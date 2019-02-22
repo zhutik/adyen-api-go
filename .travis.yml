@@ -8,9 +8,6 @@ install:
   - go get github.com/golang/lint/golint
   - go get github.com/kisielk/errcheck
   - go get github.com/joho/godotenv
-  - go get -u golang.org/x/tools/cmd/cover
-  - go get -u github.com/modocache/gover
-  - go get -u github.com/mattn/goveralls
 
 stages:
   - verification
@@ -19,10 +16,6 @@ stages:
 jobs:
   include:
     - stage: verification
-      go: "1.9"
-      script: make verification
-
-    - stage: verification
       go: "1.10"
       script: make verification
 
@@ -31,20 +24,16 @@ jobs:
       script: make verification
 
     - stage: test
-      go: "1.8"
-      script: make test
-
-    - stage: test
-      go: "1.9"
-      script: make test
-
-    - stage: test
       go: "1.10"
       script: make test
 
     - stage: test
       go: "1.11"
+      before_script:
+        - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+        - chmod +x ./cc-test-reporter
+        - ./cc-test-reporter before-build
       script:
         - make test
-        - gover
-        - goveralls -service=travis-ci -coverprofile=gover.coverprofile -repotoken $COVERALLS_TOKEN
+      after_script:
+        - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
