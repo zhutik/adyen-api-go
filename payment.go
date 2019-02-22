@@ -20,42 +20,44 @@ const (
 //
 // Link - https://docs.adyen.com/developers/api-reference/payments-api#paymentrequest
 type AuthoriseEncrypted struct {
-	AdditionalData                   *AdditionalData `json:"additionalData,omitempty"`
-	Amount                           *Amount         `json:"amount"`
-	BillingAddress                   *Address        `json:"billingAddress,omitempty"`
-	DeliveryAddress                  *Address        `json:"deliveryAddress,omitempty"`
-	Reference                        string          `json:"reference"`
-	MerchantAccount                  string          `json:"merchantAccount"`
-	ShopperReference                 string          `json:"shopperReference,omitempty"` // Mandatory for recurring payment
-	Recurring                        *Recurring      `json:"recurring,omitempty"`
-	ShopperEmail                     string          `json:"shopperEmail,omitempty"`
-	ShopperInteraction               string          `json:"shopperInteraction,omitempty"`
-	ShopperIP                        string          `json:"shopperIP,omitempty"`
-	ShopperLocale                    string          `json:"shopperLocale,omitempty"`
-	ShopperName                      *Name           `json:"shopperName,omitempty"`
-	SelectedRecurringDetailReference string          `json:"selectedRecurringDetailReference,omitempty"`
-	BrowserInfo                      *BrowserInfo    `json:"browserInfo,omitempty"` // Required for a 3DS process
+	AdditionalData                   *AdditionalData      `json:"additionalData,omitempty"`
+	Amount                           *Amount              `json:"amount"`
+	BillingAddress                   *Address             `json:"billingAddress,omitempty"`
+	DeliveryAddress                  *Address             `json:"deliveryAddress,omitempty"`
+	Reference                        string               `json:"reference"`
+	MerchantAccount                  string               `json:"merchantAccount"`
+	ShopperReference                 string               `json:"shopperReference,omitempty"` // Mandatory for recurring payment
+	Recurring                        *Recurring           `json:"recurring,omitempty"`
+	ShopperEmail                     string               `json:"shopperEmail,omitempty"`
+	ShopperInteraction               string               `json:"shopperInteraction,omitempty"`
+	ShopperIP                        string               `json:"shopperIP,omitempty"`
+	ShopperLocale                    string               `json:"shopperLocale,omitempty"`
+	ShopperName                      *Name                `json:"shopperName,omitempty"`
+	SelectedRecurringDetailReference string               `json:"selectedRecurringDetailReference,omitempty"`
+	BrowserInfo                      *BrowserInfo         `json:"browserInfo,omitempty"`         // Required for a 3DS process
+	ThreeDS2RequestData              *ThreeDS2RequestData `json:"threeDS2RequestData,omitempty"` // Required for a 3DS 2.0 process
 }
 
 // Authorise structure for Authorisation request (card is not encrypted)
 //
 // Link - https://docs.adyen.com/developers/api-reference/payments-api#paymentrequest
 type Authorise struct {
-	Card                             *Card        `json:"card,omitempty"`
-	Amount                           *Amount      `json:"amount"`
-	BillingAddress                   *Address     `json:"billingAddress,omitempty"`
-	DeliveryAddress                  *Address     `json:"deliveryAddress,omitempty"`
-	Reference                        string       `json:"reference"`
-	MerchantAccount                  string       `json:"merchantAccount"`
-	ShopperReference                 string       `json:"shopperReference,omitempty"` // Mandatory for recurring payment
-	Recurring                        *Recurring   `json:"recurring,omitempty"`
-	ShopperEmail                     string       `json:"shopperEmail,omitempty"`
-	ShopperInteraction               string       `json:"shopperInteraction,omitempty"`
-	ShopperIP                        string       `json:"shopperIP,omitempty"`
-	ShopperLocale                    string       `json:"shopperLocale,omitempty"`
-	ShopperName                      *Name        `json:"shopperName,omitempty"`
-	SelectedRecurringDetailReference string       `json:"selectedRecurringDetailReference,omitempty"`
-	BrowserInfo                      *BrowserInfo `json:"browserInfo,omitempty"` // Required for a 3DS process
+	Card                             *Card                `json:"card,omitempty"`
+	Amount                           *Amount              `json:"amount"`
+	BillingAddress                   *Address             `json:"billingAddress,omitempty"`
+	DeliveryAddress                  *Address             `json:"deliveryAddress,omitempty"`
+	Reference                        string               `json:"reference"`
+	MerchantAccount                  string               `json:"merchantAccount"`
+	ShopperReference                 string               `json:"shopperReference,omitempty"` // Mandatory for recurring payment
+	Recurring                        *Recurring           `json:"recurring,omitempty"`
+	ShopperEmail                     string               `json:"shopperEmail,omitempty"`
+	ShopperInteraction               string               `json:"shopperInteraction,omitempty"`
+	ShopperIP                        string               `json:"shopperIP,omitempty"`
+	ShopperLocale                    string               `json:"shopperLocale,omitempty"`
+	ShopperName                      *Name                `json:"shopperName,omitempty"`
+	SelectedRecurringDetailReference string               `json:"selectedRecurringDetailReference,omitempty"`
+	BrowserInfo                      *BrowserInfo         `json:"browserInfo,omitempty"`         // Required for a 3DS process
+	ThreeDS2RequestData              *ThreeDS2RequestData `json:"threeDS2RequestData,omitempty"` // Required for a 3DS 2.0 process
 }
 
 // AuthoriseResponse is a response structure for Adyen
@@ -74,10 +76,17 @@ type AuthoriseResponse struct {
 
 // AdditionalData stores encrypted information about customer's credit card
 type AdditionalData struct {
-	Content       string      `json:"card.encrypted.json,omitempty"`
-	AliasType     string      `json:"aliasType,omitempty"`
-	Alias         string      `json:"alias,omitempty"`
-	ExecuteThreeD *StringBool `json:"executeThreeD,omitempty"`
+	Content                      string      `json:"card.encrypted.json,omitempty"`
+	AliasType                    string      `json:"aliasType,omitempty"`
+	Alias                        string      `json:"alias,omitempty"`
+	ExecuteThreeD                *StringBool `json:"executeThreeD,omitempty"`
+	ThreeDS2Token                string      `json:"threeds2.threeDS2Token,omitempty"`
+	ThreeDSServerTransID         string      `json:"threeds2.threeDSServerTransID,omitempty"`
+	ThreeDSMethodURL             string      `json:"threeds2.threeDSMethodURL,omitempty"`
+	ResponseThreeDSServerTransID string      `json:"threeds2.threeDS2ResponseData.threeDSServerTransID,omitempty"`
+	ResponseAcsTransID           string      `json:"threeds2.threeDS2ResponseData.acsTransID,omitempty"`
+	ResponseMessageVersion       string      `json:"threeds2.threeDS2ResponseData.messageVersion,omitempty"`
+	ResponseAcsURL               string      `json:"threeds2.threeDS2ResponseData.acsURL,omitempty"`
 }
 
 // BrowserInfo hold information on the user browser
