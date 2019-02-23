@@ -27,4 +27,4 @@ _testmain.go
 .DS_Store
 .vscode
 
-*.coverprofile
+c.out

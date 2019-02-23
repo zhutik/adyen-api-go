@@ -68,42 +68,14 @@ func (a *PaymentGateway) Authorise(req *Authorise) (*AuthoriseResponse, error) {
 	return resp.authorize()
 }
 
-// Authorise3DSEncrypted - Perform authorise payment in Adyen
+// Authorise3DS2 - Perform authorise 3DS 2.0 payment in Adyen
 //
-// To perform recurring payment, AuthoriseEncrypted need to have contract specified and shopperReference
-//
-// Example:
-//   &adyen.AuthoriseEncrypted{
-//       Amount:           adyen.NewAmount("EUR", 10.50),
-//       MerchantAccount:  "merchant-account",
-//       ThreeDS2RequestData: &adyen.ThreeDS2RequestData{
-//          AuthenticationOnly: true,
-//          DeviceChannel:      adyen.DeviceChannelBrowser,
-//          NotificationURL:    "http://localhost:8080/3ds2/notification",
-//       },
-//       BrowserInfo: &adyen.BrowserInfo{
-//          UserAgent:    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36",
-//          AcceptHeader: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-//       },
-//       AdditionalData:   &adyen.AdditionalData{Content: r.Form.Get("adyen-3ds2-encrypted-data")}, // encrypted CC data
-//   }
-//}
-// adyen.Recurring{Contract:adyen.RecurringPaymentRecurring} as one of the contracts
-func (a *PaymentGateway) Authorise3DSEncrypted(req *AuthoriseEncrypted) (*AuthoriseResponse, error) {
-	url := a.adyenURL(PaymentService, authoriseType, Payment3DS2APIVersion)
-
-	resp, err := a.execute(url, req)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return resp.authorize()
-}
-
-// Authorise3ds2 - Perform authorise 3DS 2.0 payment in Adyen
-func (a *PaymentGateway) Authorise3ds2(req *Authorise3DS2) (*AuthoriseResponse, error) {
-	url := a.adyenURL(PaymentService, authorise3DS2Type, Payment3DS2APIVersion)
+// Performs 3DS 2.0 request from your server to Adyen
+// For 3DS 2.0 this should be called 2 times:
+//   - once, when device fingerprint is collected
+//   - second, when first call returned "ChallengeShopper" response to subit challenge results.
+func (a *PaymentGateway) Authorise3DS2(req *Authorise3DS2) (*AuthoriseResponse, error) {
+	url := a.adyenURL(PaymentService, authorise3DS2Type, PaymentAPIVersion)
 
 	resp, err := a.execute(url, req)
 

@@ -17,7 +17,7 @@ const (
 	DefaultClientTimeout = time.Second * 10
 
 	// PaymentAPIVersion - API version of current payment API
-	PaymentAPIVersion = "v30"
+	PaymentAPIVersion = "v40"
 
 	// Payment3DS2APIVersion - API version of current payment API for 3DS 2.0 requests
 	Payment3DS2APIVersion = "v40"
