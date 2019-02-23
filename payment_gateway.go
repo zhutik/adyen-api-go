@@ -20,7 +20,7 @@ const skipHppURL = "skipDetails"
 const authorise3DType = "authorise3d"
 
 // authorise3DS2Type - authorise 3DS 2.0 type request, @TODO: move to enums
-const authorise3DS2Type = "authorise3d2"
+const authorise3DS2Type = "authorise3ds2"
 
 // AuthoriseEncrypted - Perform authorise payment in Adyen
 //

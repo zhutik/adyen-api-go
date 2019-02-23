@@ -3,9 +3,7 @@ package adyen
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
-	"os"
 )
 
 // APIError - handle error (non 200 status) response from Adyen
@@ -47,9 +45,6 @@ func (r *Response) authorize() (*AuthoriseResponse, error) {
 	if err := json.Unmarshal(r.Body, &a); err != nil {
 		return nil, err
 	}
-
-	logger := log.New(os.Stderr, "adyen - ", log.LstdFlags)
-	logger.Println(string(r.Body))
 
 	return &a, nil
 }

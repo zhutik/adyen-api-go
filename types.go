@@ -51,3 +51,40 @@ type Name struct {
 	Infix     string `json:"infix,omitempty"`
 	LastName  string `json:"lastName"`
 }
+
+/***************
+* Account Info *
+***************/
+
+// AccountInfo constants
+const (
+	AccountInfoNotApplible     = "notApplicable"
+	AccountInfoThisTransaction = "thisTransaction"
+	AccountInfoLessThan30Days  = "lessThan30Days"
+	AccountInfoFrom30To60Days  = "from30To60Days"
+	AccountInfoMoreThan60Days  = "moreThan60Days"
+)
+
+// AccountInfo - Shopper account information for 3D Secure 2.0
+//
+// Description - https://docs.adyen.com/developers/risk-management/3d-secure-2-0/server-integration/api-reference-3d-secure-2-0#accountinfo
+type AccountInfo struct {
+	AccountAgeIndicator           string `json:"accountAgeIndicator,omitempty"` // one of AccountInfo constants
+	AccountChangeDate             string `json:"accountChangeDate,omitempty"`
+	AccountChangeIndicator        string `json:"accountChangeIndicator,omitempty"` // one of AccountInfo constants
+	AccountCreationDate           string `json:"accountCreationDate,omitempty"`
+	PasswordChangeDate            string `json:"passwordChangeDate,omitempty"`
+	PasswordChangeDateIndicator   string `json:"passwordChangeDateIndicator,omitempty"` // one of AccountInfo constants
+	PurchasesLast6Months          int    `json:"purchasesLast6Months,omitempty"`
+	AddCardAttemptsDay            int    `json:"addCardAttemptsDay,omitempty"`
+	PastTransactionsDay           int    `json:"pastTransactionsDay,omitempty"`
+	PastTransactionsYear          int    `json:"pastTransactionsYear,omitempty"`
+	PaymentAccountAge             string `json:"paymentAccountAge,omitempty"`
+	PaymentAccountIndicator       string `json:"paymentAccountIndicator,omitempty"` // one of AccountInfo constants
+	DeliveryAddressUsageDate      string `json:"deliveryAddressUsageDate,omitempty"`
+	DeliveryAddressUsageIndicator string `json:"deliveryAddressUsageIndicator,omitempty"`
+	SuspiciousAccActivity         bool   `json:"suspiciousAccActivity,omitempty"`
+	HomePhone                     string `json:"homePhone,omitempty"`
+	MobilePhone                   string `json:"mobilePhone,omitempty"`
+	WorkPhone                     string `json:"workPhone,omitempty"`
+}

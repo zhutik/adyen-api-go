@@ -84,9 +84,15 @@ type AdditionalData struct {
 	ThreeDSServerTransID         string      `json:"threeds2.threeDSServerTransID,omitempty"`
 	ThreeDSMethodURL             string      `json:"threeds2.threeDSMethodURL,omitempty"`
 	ResponseThreeDSServerTransID string      `json:"threeds2.threeDS2ResponseData.threeDSServerTransID,omitempty"`
-	ResponseAcsTransID           string      `json:"threeds2.threeDS2ResponseData.acsTransID,omitempty"`
 	ResponseMessageVersion       string      `json:"threeds2.threeDS2ResponseData.messageVersion,omitempty"`
-	ResponseAcsURL               string      `json:"threeds2.threeDS2ResponseData.acsURL,omitempty"`
+	ResponseACSTransID           string      `json:"threeds2.threeDS2ResponseData.acsTransID,omitempty"`
+	ResponseACSURL               string      `json:"threeds2.threeDS2ResponseData.acsURL,omitempty"`
+	ResponseACSChallengeMandated string      `json:"threeds2.threeDS2ResponseData.acsChallengeMandated,omitempty"`
+	ResponseACSReferenceNumber   string      `json:"threeds2.threeDS2ResponseData.acsReferenceNumber,omitempty"`
+	ResponseDSReferenceNumber    string      `json:"threeds2.threeDS2ResponseData.dsReferenceNumber,omitempty"`
+	ResponseTransactionStatus    string      `json:"threeds2.threeDS2ResponseData.transStatus,omitempty"`
+	ResponseAuthType             string      `json:"threeds2.threeDS2ResponseData.authenticationType,omitempty"`
+	ResponseDCTransactionID      string      `json:"threeds2.threeDS2ResponseData.dsTransID,omitempty"`
 }
 
 // BrowserInfo hold information on the user browser
