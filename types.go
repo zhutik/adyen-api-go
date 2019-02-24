@@ -88,3 +88,19 @@ type AccountInfo struct {
 	MobilePhone                   string `json:"mobilePhone,omitempty"`
 	WorkPhone                     string `json:"workPhone,omitempty"`
 }
+
+/**************
+* BrowserInfo *
+**************/
+
+// BrowserInfo hold information on the user browser
+type BrowserInfo struct {
+	AcceptHeader   string `json:"acceptHeader"`
+	UserAgent      string `json:"userAgent"`
+	Language       string `json:"language,omitempty"`
+	ColorDepth     int    `json:"colorDepth,omitempty"`
+	JavaEnabled    bool   `json:"javaEnabled,omitempty"`
+	ScreenHeight   int    `json:"screenHeight,omitempty"`
+	ScreenWidth    int    `json:"screenWidth,omitempty"`
+	TimeZoneOffset int    `json:"timeZoneOffset,omitempty"`
+}

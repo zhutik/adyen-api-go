@@ -19,9 +19,6 @@ const (
 	// PaymentAPIVersion - API version of current payment API
 	PaymentAPIVersion = "v40"
 
-	// Payment3DS2APIVersion - API version of current payment API for 3DS 2.0 requests
-	Payment3DS2APIVersion = "v40"
-
 	// RecurringAPIVersion - API version of current recurring API
 	RecurringAPIVersion = "v25"
 
