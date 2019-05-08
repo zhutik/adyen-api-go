@@ -35,7 +35,7 @@ type AuthoriseEncrypted struct {
 	ShopperName                      *Name           `json:"shopperName,omitempty"`
 	SelectedRecurringDetailReference string          `json:"selectedRecurringDetailReference,omitempty"`
 	BrowserInfo                      *BrowserInfo    `json:"browserInfo,omitempty"` // Required for a 3DS process
-	CaptureDelayHours                int             `json:"captureDelayHours,omitempty"`
+	CaptureDelayHours                *int            `json:"captureDelayHours,omitempty"`
 }
 
 // Authorise structure for Authorisation request (card is not encrypted)
@@ -57,7 +57,7 @@ type Authorise struct {
 	ShopperName                      *Name        `json:"shopperName,omitempty"`
 	SelectedRecurringDetailReference string       `json:"selectedRecurringDetailReference,omitempty"`
 	BrowserInfo                      *BrowserInfo `json:"browserInfo,omitempty"` // Required for a 3DS process
-	CaptureDelayHours                int          `json:"captureDelayHours,omitempty"`
+	CaptureDelayHours                *int         `json:"captureDelayHours,omitempty"`
 }
 
 // AuthoriseResponse is a response structure for Adyen
