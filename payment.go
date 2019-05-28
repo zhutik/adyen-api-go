@@ -82,6 +82,7 @@ type AdditionalData struct {
 	ExpiryDate               string      `json:"expiryDate,omitempty"`
 	CardBin                  string      `json:"cardBin,omitempty"`
 	CardSummary              string      `json:"cardSummary,omitempty"`
+	CardHolderName           string      `json:"cardHolderName,omitempty"`
 	PaymentMethod            string      `json:"paymentMethod,omitempty"`
 	CardPaymentMethod        string      `json:"cardPaymentMethod,omitempty"`
 	CardIssuingCountry       string      `json:"cardIssuingCountry,omitempty"`
