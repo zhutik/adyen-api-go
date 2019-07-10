@@ -90,6 +90,7 @@ type AdditionalData struct {
 	RecurringDetailReference          string      `json:"recurring.recurringDetailReference,omitempty"`
 	ExecuteThreeD                     *StringBool `json:"executeThreeD,omitempty"`
 	FundingSource                     string      `json:"fundingSource,omitempty"`
+	CustomRoutingFlag                 string      `json:"customRoutingFlag,omitempty"`
 	RequestedTestAcquirerResponseCode int         `json:"RequestedTestAcquirerResponseCode,omitempty"` //Used for trigger error from adyen
 }
 
