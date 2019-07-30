@@ -1,4 +1,4 @@
-module adyen-api-go
+module bitbucket.org/makana14/adyen-go-api
 
 require (
 	github.com/google/go-querystring v1.0.0
