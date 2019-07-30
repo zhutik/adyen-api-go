@@ -28,10 +28,10 @@ var Testing = Environment{
 
 // Production - instance of production environment
 var Production = Environment{
-	apiURL:      "https://%s-%s-pal-live.adyenpayments.com/pal/servlet",
+	apiURL:      "https://%s-%spal-live.adyenpayments.com/pal/servlet",
 	clientURL:   "https://live.adyen.com/hpp/cse/js/",
 	hppURL:      "https://live.adyen.com/hpp/",
-	checkoutURL: "https://%s-%s-checkout-live.adyenpayments.com/services/PaymentSetupAndVerification",
+	checkoutURL: "https://%s-%scheckout-live.adyenpayments.com/services/PaymentSetupAndVerification",
 }
 
 // TestEnvironment returns test environment configuration.
@@ -69,4 +69,9 @@ func (e Environment) HppURL(request string) string {
 // CheckoutURL returns the full URL to a Checkout API endpoint.
 func (e Environment) CheckoutURL(service string, version string) string {
 	return e.checkoutURL + "/" + version + "/" + service
+}
+
+// OverwriteAPIURL for testing use
+func (e Environment) OverwriteAPIURL(url string) {
+	e.apiURL = url
 }
