@@ -70,8 +70,3 @@ func (e Environment) HppURL(request string) string {
 func (e Environment) CheckoutURL(service string, version string) string {
 	return e.checkoutURL + "/" + version + "/" + service
 }
-
-// OverwriteAPIURL for testing use
-func (e Environment) OverwriteAPIURL(url string) {
-	e.apiURL = url
-}
