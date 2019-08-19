@@ -79,7 +79,7 @@ func TestBaseURLEnvironmentProduction(t *testing.T) {
 	}
 
 	act := env.BaseURL("service", "version")
-	exp := "https://5409c4fd1cc98a4e-AcmeAccount123pal-live.adyenpayments.com/pal/servlet/service/version"
+	exp := "https://5409c4fd1cc98a4e-AcmeAccount123-pal-live.adyenpayments.com/pal/servlet/service/version"
 
 	equals(t, exp, act)
 }
@@ -115,7 +115,7 @@ func TestCheckoutURLEnvironmentProduction(t *testing.T) {
 	}
 
 	act := env.CheckoutURL("service", "version")
-	exp := "https://5409c4fd1cc98a4e-AcmeAccount123checkout-live.adyenpayments.com/services/PaymentSetupAndVerification/version/service"
+	exp := "https://5409c4fd1cc98a4e-AcmeAccount123-checkout-live.adyenpayments.com/services/PaymentSetupAndVerification/version/service"
 
 	equals(t, exp, act)
 }
