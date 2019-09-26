@@ -60,6 +60,6 @@ func NewAmount(currency string, amount float32) *Amount {
 
 	return &Amount{
 		Currency: currency,
-		Value:   float32(math.Round(float64(amount * coef))),
+		Value:    float32(math.Round(float64(amount * coef))),
 	}
 }
