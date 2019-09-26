@@ -41,6 +41,12 @@ func TestNewAmount(t *testing.T) {
 			amount:   150.050,
 			expected: Amount{Currency: "BHD", Value: 150050},
 		},
+		{
+			name:     "Test correct float32 conversion",
+			currency: "EUR",
+			amount:   8.40,
+			expected: Amount{Currency: "EUR", Value: 840},
+		},
 	}
 
 	for _, c := range cases {
