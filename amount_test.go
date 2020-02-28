@@ -1,6 +1,7 @@
 package adyen
 
 import (
+	"encoding/json"
 	"testing"
 )
 
@@ -55,5 +56,27 @@ func TestNewAmount(t *testing.T) {
 
 			equals(t, c.expected, *a)
 		})
+	}
+}
+
+func TestAmount_UnmarshalJson(t *testing.T) {
+	t.Parallel()
+
+	structJSON := `
+{
+	"currency" : "KWD",
+	"value"    : 87230
+}
+`
+	var amount Amount
+	err := json.Unmarshal([]byte(structJSON), &amount)
+	if err != nil {
+		t.Fatalf("unmarshal error: %v", err)
+	}
+	if amount.Currency != "KWD" {
+		t.Fatalf("expected currency KWD, but got %s in unmarshaled struct %+v", amount.Currency, amount)
+	}
+	if amount.Value != 87230.0 {
+		t.Fatalf("expected value 87230.0, but got %f in unmarshaled struct %+v", amount.Value, amount)
 	}
 }
