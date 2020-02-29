@@ -29,6 +29,7 @@ type NotificationRequestItemData struct {
 		ExpiryDate               string `json:"expiryDate,omitempty"`
 		AuthorisedAmountValue    string `json:"authorisedAmountValue,omitempty"`
 		AuthorisedAmountCurrency string `json:"authorisedAmountCurrency,omitempty"`
+		HmacSignature            string `json:"hmacSignature,omitempty"`
 	} `json:"additionalData,omitempty"`
 	Amount              Amount     `json:"amount"`
 	PspReference        string     `json:"pspReference"`
