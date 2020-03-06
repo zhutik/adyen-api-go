@@ -71,7 +71,8 @@ type AuthoriseResponse struct {
 	RefusalReason  string          `json:"refusalReason"`
 	IssuerURL      string          `json:"issuerUrl"`
 	MD             string          `json:"md"`
-	PaRequest      string          `json:"paRequest"`
+	PaRequest      string          `json:"paRepquest"`
+	FraudResult    *FraudResult    `json:"fraudResult,omitempty"`
 	AdditionalData *AdditionalData `json:"additionalData,omitempty"`
 }
 
@@ -103,6 +104,24 @@ type BrowserInfo struct {
 // Recurring hold the behavior for a future payment : could be ONECLICK or RECURRING
 type Recurring struct {
 	Contract string `json:"contract"`
+}
+
+// FraudResult hold the fraud score of transaction
+type FraudResult struct {
+	AccountScore int64    `json:"accountScore,omitempty"`
+	Results      []Result `json:"results,omitempty"`
+}
+
+// Result hold the fraud score detail
+type Result struct {
+	FraudCheckResult *FraudCheckResult `json:"FraudCheckResult,omitempty"`
+}
+
+// FraudCheckResult hold information of fraud score detail
+type FraudCheckResult struct {
+	AccountScore int    `json:"accountScore,omitempty"`
+	CheckID      int    `json:"checkId,omitempty"`
+	Name         string `json:"name,omitempty"`
 }
 
 /*************
