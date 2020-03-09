@@ -71,7 +71,7 @@ type AuthoriseResponse struct {
 	RefusalReason  string          `json:"refusalReason"`
 	IssuerURL      string          `json:"issuerUrl"`
 	MD             string          `json:"md"`
-	PaRequest      string          `json:"paRepquest"`
+	PaRequest      string          `json:"paRequest"`
 	FraudResult    *FraudResult    `json:"fraudResult,omitempty"`
 	AdditionalData *AdditionalData `json:"additionalData,omitempty"`
 }
