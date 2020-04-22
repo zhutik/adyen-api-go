@@ -17,10 +17,10 @@ const (
 	DefaultClientTimeout = time.Second * 10
 
 	// PaymentAPIVersion - API version of current payment API
-	PaymentAPIVersion = "v30"
+	PaymentAPIVersion = "v52"
 
 	// RecurringAPIVersion - API version of current recurring API
-	RecurringAPIVersion = "v25"
+	RecurringAPIVersion = "v49"
 
 	// PaymentService is used to identify the standard payment workflow.
 	PaymentService = "Payment"
@@ -29,7 +29,7 @@ const (
 	RecurringService = "Recurring"
 
 	// CheckoutAPIVersion - API version of current checkout API
-	CheckoutAPIVersion = "v32"
+	CheckoutAPIVersion = "v52"
 )
 
 // Adyen - base structure with configuration options
