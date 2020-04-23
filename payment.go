@@ -93,6 +93,10 @@ type AdditionalData struct {
 	FundingSource                     string      `json:"fundingSource,omitempty"`
 	CustomRoutingFlag                 string      `json:"customRoutingFlag,omitempty"`
 	RequestedTestAcquirerResponseCode int         `json:"RequestedTestAcquirerResponseCode,omitempty"` //Used for trigger error from adyen
+	CVCResult                         string      `json:"cvcResult,omitempty"`
+	CVCResultRaw                      string      `json:"cvcResultRaw,omitempty"`
+	AVSResult                         string      `json:"avsResult,omitempty"`
+	AVSResultRaw                      string      `json:"avsResultRaw,omitempty"`
 }
 
 // BrowserInfo hold information on the user browser
