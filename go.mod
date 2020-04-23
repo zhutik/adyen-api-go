@@ -1,4 +1,4 @@
-module github.com/zhutik/adyen-api-go
+module github.com/nirajjayantbolt/adyen-api-go
 
 go 1.14
 
