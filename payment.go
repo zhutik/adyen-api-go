@@ -78,25 +78,25 @@ type AuthoriseResponse struct {
 
 // AdditionalData stores encrypted information about customer's credit card
 type AdditionalData struct {
-	Content                           string      `json:"card.encrypted.json,omitempty"`
-	AliasType                         string      `json:"aliasType,omitempty"`
-	Alias                             string      `json:"alias,omitempty"`
-	ExpiryDate                        string      `json:"expiryDate,omitempty"`
-	CardBin                           string      `json:"cardBin,omitempty"`
-	CardSummary                       string      `json:"cardSummary,omitempty"`
-	CardHolderName                    string      `json:"cardHolderName,omitempty"`
-	PaymentMethod                     string      `json:"paymentMethod,omitempty"`
-	CardPaymentMethod                 string      `json:"cardPaymentMethod,omitempty"`
-	CardIssuingCountry                string      `json:"cardIssuingCountry,omitempty"`
-	RecurringDetailReference          string      `json:"recurring.recurringDetailReference,omitempty"`
-	ExecuteThreeD                     *StringBool `json:"executeThreeD,omitempty"`
-	FundingSource                     string      `json:"fundingSource,omitempty"`
-	CustomRoutingFlag                 string      `json:"customRoutingFlag,omitempty"`
-	RequestedTestAcquirerResponseCode int         `json:"RequestedTestAcquirerResponseCode,omitempty"` //Used for trigger error from adyen
-	CVCResult                         string      `json:"cvcResult,omitempty"`
-	CVCResultRaw                      string      `json:"cvcResultRaw,omitempty"`
-	AVSResult                         string      `json:"avsResult,omitempty"`
-	AVSResultRaw                      string      `json:"avsResultRaw,omitempty"`
+	Content                           string           `json:"card.encrypted.json,omitempty"`
+	AliasType                         string           `json:"aliasType,omitempty"`
+	Alias                             string           `json:"alias,omitempty"`
+	ExpiryDate                        string           `json:"expiryDate,omitempty"`
+	CardBin                           string           `json:"cardBin,omitempty"`
+	CardSummary                       string           `json:"cardSummary,omitempty"`
+	CardHolderName                    string           `json:"cardHolderName,omitempty"`
+	PaymentMethod                     string           `json:"paymentMethod,omitempty"`
+	CardPaymentMethod                 string           `json:"cardPaymentMethod,omitempty"`
+	CardIssuingCountry                string           `json:"cardIssuingCountry,omitempty"`
+	RecurringDetailReference          string           `json:"recurring.recurringDetailReference,omitempty"`
+	ExecuteThreeD                     *StringBool      `json:"executeThreeD,omitempty"`
+	FundingSource                     string           `json:"fundingSource,omitempty"`
+	CustomRoutingFlag                 string           `json:"customRoutingFlag,omitempty"`
+	RequestedTestAcquirerResponseCode int              `json:"RequestedTestAcquirerResponseCode,omitempty"` //Used for trigger error from adyen
+	CVCResult                         string           `json:"cvcResult,omitempty"`
+	CVCResultRaw                      string           `json:"cvcResultRaw,omitempty"`
+	AVSResult                         AdyenAVSResponse `json:"avsResult,omitempty"`
+	AVSResultRaw                      string           `json:"avsResultRaw,omitempty"`
 }
 
 // BrowserInfo hold information on the user browser
