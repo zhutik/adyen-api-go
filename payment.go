@@ -93,7 +93,7 @@ type AdditionalData struct {
 	FundingSource                     string      `json:"fundingSource,omitempty"`
 	CustomRoutingFlag                 string      `json:"customRoutingFlag,omitempty"`
 	RequestedTestAcquirerResponseCode int         `json:"RequestedTestAcquirerResponseCode,omitempty"` //Used for trigger error from adyen
-	CVCResult                         string      `json:"cvcResult,omitempty"`
+	CVCResult                         CVCResult   `json:"cvcResult,omitempty"`
 	CVCResultRaw                      string      `json:"cvcResultRaw,omitempty"`
 	AVSResult                         AVSResponse `json:"avsResult,omitempty"`
 	AVSResultRaw                      string      `json:"avsResultRaw,omitempty"`
