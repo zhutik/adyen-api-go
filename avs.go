@@ -8,7 +8,7 @@ type AVSResponse string
 // AVSResponse hard-coded for easy comparison checking later
 const (
 	AVSResponse0  AVSResponse = "0 Unknown"
-	AVSResponse1  AVSResponse = "1 Address matches, but the postal code does not match"
+	AVSResponse1  AVSResponse = "1 Address matches, postal code doesn't"
 	AVSResponse2  AVSResponse = "2 Neither postal code nor address match"
 	AVSResponse3  AVSResponse = "3 AVS unavailable"
 	AVSResponse4  AVSResponse = "4 AVS not supported for this card type"
