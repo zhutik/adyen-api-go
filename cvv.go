@@ -3,6 +3,7 @@ package adyen
 // CVCResult represents the Adyen translation of CVC codes from issuer
 // https://docs.adyen.com/development-resources/test-cards/cvc-cvv-result-testing
 type CVCResult string
+
 // Constants represented by numerical code they are assigned
 const (
 	CVCResult0 CVCResult = "0 Unknown"
@@ -13,5 +14,3 @@ const (
 	CVCResult5 CVCResult = "5 Issuer not certified for CVC/CVV"
 	CVCResult6 CVCResult = "6 No CVC/CVV provided"
 )
-
-
