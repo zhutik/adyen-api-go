@@ -30,6 +30,13 @@ type NotificationRequestItemData struct {
 		AuthorisedAmountValue    string `json:"authorisedAmountValue,omitempty"`
 		AuthorisedAmountCurrency string `json:"authorisedAmountCurrency,omitempty"`
 		HmacSignature            string `json:"hmacSignature,omitempty"`
+		NOFReasonCode            string `json:"nofReasonCode,omitempty"`
+		NOFSchemeCode            string `json:"nofSchemeCode,omitempty"`
+		RFIReasonCode            string `json:"rfiReasonCode,omitempty"`
+		RFISchemeCode            string `json:"rfiSchemeCode,omitempty"`
+		ChargebackReasonCode     string `json:"chargebackReasonCode,omitempty"`
+		ChargebackSchemeCode     string `json:"chargebackSchemeCode,omitempty"`
+		ARN                      string `json:"arn,omitempty"`
 	} `json:"additionalData,omitempty"`
 	Amount              Amount     `json:"amount"`
 	PspReference        string     `json:"pspReference"`
