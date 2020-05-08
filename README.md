@@ -1,4 +1,10 @@
-# Adyen API for Go
+# [Deprecated] Adyen API for Go
+
+This library is deprecated in favor of [official one from Adyen](https://github.com/Adyen/adyen-go-api-library), now it's finally released!
+
+Thanks a lot for everyone who contributed and used this library!
+
+-----------------------------------------------------------------
 
 [![Build Status](https://travis-ci.org/zhutik/adyen-api-go.png)](https://travis-ci.org/zhutik/adyen-api-go)
 [![GoDoc](http://godoc.org/github.com/zhutik/adyen-api-go?status.png)](http://godoc.org/github.com/zhutik/adyen-api-go)
